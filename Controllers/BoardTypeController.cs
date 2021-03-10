@@ -107,5 +107,20 @@ namespace surfaliancaAPI.Controllers
 
 
         }
+
+        [HttpGet("{id}")]
+        [Authorize()]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return new JsonResult(genericRepository.Get(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Arquivo não encontrado!" + ex.Message);
+            }
+        }
+
     }
 }

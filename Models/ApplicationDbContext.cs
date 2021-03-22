@@ -34,10 +34,15 @@ namespace Models
         public DbSet<Store> Store { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<FinSystem> FinSystem { get; set; }
+        public DbSet<FinColor> FinColor { get; set; }
+        public DbSet<FinSystemColor> FinSystemColor { get; set; }
+
         public DbSet<Team> Team { get; set; }
         public DbSet<TeamImage> TeamImage { get; set; }
         public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Shaper> Shaper { get; set; }
+
+
 
 
     }

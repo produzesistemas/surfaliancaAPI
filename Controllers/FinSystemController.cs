@@ -4,12 +4,10 @@ using System.Security.Claims;
 using Models;
 using UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.Linq.Expressions;
 using LinqKit;
+using System.Collections.Generic;
 
 namespace surfaliancaAPI.Controllers
 {
@@ -17,23 +15,21 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class FinSystemController : ControllerBase
     {
-        private IWebHostEnvironment _hostEnvironment;
-        private IConfiguration _configuration;
         private IRepository<FinSystem> genericRepository;
-        private IRepository<Store> storeRepository;
-        private readonly UserManager<IdentityUser> userManager;
+        private IFinSystemRepository<FinSystem> finSystemRepository;
+        private IRepository<FinColor> finColorRepository;
+        private IRepository<FinSystemColor> finSystemColorRepository;
 
-        public FinSystemController(UserManager<IdentityUser> userManager,
-            IWebHostEnvironment environment,
-            IConfiguration Configuration,
-            IRepository<FinSystem> finSystemRepository,
-            IRepository<Store> storeRepository)
+        public FinSystemController(
+            IRepository<FinSystem> genericRepository,
+             IFinSystemRepository<FinSystem> finSystemRepository,
+            IRepository<FinSystemColor> finSystemColorRepository,
+            IRepository<FinColor> finColorRepository)
         {
-            _hostEnvironment = environment;
-            _configuration = Configuration;
-            this.genericRepository = finSystemRepository;
-            this.storeRepository = storeRepository;
-            this.userManager = userManager;
+            this.genericRepository = genericRepository;
+            this.finSystemRepository = finSystemRepository;
+            this.finColorRepository = finColorRepository;
+            this.finSystemColorRepository = finSystemColorRepository;
         }
 
         [HttpPost()]
@@ -76,14 +72,34 @@ namespace surfaliancaAPI.Controllers
                 }
                 if (finSystem.Id > decimal.Zero)
                     {
-                        var finSystemBase = genericRepository.Get(finSystem.Id);
+                        var finSystemBase = finSystemRepository.Get(finSystem.Id);
                         finSystemBase.Name = finSystem.Name;
+                        finSystemBase.UpdateApplicationUserId = id;
+                        finSystemBase.UpdateDate = DateTime.Now;
                         genericRepository.Update(finSystemBase);
-                    }
+                        var toDelete = finSystemBase.FinSystemColors.Except(finSystem.FinSystemColors, new EqualityComparer()).ToList();
+                        var toInsert = finSystem.FinSystemColors.Except(finSystemBase.FinSystemColors, new EqualityComparer()).ToList();
+                        toDelete.ForEach(x =>
+                        {
+                            finSystemColorRepository.Delete(x);
+                        });
+                        toInsert.ForEach(x =>
+                        {
+                            x.FinSystemId = finSystemBase.Id;
+                            finSystemColorRepository.Insert(x);
+                        });
+                }
                     else
                     {
                         finSystem.StoreId = storeId;
+                        finSystem.ApplicationUserId = id;
+                        finSystem.CreateDate = DateTime.Now;
                         genericRepository.Insert(finSystem);
+                        finSystem.FinSystemColors.ForEach(finSystemColor =>
+                        {
+                            finSystemColor.FinSystemId = finSystem.Id;
+                            finSystemColorRepository.Insert(finSystemColor);
+                        });
                     }
                     return new JsonResult(finSystem);
             }
@@ -109,6 +125,53 @@ namespace surfaliancaAPI.Controllers
             }
 
 
+        }
+
+        [HttpGet()]
+        [Route("getColors")]
+        [AllowAnonymous]
+        public IActionResult GetColors()
+        {
+            try
+            {
+                return new JsonResult(finColorRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+        }
+
+        [HttpGet("{id}")]
+        [Authorize()]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return new JsonResult(finSystemRepository.Get(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Arquivo não encontrado!" + ex.Message);
+            }
+        }
+
+        class EqualityComparer : IEqualityComparer<FinSystemColor>
+        {
+            public bool Equals(FinSystemColor x, FinSystemColor y)
+            {
+                if (object.ReferenceEquals(x, y))
+                    return true;
+                if (x == null || y == null)
+                    return false;
+                return x.FinSystemId == y.FinSystemId && x.FinColorId == y.FinColorId && x.Id == y.Id;
+            }
+
+            public int GetHashCode(FinSystemColor obj)
+            {
+                return obj.Id.GetHashCode();
+            }
         }
     }
 }

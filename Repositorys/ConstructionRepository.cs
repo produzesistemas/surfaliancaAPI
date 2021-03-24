@@ -5,32 +5,28 @@ using System;
 using System.Linq;
 using UnitOfWork;
 
+
 namespace Repositorys
 {
-    public class FinSystemRepository<T> : IFinSystemRepository<FinSystem> where T : BaseEntity
+    public class ConstructionRepository<T> : IConstructionRepository<Construction> where T : BaseEntity
     {
-        private DbSet<FinSystem> entities;
+        private DbSet<Construction> entities;
         private DbSet<IdentityUser> users;
-        private DbSet<FinSystemColor> finSystemColors;
-        private DbSet<FinColor> finColors;
 
-        public FinSystemRepository(ApplicationDbContext context)
+        public ConstructionRepository(ApplicationDbContext context)
         {
-            entities = context.Set<FinSystem>();
+            entities = context.Set<Construction>();
             users = context.Set<IdentityUser>();
-            finSystemColors = context.Set<FinSystemColor>();
-            finColors = context.Set<FinColor>();
         }
 
-        public FinSystem Get(int id)
+        public Construction Get(int id)
         {
-            return entities.Select(x => new FinSystem
+            return entities.Select(x => new Construction
             {
                 Id = x.Id,
                 Name = x.Name,
                 Details = x.Details,
                 StoreId = x.StoreId,
-                FinSystemColors = finSystemColors.Where(t => t.FinSystemId == x.Id).ToList(),
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
@@ -40,13 +36,12 @@ namespace Repositorys
             }).FirstOrDefault(x => x.Id == id);
         }
 
-        public IQueryable<FinSystem> Where(Func<FinSystem, bool> expression)
+        public IQueryable<Construction> Where(Func<Construction, bool> expression)
         {
-            return entities.Select(x => new FinSystem
+            return entities.Select(x => new Construction
             {
                 Id = x.Id,
                 Name = x.Name,
-                FinSystemColors = finSystemColors.Where(t => t.FinSystemId == x.Id).ToList(),
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
                 AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
             }).Where(expression).AsQueryable();

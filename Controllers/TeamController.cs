@@ -51,7 +51,7 @@ namespace surfaliancaAPI.Controllers
             try
             {
                 var team = JsonConvert.DeserializeObject<Team>(Convert.ToString(Request.Form["team"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
+                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileTeam"]);
                 var fileDelete = pathToSave;
                 var files = Request.Form.Files;
                 ClaimsPrincipal currentUser = this.User;

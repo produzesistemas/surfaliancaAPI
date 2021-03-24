@@ -42,6 +42,8 @@ namespace Models
         public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Shaper> Shaper { get; set; }
 
+        public DbSet<Construction> Construction { get; set; }
+
 
 
 

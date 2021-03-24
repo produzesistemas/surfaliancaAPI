@@ -70,10 +70,7 @@ namespace surfaliancaAPI.Controllers
                             genericRepository.Insert(store);
                             return new OkResult();
                         }
-                    }
-
-                    if (store.Id > decimal.Zero)
-                    {
+                    } else {
                         var lojaBase = genericRepository.Get(store.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {

@@ -30,7 +30,7 @@ namespace Repositorys
 
         public IQueryable<T> GetAll()
         {
-            throw new NotImplementedException();
+            return entities.AsQueryable();
         }
 
         public void Insert(T entity)

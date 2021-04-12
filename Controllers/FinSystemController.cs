@@ -39,15 +39,12 @@ namespace surfaliancaAPI.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-            var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
             if (id == null)
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            Expression<Func<FinSystem, bool>> p1, p2;
+            Expression<Func<FinSystem, bool>> p2;
             var predicate = PredicateBuilder.New<FinSystem>();
-            p1 = p => p.StoreId == storeId;
-            predicate = predicate.And(p1);
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -65,7 +62,6 @@ namespace surfaliancaAPI.Controllers
             {
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
                 if (id == null)
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
@@ -91,7 +87,6 @@ namespace surfaliancaAPI.Controllers
                 }
                     else
                     {
-                        finSystem.StoreId = storeId;
                         finSystem.ApplicationUserId = id;
                         finSystem.CreateDate = DateTime.Now;
                         genericRepository.Insert(finSystem);
@@ -127,21 +122,7 @@ namespace surfaliancaAPI.Controllers
 
         }
 
-        [HttpGet()]
-        [Route("getColors")]
-        [AllowAnonymous]
-        public IActionResult GetColors()
-        {
-            try
-            {
-                return new JsonResult(finColorRepository.GetAll().ToList());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
 
-        }
 
         [HttpGet("{id}")]
         [Authorize()]

@@ -41,15 +41,12 @@ namespace surfaliancaAPI.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-            var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
             if (id == null)
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            Expression<Func<Shaper, bool>> p1, p2;
+            Expression<Func<Shaper, bool>> p2;
             var predicate = PredicateBuilder.New<Shaper>();
-            p1 = p => p.StoreId == storeId;
-            predicate = predicate.And(p1);
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -67,7 +64,6 @@ namespace surfaliancaAPI.Controllers
             {
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
                 if (id == null)
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
@@ -97,7 +93,6 @@ namespace surfaliancaAPI.Controllers
                 }
                 else
                 {
-                    entity.StoreId = storeId;
                     var extension = Path.GetExtension(files[0].FileName);
                     var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
                     var fullPath = Path.Combine(pathToSave, fileName);

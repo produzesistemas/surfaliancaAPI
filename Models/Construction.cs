@@ -8,7 +8,6 @@ namespace Models
     {
         public string Name { get; set; }
         public string Details { get; set; }
-        public int StoreId { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }

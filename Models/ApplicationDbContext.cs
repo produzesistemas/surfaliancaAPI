@@ -24,7 +24,6 @@ namespace Models
         }
 
         public DbSet<ProductType> ProductType { get; set; }
-        public DbSet<ProductModel> ProductModel { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<State> State { get; set; }
         public DbSet<Country> Country { get; set; }
@@ -43,7 +42,7 @@ namespace Models
         public DbSet<Shaper> Shaper { get; set; }
 
         public DbSet<Construction> Construction { get; set; }
-
+        public DbSet<Lamination> Lamination { get; set; }
 
 
 

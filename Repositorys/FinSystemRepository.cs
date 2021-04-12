@@ -29,7 +29,6 @@ namespace Repositorys
                 Id = x.Id,
                 Name = x.Name,
                 Details = x.Details,
-                StoreId = x.StoreId,
                 FinSystemColors = finSystemColors.Where(t => t.FinSystemId == x.Id).ToList(),
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,

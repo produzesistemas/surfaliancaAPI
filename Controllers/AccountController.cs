@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Models;
 using UnitOfWork;
 using System.Linq;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace surfaliancaAPI.Controllers
 {
@@ -32,40 +34,42 @@ namespace surfaliancaAPI.Controllers
 
         [HttpPost()]
         [AllowAnonymous]
-        [Route("registerPartner")]
-        public async Task<IActionResult> RegisterPartner(ApplicationUser user)
+        [Route("registerClient")]
+        public async Task<IActionResult> RegisterClient(ApplicationUser user)
         {
             try
             {
                 var exist = await userManager.FindByEmailAsync(user.Email);
                 if (exist == null)
                 {
-                    user.UserName = user.Email;
+                    user.UserName = user.Email.Split("@").FirstOrDefault();
                     var result = await userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(user, "Parceiro");
+                        List<string> permissions = new List<string>();
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(new Claim(ClaimTypes.Role, "Cliente"));
+                        await userManager.AddClaimsAsync(user, claims);
+                        permissions.Add("Cliente");
+                        user.Token = TokenService.GenerateToken(user, configuration, permissions);
                         user.PasswordHash = null;
-                        var store = storeRepository.Where(x => x.AspNetUsersId == user.Id).FirstOrDefault();
-                        if (store == null)
-                        {
-                            store = new Store() { Id = 0 };
-                        }
-                        user.Token = TokenService.GenerateToken(user, configuration, store);
                         return new JsonResult(user);
                     }
                 } else
                 {
+                    var claimscurrentUser = userManager.GetClaimsAsync(exist).Result.ToList();
+                    var permissions = claimscurrentUser.Select(c => c.Value).ToList();
                     var applicationUser = new ApplicationUser();
                     applicationUser = (ApplicationUser)exist;
-                    var store = storeRepository.Where(x => x.AspNetUsersId == applicationUser.Id).FirstOrDefault();
-                    if (store == null)
-                    {
-                        store = new Store() { Id = 0 };
-                    }
-                    user.Token = TokenService.GenerateToken(user, configuration, store);
-                    applicationUser.Token = TokenService.GenerateToken(applicationUser, configuration, store);
-                    return new JsonResult(exist);
+                    applicationUser.Token = TokenService.GenerateToken(applicationUser, configuration, permissions);
+                    var applicationUserDTO = new ApplicationUserDTO();
+                    applicationUserDTO.Token = applicationUser.Token;
+                    applicationUserDTO.Id = applicationUser.Id;
+                    applicationUserDTO.Provider = applicationUser.Provider;
+                    applicationUserDTO.ProviderId = applicationUser.ProviderId;
+                    applicationUserDTO.Email = applicationUser.Email;
+                    applicationUserDTO.UserName = applicationUser.UserName;
+                    return new JsonResult(applicationUserDTO);
                 }
 
 
@@ -80,12 +84,76 @@ namespace surfaliancaAPI.Controllers
 
         }
 
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[Route("login")]
-        //public async Task<IActionResult> Login(ApplicationUser user)
-        //{
-            
-        //}
+        [HttpPost()]
+        [AllowAnonymous]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginUser loginUser)
+        {
+            try
+            {
+                var result = await signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Secret, false, false);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest("Acesso negado! Login inválido!");
+                }
+                var user = await userManager.FindByEmailAsync(loginUser.Email);
+
+                var claimsPrincipal = await signInManager.CreateUserPrincipalAsync(user);
+                var claims = claimsPrincipal.Claims.ToList();
+                var permissions = claims.Where(c => c.Type.Contains("role")).Select(c => c.Value).ToList();
+                if (!permissions.Where(x => x.Contains("Master")).Any())
+                {
+                    return BadRequest("Acesso negado! Usuário não é Master!");
+                }
+                var applicationUser = new ApplicationUser();
+                applicationUser.Id = user.Id;
+                var applicationUserDTO = new ApplicationUserDTO();
+                applicationUserDTO.Token = TokenService.GenerateToken(applicationUser, configuration, permissions);
+                applicationUserDTO.Email = user.Email;
+                applicationUserDTO.UserName = user.UserName;
+                return new JsonResult(applicationUserDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Falha no login! " + ex.Message);
+            }
+
+        }
+
+        [HttpPost()]
+        [AllowAnonymous]
+        //[Authorize()]
+        [Route("registerMaster")]
+        public async Task<IActionResult> RegisterMaster(LoginUser loginUser)
+        {
+            try
+            {
+                var user = new IdentityUser
+                {
+                    UserName = loginUser.Email,
+                    Email = loginUser.Email
+                };
+                var result = await userManager.CreateAsync(user, loginUser.Secret);
+                if (result.Succeeded)
+                {
+                    List<Claim> claims = new List<Claim>();
+                    claims.Add(new Claim(ClaimTypes.Role, "Master"));
+                    await userManager.AddClaimsAsync(user, claims);
+
+                }
+                else
+                {
+                    return BadRequest(result.Errors.FirstOrDefault().Description);
+                }
+                return new JsonResult(user);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
+
+        }
+
     }
 }

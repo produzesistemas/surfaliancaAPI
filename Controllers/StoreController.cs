@@ -64,9 +64,9 @@ namespace surfaliancaAPI.Controllers
                                 Request.Form.Files[0].CopyTo(stream);
                             }
                             store.ImageName = fileName;
-                            store.AspNetUsersId = id;
-                            store.Active = true;
+                            store.ApplicationUserId = id;
                             store.CityId = cityRepository.GetByName(store.NameCity).Id;
+                            store.CreateDate = DateTime.Now;
                             genericRepository.Insert(store);
                             return new OkResult();
                         }
@@ -91,8 +91,11 @@ namespace surfaliancaAPI.Controllers
                         lojaBase.CNPJ = store.CNPJ;
                         lojaBase.Contact = store.Contact;
                         lojaBase.Number = store.Number;
+                        lojaBase.ValueMinimum = store.ValueMinimum;
                         lojaBase.ExchangePolicy = store.ExchangePolicy;
                         lojaBase.DeliveryPolicy = store.DeliveryPolicy;
+                        lojaBase.UpdateApplicationUserId = id;
+                        lojaBase.UpdateDate = DateTime.Now;
                         genericRepository.Update(lojaBase);
                         if (System.IO.File.Exists(fileDelete))
                         {
@@ -113,19 +116,25 @@ namespace surfaliancaAPI.Controllers
 
         }
 
-        [HttpPost()]
-        [Route("getByUser")]
+        [HttpGet()]
         [Authorize()]
-        public IActionResult GetByUser(ApplicationUser user)
+        public IActionResult Get()
         {
             try
             {
-                return new JsonResult(storeRepository.GetByUser(user.Id));
+                ClaimsPrincipal currentUser = this.User;
+                var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
+                if (id == null)
+                {
+                    return BadRequest("Identificação do usuário não encontrada.");
+                }
+                return new JsonResult(storeRepository.Where(x => x.ApplicationUserId == id).FirstOrDefault());
             }
             catch (Exception ex)
             {
-                return BadRequest("Falha no carregamento da Loja - " + ex.Message);
+                return StatusCode(500, $"Internal server error: {ex}");
             }
+
         }
     }
 }

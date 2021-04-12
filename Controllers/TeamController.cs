@@ -56,14 +56,14 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
                 if ((id != null) || (team != null))
                 {
                     if (team.Id == decimal.Zero)
                     {
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
-                            team.StoreId = storeId;
+                            team.ApplicationUserId = id;
+                            team.CreateDate = DateTime.Now;
                             genericRepository.Insert(team);
                             var filesUpload = Request.Form.Files;
 
@@ -85,45 +85,24 @@ namespace surfaliancaAPI.Controllers
                         var lstteamImageBase = teamImageRepository.Where(w => w.TeamId == team.Id).ToList();
                         teamBase.Description = team.Description;
                         teamBase.Name = team.Name;
+                        teamBase.UpdateApplicationUserId = id;
+                        teamBase.UpdateDate = DateTime.Now;
                         genericRepository.Update(teamBase);
-                        var toDelete = teamBase.teamImages.Except(team.teamImages, new EqualityComparer()).ToList();
-                        var toInsert = team.teamImages.Except(teamBase.teamImages, new EqualityComparer()).ToList();
-                        toDelete.ForEach(x =>
+                        lstteamImageBase.ForEach(x =>
                         {
                             teamImageRepository.Delete(x);
                         });
-                        toInsert.ForEach(x =>
+                        for (var counter = 0; counter < files.Count; counter++)
                         {
-                            x.TeamId = teamBase.Id;
-                            teamImageRepository.Insert(x);
-                        });
-
-                        if (Request.Form.Files.Count() > decimal.Zero)
-                        {
-                            //var files = Request.Form.Files;
-                            for (var counter = 0; counter < files.Count; counter++)
+                            var extension = Path.GetExtension(files[counter].FileName);
+                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                            var fullPath = Path.Combine(pathToSave, fileName);
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
                             {
-                                var extension = Path.GetExtension(files[counter].FileName);
-                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                                using (var stream = new FileStream(Path.Combine(pathToSave, fileName), FileMode.Create))
-                                {
-                                    files[counter].CopyTo(stream);
-                                }
-
-                                teamImageRepository.Insert(new TeamImage() { ImageName = fileName, TeamId = team.Id });
+                                files[counter].CopyTo(stream);
                             }
-
-                            //lstteamImageBase.ForEach(teamImage =>
-                            //{
-                            //    fileDelete = string.Concat(fileDelete, teamImage.ImageName);
-                            //    if (System.IO.File.Exists(fileDelete))
-                            //    {
-                            //        System.IO.File.Delete(fileDelete);
-                            //    }
-                            //    fileDelete = pathToSave;
-                            //    teamImageRepository.Delete(teamImage);
-                            //});
-                        }
+                            teamImageRepository.Insert(new TeamImage() { ImageName = fileName, TeamId = teamBase.Id });
+                        };
                         return new OkResult();
                     }
                 }
@@ -148,11 +127,8 @@ namespace surfaliancaAPI.Controllers
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
-                Expression<Func<Team, bool>> p1, p2;
+                Expression<Func<Team, bool>> p2;
                 var predicate = PredicateBuilder.New<Team>();
-                p1 = p => p.StoreId == storeId;
-                predicate = predicate.And(p1);
                 if (filter.Name != null)
                 {
                     p2 = p => p.Name.Contains(filter.Name);

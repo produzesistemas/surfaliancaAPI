@@ -32,19 +32,12 @@ namespace surfaliancaAPI.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-            var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
             if (id == null)
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            if (storeId == decimal.Zero)
-            {
-                return BadRequest("É obrigatório o cadastro de Loja/Fabricante.");
-            }
-            Expression<Func<Construction, bool>> p1, p2;
+            Expression<Func<Construction, bool>> p2;
             var predicate = PredicateBuilder.New<Construction>();
-            p1 = p => p.StoreId == storeId;
-            predicate = predicate.And(p1);
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -62,14 +55,9 @@ namespace surfaliancaAPI.Controllers
             {
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
                 if (id == null)
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
-                }
-                if (storeId == decimal.Zero)
-                {
-                    return BadRequest("É obrigatório o cadastro de Loja/Fabricante.");
                 }
                 if (entity.Id > decimal.Zero)
                 {
@@ -82,7 +70,6 @@ namespace surfaliancaAPI.Controllers
                 }
                 else
                 {
-                    entity.StoreId = storeId;
                     entity.ApplicationUserId = id;
                     entity.CreateDate = DateTime.Now;
                     genericRepository.Insert(entity);

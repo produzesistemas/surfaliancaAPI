@@ -40,15 +40,12 @@ namespace surfaliancaAPI.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-            var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
             if (id == null)
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            Expression<Func<BoardType, bool>> p1, p2;
+            Expression<Func<BoardType, bool>> p2;
             var predicate = PredicateBuilder.New<BoardType>();
-            p1 = p => p.StoreId == storeId;
-            predicate = predicate.And(p1);
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -60,29 +57,32 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save(BoardType finSystem)
+        public IActionResult Save(BoardType boardtype)
         {
             try
             {
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                var storeId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(z => z.Type.Contains("sid")).Value);
                 if (id == null)
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                if (finSystem.Id > decimal.Zero)
+                if (boardtype.Id > decimal.Zero)
                 {
-                    var finSystemBase = genericRepository.Get(finSystem.Id);
-                    finSystemBase.Name = finSystem.Name;
-                    genericRepository.Update(finSystemBase);
+                    var boardtypeBase = genericRepository.Get(boardtype.Id);
+                    boardtypeBase.Name = boardtype.Name;
+                    boardtypeBase.UpdateDate = DateTime.Now;
+                    boardtype.UpdateApplicationUserId = id;
+
+                    genericRepository.Update(boardtypeBase);
                 }
                 else
                 {
-                    finSystem.StoreId = storeId;
-                    genericRepository.Insert(finSystem);
+                    boardtype.ApplicationUserId = id;
+                    boardtype.CreateDate = DateTime.Now;
+                    genericRepository.Insert(boardtype);
                 }
-                return new JsonResult(finSystem);
+                return new OkResult();
             }
             catch (Exception ex)
             {

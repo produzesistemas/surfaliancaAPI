@@ -43,6 +43,7 @@ namespace Models
 
         public DbSet<Construction> Construction { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
+        public DbSet<Tail> Tail { get; set; }
 
 
 

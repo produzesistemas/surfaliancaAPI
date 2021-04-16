@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Linq;
@@ -7,23 +6,24 @@ using UnitOfWork;
 
 namespace Repositorys
 {
-    public class LaminationRepository<T> : ILaminationRepository<Lamination> where T : BaseEntity
+    public class ShaperRepository<T> : IShaperRepository<Shaper> where T : BaseEntity
     {
-        private DbSet<Lamination> entities;
+        private DbSet<Shaper> entities;
         private DbSet<IdentityUser> users;
 
-        public LaminationRepository(ApplicationDbContext context)
+        public ShaperRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Lamination>();
+            entities = context.Set<Shaper>();
             users = context.Set<IdentityUser>();
         }
 
-        public Lamination Get(int id)
+        public Shaper Get(int id)
         {
-            return entities.Select(x => new Lamination
+            return entities.Select(x => new Shaper
             {
                 Id = x.Id,
                 Name = x.Name,
+                ImageName = x.ImageName,
                 Details = x.Details,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,

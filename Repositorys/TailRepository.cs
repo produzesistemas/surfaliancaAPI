@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Linq;
@@ -7,24 +6,24 @@ using UnitOfWork;
 
 namespace Repositorys
 {
-    public class LaminationRepository<T> : ILaminationRepository<Lamination> where T : BaseEntity
+    public class TailRepository<T> : ITailRepository<Tail> where T : BaseEntity
     {
-        private DbSet<Lamination> entities;
+        private DbSet<Tail> entities;
         private DbSet<IdentityUser> users;
 
-        public LaminationRepository(ApplicationDbContext context)
+        public TailRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Lamination>();
+            entities = context.Set<Tail>();
             users = context.Set<IdentityUser>();
         }
 
-        public Lamination Get(int id)
+        public Tail Get(int id)
         {
-            return entities.Select(x => new Lamination
+            return entities.Select(x => new Tail
             {
                 Id = x.Id,
                 Name = x.Name,
-                Details = x.Details,
+                ImageName = x.ImageName,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,

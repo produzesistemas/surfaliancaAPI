@@ -45,6 +45,8 @@ namespace Models
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
 
+        public DbSet<Bottom> Bottom { get; set; }
+
 
 
     }

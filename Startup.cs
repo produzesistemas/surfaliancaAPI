@@ -41,6 +41,8 @@ namespace surfaliancaAPI
             services.AddScoped(typeof(ILaminationRepository<>), typeof(LaminationRepository<>));
             services.AddScoped(typeof(ITailRepository<>), typeof(TailRepository<>));
             services.AddScoped(typeof(IShaperRepository<>), typeof(ShaperRepository<>));
+            services.AddScoped(typeof(IBottomRepository<>), typeof(BottomRepository<>));
+
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

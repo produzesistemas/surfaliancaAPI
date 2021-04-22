@@ -77,15 +77,18 @@ namespace surfaliancaAPI.Controllers
                 {
                     var tailBase = genericRepository.Get(tail.Id);
                     tailBase.Name = tail.Name;
-                    var extension = Path.GetExtension(files[0].FileName);
-                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    if (Request.Form.Files.Count() > decimal.Zero)
                     {
-                        files[0].CopyTo(stream);
+                        var extension = Path.GetExtension(files[0].FileName);
+                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                        var fullPath = Path.Combine(pathToSave, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            files[0].CopyTo(stream);
+                        }
+                        fileDelete = string.Concat(fileDelete, tailBase.ImageName);
+                        tailBase.ImageName = fileName;
                     }
-                    fileDelete = string.Concat(fileDelete, tailBase.ImageName);
-                    tailBase.ImageName = fileName;
                     tailBase.UpdateApplicationUserId = id;
                     tailBase.UpdateDate = DateTime.Now;
                     genericRepository.Update(tailBase);
@@ -96,17 +99,20 @@ namespace surfaliancaAPI.Controllers
                 }
                 else
                 {
-                    var extension = Path.GetExtension(files[0].FileName);
-                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    if (Request.Form.Files.Count() > decimal.Zero)
                     {
-                        files[0].CopyTo(stream);
+                        var extension = Path.GetExtension(files[0].FileName);
+                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                        var fullPath = Path.Combine(pathToSave, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            files[0].CopyTo(stream);
+                        }
+                        tail.ImageName = fileName;
+                        tail.ApplicationUserId = id;
+                        tail.CreateDate = DateTime.Now;
+                        genericRepository.Insert(tail);
                     }
-                    tail.ImageName = fileName;
-                    tail.ApplicationUserId = id;
-                    tail.CreateDate = DateTime.Now;
-                    genericRepository.Insert(tail);
                 }
                 return new OkResult();
             }

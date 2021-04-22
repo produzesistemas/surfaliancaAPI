@@ -74,11 +74,11 @@ namespace surfaliancaAPI.Controllers
                     entity.CreateDate = DateTime.Now;
                     genericRepository.Insert(entity);
                 }
-                return new JsonResult(entity);
+                return new OkResult();
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha na tentativa: ", ex.Message));
             }
         }
 

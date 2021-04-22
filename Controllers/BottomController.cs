@@ -17,25 +17,25 @@ namespace surfaliancaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShaperController : ControllerBase
+    public class BottomController : ControllerBase
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Shaper> genericRepository;
-        private IShaperRepository<Shaper> shaperRepository;
+        private IRepository<Bottom> genericRepository;
+        private IBottomRepository<Bottom> bottomRepository;
         private readonly UserManager<IdentityUser> userManager;
 
-        public ShaperController(UserManager<IdentityUser> userManager,
+        public BottomController(UserManager<IdentityUser> userManager,
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Shaper> genericRepository,
-            IShaperRepository<Shaper> shaperRepository
+            IRepository<Bottom> genericRepository,
+            IBottomRepository<Bottom> bottomRepository
             )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
-            this.shaperRepository = shaperRepository;
+            this.bottomRepository = bottomRepository;
             this.userManager = userManager;
         }
 
@@ -50,8 +50,8 @@ namespace surfaliancaAPI.Controllers
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            Expression<Func<Shaper, bool>> p2;
-            var predicate = PredicateBuilder.New<Shaper>();
+            Expression<Func<Bottom, bool>> p2;
+            var predicate = PredicateBuilder.New<Bottom>();
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -67,7 +67,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var shaper = JsonConvert.DeserializeObject<Shaper>(Convert.ToString(Request.Form["shaper"]));
+                var bottom = JsonConvert.DeserializeObject<Bottom>(Convert.ToString(Request.Form["bottom"]));
                 var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
                 var fileDelete = pathToSave;
 
@@ -79,11 +79,10 @@ namespace surfaliancaAPI.Controllers
                 }
 
                 var files = Request.Form.Files;
-                if (shaper.Id > decimal.Zero)
+                if (bottom.Id > decimal.Zero)
                 {
-
-                    var shaperBase = genericRepository.Get(shaper.Id);
-                    shaperBase.Name = shaper.Name;
+                    var bottomBase = genericRepository.Get(bottom.Id);
+                    bottomBase.Name = bottom.Name;
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);
@@ -93,12 +92,12 @@ namespace surfaliancaAPI.Controllers
                         {
                             files[0].CopyTo(stream);
                         }
-                        fileDelete = string.Concat(fileDelete, shaperBase.ImageName);
-                        shaperBase.ImageName = fileName;
+                        fileDelete = string.Concat(fileDelete, bottom.ImageName);
+                        bottomBase.ImageName = fileName;
                     }
-                    shaperBase.UpdateApplicationUserId = id;
-                    shaperBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(shaperBase);
+                    bottomBase.UpdateApplicationUserId = id;
+                    bottomBase.UpdateDate = DateTime.Now;
+                    genericRepository.Update(bottomBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
@@ -115,10 +114,10 @@ namespace surfaliancaAPI.Controllers
                         {
                             files[0].CopyTo(stream);
                         }
-                        shaper.ImageName = fileName;
-                        shaper.ApplicationUserId = id;
-                        shaper.CreateDate = DateTime.Now;
-                        genericRepository.Insert(shaper);
+                        bottom.ImageName = fileName;
+                        bottom.ApplicationUserId = id;
+                        bottom.CreateDate = DateTime.Now;
+                        genericRepository.Insert(bottom);
                     }
                 }
                 return new OkResult();
@@ -153,7 +152,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(shaperRepository.Get(id));
+                return new JsonResult(bottomRepository.Get(id));
             }
             catch (Exception ex)
             {

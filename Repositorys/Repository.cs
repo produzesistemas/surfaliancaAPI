@@ -30,8 +30,9 @@ namespace Repositorys
 
         public IQueryable<T> GetAll()
         {
-            return entities.AsQueryable();
+           return entities.AsQueryable();
         }
+        
 
         public void Insert(T entity)
         {

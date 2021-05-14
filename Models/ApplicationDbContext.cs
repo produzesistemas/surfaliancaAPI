@@ -7,8 +7,6 @@ namespace Models
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
 
-
-
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
 
@@ -20,6 +18,18 @@ namespace Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BoardModel>().HasKey(c => c.Id);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelBoardTypes).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelBottoms).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelConstructions).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelFinSystems).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelLaminations).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelLitigations).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelShapers).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelSizes).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTails).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelWidths).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -43,11 +53,24 @@ namespace Models
 
         public DbSet<Construction> Construction { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
+        public DbSet<Litigation> Litigation { get; set; }
         public DbSet<Tail> Tail { get; set; }
 
         public DbSet<Bottom> Bottom { get; set; }
+        public DbSet<Size> Size { get; set; }
+        public DbSet<Width> Width { get; set; }
 
 
-
+        public DbSet<BoardModel> BoardModel { get; set; }
+        public DbSet<BoardModelBoardType> BoardModelBoardType { get; set; }
+        public DbSet<BoardModelShaper> BoardModelShaper { get; set; }
+        public DbSet<BoardModelBottom> BoardModelBottom { get; set; }
+        public DbSet<BoardModelConstruction> BoardModelConstruction { get; set; }
+        public DbSet<BoardModelFinSystem> BoardModelFinSystem { get; set; }
+        public DbSet<BoardModelLamination> BoardModelLamination { get; set; }
+        public DbSet<BoardModelLitigation> BoardModelLitigation { get; set; }
+        public DbSet<BoardModelSize> BoardModelSize { get; set; }
+        public DbSet<BoardModelTail> BoardModelTail { get; set; }
+        public DbSet<BoardModelWidth> BoardModelWidth { get; set; }
     }
 }

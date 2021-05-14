@@ -26,18 +26,18 @@ namespace surfaliancaAPI.Controllers
         private IBoardModelRepository<BoardModel> boardModelRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<BoardModelShaper> boardModelShaperRepository;
-        private IRepository<BoardModelBoardType> boardModelBoardTypeRepository;
-        private IRepository<BoardModelBottom> boardModelBottomRepository;
-        private IRepository<BoardModelConstruction> boardModelConstructionRepository;
-        private IRepository<BoardModelFinSystem> boardModelFinSystemRepository;
-        private IRepository<BoardModelLamination> boardModelLaminationRepository;
-        private IRepository<BoardModelLitigation> boardModelLitigationRepository;
-        private IRepository<BoardModelSize> boardModelSizeRepository;
-        private IRepository<BoardModelTail> boardModelTailRepository;
-        private IRepository<BoardModelWidth> boardModelWidthRepository;
+        //private IRepository<BoardModelShaper> boardModelShaperRepository;
+        //private IRepository<BoardModelBoardType> boardModelBoardTypeRepository;
+        //private IRepository<BoardModelBottom> boardModelBottomRepository;
+        //private IRepository<BoardModelConstruction> boardModelConstructionRepository;
+        //private IRepository<BoardModelFinSystem> boardModelFinSystemRepository;
+        //private IRepository<BoardModelLamination> boardModelLaminationRepository;
+        //private IRepository<BoardModelLitigation> boardModelLitigationRepository;
+        //private IRepository<BoardModelSize> boardModelSizeRepository;
+        //private IRepository<BoardModelTail> boardModelTailRepository;
+        //private IRepository<BoardModelWidth> boardModelWidthRepository;
 
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
 
         public BoardModelController(
@@ -47,17 +47,17 @@ namespace surfaliancaAPI.Controllers
                 IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<BoardModel> genericRepository,
-            IBoardModelRepository<BoardModel> boardModelRepository,
-                IRepository<BoardModelShaper> boardModelShaperRepository,
-            IRepository<BoardModelBoardType> boardModelBoardTypeRepository,
-         IRepository<BoardModelBottom> boardModelBottomRepository,
-         IRepository<BoardModelConstruction> boardModelConstructionRepository,
-         IRepository<BoardModelFinSystem> boardModelFinSystemRepository,
-         IRepository<BoardModelLamination> boardModelLaminationRepository,
-         IRepository<BoardModelLitigation> boardModelLitigationRepository,
-         IRepository<BoardModelSize> boardModelSizeRepository,
-         IRepository<BoardModelTail> boardModelTailRepository,
-         IRepository<BoardModelWidth> boardModelWidthRepository, ApplicationDbContext context
+            IBoardModelRepository<BoardModel> boardModelRepository
+         //       IRepository<BoardModelShaper> boardModelShaperRepository,
+         //   IRepository<BoardModelBoardType> boardModelBoardTypeRepository,
+         //IRepository<BoardModelBottom> boardModelBottomRepository,
+         //IRepository<BoardModelConstruction> boardModelConstructionRepository,
+         //IRepository<BoardModelFinSystem> boardModelFinSystemRepository,
+         //IRepository<BoardModelLamination> boardModelLaminationRepository,
+         //IRepository<BoardModelLitigation> boardModelLitigationRepository,
+         //IRepository<BoardModelSize> boardModelSizeRepository,
+         //IRepository<BoardModelTail> boardModelTailRepository,
+         //IRepository<BoardModelWidth> boardModelWidthRepository, ApplicationDbContext context
     )
         {
             this.sizeRepository = sizeRepository;
@@ -66,18 +66,18 @@ namespace surfaliancaAPI.Controllers
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
-            this.boardModelShaperRepository = boardModelShaperRepository;
-            this.boardModelBoardTypeRepository = boardModelBoardTypeRepository;
-            this.boardModelBottomRepository = boardModelBottomRepository;
-            this.boardModelConstructionRepository = boardModelConstructionRepository;
-            this.boardModelFinSystemRepository = boardModelFinSystemRepository;
-            this.boardModelLaminationRepository = boardModelLaminationRepository;
-            this.boardModelLitigationRepository = boardModelLitigationRepository;
-            this.boardModelSizeRepository = boardModelSizeRepository;
-            this.boardModelTailRepository = boardModelTailRepository;
-            this.boardModelWidthRepository = boardModelWidthRepository;
+            //this.boardModelShaperRepository = boardModelShaperRepository;
+            //this.boardModelBoardTypeRepository = boardModelBoardTypeRepository;
+            //this.boardModelBottomRepository = boardModelBottomRepository;
+            //this.boardModelConstructionRepository = boardModelConstructionRepository;
+            //this.boardModelFinSystemRepository = boardModelFinSystemRepository;
+            //this.boardModelLaminationRepository = boardModelLaminationRepository;
+            //this.boardModelLitigationRepository = boardModelLitigationRepository;
+            //this.boardModelSizeRepository = boardModelSizeRepository;
+            //this.boardModelTailRepository = boardModelTailRepository;
+            //this.boardModelWidthRepository = boardModelWidthRepository;
             this.boardModelRepository = boardModelRepository;
-            _context = context;
+            //_context = context;
         }
 
         [HttpPost()]

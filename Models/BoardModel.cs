@@ -44,19 +44,5 @@ namespace Models
         [NotMapped]
         public List<BoardModelWidth> BoardModelWidths { get; set; }
 
-        public BoardModel()
-        {
-            //BoardModelShapers = new List<BoardModelShaper>();
-            //BoardModelBoardTypes = new List<BoardModelBoardType>();
-            //BoardModelBottoms = new List<BoardModelBottom>();
-            //BoardModelConstructions = new List<BoardModelConstruction>();
-            //BoardModelFinSystems = new List<BoardModelFinSystem>();
-            //BoardModelLaminations = new List<BoardModelLamination>();
-            //BoardModelLitigations = new List<BoardModelLitigation>();
-            //BoardModelSizes = new List<BoardModelSize>();
-            //BoardModelTails = new List<BoardModelTail>();
-            //BoardModelWidths = new List<BoardModelWidth>();
-        }
-
     }
 }

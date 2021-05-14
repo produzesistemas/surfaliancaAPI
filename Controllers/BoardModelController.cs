@@ -314,6 +314,13 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
+        [HttpPost()]
+        [Route("getToOrder")]
+        public IActionResult GetToOrder(BoardModel boardModel)
+        {
+            return new JsonResult(boardModelRepository.Get(boardModel.Id));
+        }
+
 
         [HttpGet()]
         [Route("getAll")]

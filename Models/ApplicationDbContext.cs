@@ -30,6 +30,58 @@ namespace Models
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTails).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelWidths).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
 
+
+            modelBuilder.Entity<BoardType>().HasKey(c => c.Id);
+            modelBuilder.Entity<BoardType>().HasMany(c => c.BoardModelBoardTypes)
+                .WithOne(b => b.BoardType)
+                .HasForeignKey(c => c.BoardTypeId);
+
+            modelBuilder.Entity<Bottom>().HasKey(c => c.Id);
+            modelBuilder.Entity<Bottom>().HasMany(c => c.BoardModelBottoms)
+                .WithOne(b => b.Bottom)
+                .HasForeignKey(c => c.BottomId);
+
+            modelBuilder.Entity<Construction>().HasKey(c => c.Id);
+            modelBuilder.Entity<Construction>().HasMany(c => c.BoardModelConstructions)
+                .WithOne(b => b.Construction)
+                .HasForeignKey(c => c.ConstructionId);
+
+            modelBuilder.Entity<FinSystem>().HasKey(c => c.Id);
+            modelBuilder.Entity<FinSystem>().HasMany(c => c.BoardModelFinSystems)
+                .WithOne(b => b.FinSystem)
+                .HasForeignKey(c => c.FinSystemId);
+
+            modelBuilder.Entity<Lamination>().HasKey(c => c.Id);
+            modelBuilder.Entity<Lamination>().HasMany(c => c.BoardModelLaminations)
+                .WithOne(b => b.Lamination)
+                .HasForeignKey(c => c.LaminationId);
+
+            modelBuilder.Entity<Litigation>().HasKey(c => c.Id);
+            modelBuilder.Entity<Litigation>().HasMany(c => c.BoardModelLitigations)
+                .WithOne(b => b.Litigation)
+                .HasForeignKey(c => c.LitigationId);
+
+            modelBuilder.Entity<Shaper>().HasKey(c => c.Id);
+            modelBuilder.Entity<Shaper>().HasMany(c => c.BoardModelShapers)
+                .WithOne(b => b.Shaper)
+                .HasForeignKey(c => c.ShaperId);
+
+            modelBuilder.Entity<Size>().HasKey(c => c.Id);
+            modelBuilder.Entity<Size>().HasMany(c => c.BoardModelSizes)
+                .WithOne(b => b.Size)
+                .HasForeignKey(c => c.SizeId);
+
+            modelBuilder.Entity<Tail>().HasKey(c => c.Id);
+            modelBuilder.Entity<Tail>().HasMany(c => c.BoardModelTails)
+                .WithOne(b => b.Tail)
+                .HasForeignKey(c => c.TailId);
+
+            modelBuilder.Entity<Width>().HasKey(c => c.Id);
+            modelBuilder.Entity<Width>().HasMany(c => c.BoardModelWidths)
+                .WithOne(b => b.Width)
+                .HasForeignKey(c => c.WidthId);
+
+
             base.OnModelCreating(modelBuilder);
         }
 

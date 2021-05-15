@@ -15,18 +15,14 @@ namespace Models
         public string ApplicationUserId { get; set; }
 
         [NotMapped]
-        public List<BoardModelBoardType> BoardModelBoardTypes { get; set; }
-
-
-
-        [NotMapped]
         public string CriadoPor { get; set; }
         [NotMapped]
         public string AlteradoPor { get; set; }
 
         [NotMapped]
+        public List<BoardModelBoardType> BoardModelBoardTypes { get; set; }
+        [NotMapped]
         public List<BoardModelShaper> BoardModelShapers { get; set; }
-
         [NotMapped]
         public List<BoardModelBottom> BoardModelBottoms { get; set; }
         [NotMapped]

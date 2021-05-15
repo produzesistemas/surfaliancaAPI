@@ -20,6 +20,10 @@ namespace Models
         public string CriadoPor { get; set; }
         [NotMapped]
         public string AlteradoPor { get; set; }
+
+        [NotMapped]
+        public List<BoardModelFinSystem> BoardModelFinSystems { get; set; }
+
         public FinSystem()
         {
             FinSystemColors = new List<FinSystemColor>();

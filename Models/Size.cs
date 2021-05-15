@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
@@ -6,5 +7,8 @@ namespace Models
     public class Size : BaseEntity
     {
         public string Description { get; set; }
+
+        [NotMapped]
+        public List<BoardModelSize> BoardModelSizes { get; set; }
     }
 }

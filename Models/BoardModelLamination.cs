@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
@@ -13,5 +14,7 @@ namespace Models
 
         [NotMapped]
         public BoardModel BoardModel { get; set; }
+
+
     }
 }

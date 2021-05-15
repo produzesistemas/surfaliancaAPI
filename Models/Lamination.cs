@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Models
 {
@@ -16,5 +17,7 @@ namespace Models
         public string CriadoPor { get; set; }
         [NotMapped]
         public string AlteradoPor { get; set; }
+        [NotMapped]
+        public List<BoardModelLamination> BoardModelLaminations { get; set; }
     }
 }

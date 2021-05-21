@@ -22,8 +22,7 @@ namespace surfaliancaAPI.Controllers
         private IRepository<Store> genericRepository;
         private IStoreRepository<Store> storeRepository;
         private ICityRepository<City> cityRepository;
-        private readonly UserManager<IdentityUser> userManager;
-        public StoreController(UserManager<IdentityUser> userManager,
+        public StoreController(
             IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<Store> genericRepository,
@@ -35,7 +34,6 @@ namespace surfaliancaAPI.Controllers
             this.genericRepository = genericRepository;
             this.storeRepository = storeRepository;
             this.cityRepository = cityRepository;
-            this.userManager = userManager;
         }
 
         [HttpPost()]
@@ -70,7 +68,9 @@ namespace surfaliancaAPI.Controllers
                             genericRepository.Insert(store);
                             return new OkResult();
                         }
-                    } else {
+                    }
+                    else
+                    {
                         var lojaBase = genericRepository.Get(store.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
@@ -117,18 +117,28 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpGet()]
-        [Authorize()]
+        [AllowAnonymous()]
         public IActionResult Get()
         {
             try
             {
-                ClaimsPrincipal currentUser = this.User;
-                var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                if (id == null)
-                {
-                    return BadRequest("Identificação do usuário não encontrada.");
-                }
-                return new JsonResult(storeRepository.Where(x => x.ApplicationUserId == id).FirstOrDefault());
+                return new JsonResult(storeRepository.Get());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+        }
+
+        [HttpGet()]
+        [Route("getStore")]
+        [Authorize()]
+        public IActionResult GetStore()
+        {
+            try
+            {
+                return new JsonResult(storeRepository.Get());
             }
             catch (Exception ex)
             {

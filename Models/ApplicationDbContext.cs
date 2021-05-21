@@ -81,6 +81,8 @@ namespace Models
                 .WithOne(b => b.Width)
                 .HasForeignKey(c => c.WidthId);
 
+            modelBuilder.Entity<Product>().HasKey(c => c.Id);
+            modelBuilder.Entity<Product>().HasOne(b => b.BoardModel).WithMany(b => b.Products);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -124,5 +126,10 @@ namespace Models
         public DbSet<BoardModelSize> BoardModelSize { get; set; }
         public DbSet<BoardModelTail> BoardModelTail { get; set; }
         public DbSet<BoardModelWidth> BoardModelWidth { get; set; }
+
+        public DbSet<Product> Product { get; set; }
+        public DbSet<TypeSale> TypeSale { get; set; }
+        public DbSet<ProductStatus> ProductStatus { get; set; }
+
     }
 }

@@ -37,5 +37,10 @@ namespace Models
         [NotMapped]
         public BoardModel BoardModel { get; set; }
 
+        public bool Active { get; set; }
+        public bool IsPromotion { get; set; }
+        public bool IsSpotlight { get; set; }
+        public decimal? ValuePromotion { get; set; }
+
     }
 }

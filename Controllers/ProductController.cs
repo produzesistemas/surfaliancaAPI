@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LinqKit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using UnitOfWork;
 
@@ -18,101 +20,180 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        //private IRepository<Product> genericRepository;
+        private IRepository<Product> genericRepository;
+        private IRepository<TypeSale> typeSaleRepository;
+        private IRepository<ProductStatus> productStatusRepository;
+        private IRepository<ProductType> productTypeRepository;
 
         public ProductController(
            IWebHostEnvironment environment,
-           IConfiguration Configuration
-           //IRepository<Product> genericRepository
+           IConfiguration Configuration,
+           IRepository<Product> genericRepository,
+           IRepository<TypeSale> typeSaleRepository,
+        IRepository<ProductStatus> productStatusRepository,
+        IRepository<ProductType> productTypeRepository
            )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            //this.genericRepository = genericRepository;
+            this.genericRepository = genericRepository;
+            this.typeSaleRepository = typeSaleRepository;
+            this.productStatusRepository = productStatusRepository;
+            this.productTypeRepository = productTypeRepository;
         }
 
-        //[HttpPost()]
-        //[Route("save")]
-        //[Authorize()]
-        //public IActionResult Save()
-        //{
-        //    try
-        //    {
-        //        var product = JsonConvert.DeserializeObject<Product>(Convert.ToString(Request.Form["product"]));
-        //        var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileProduct"]);
-        //        var fileDelete = pathToSave;
-        //        ClaimsPrincipal currentUser = this.User;
-        //        var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-        //        if ((id != null) || (product != null))
-        //        {
-        //            if (product.Id == decimal.Zero)
-        //            {
-        //                if (Request.Form.Files.Count() > decimal.Zero)
-        //                {
-        //                    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-        //                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-        //                    var fullPath = Path.Combine(pathToSave, fileName);
-        //                    using (var stream = new FileStream(fullPath, FileMode.Create))
-        //                    {
-        //                        Request.Form.Files[0].CopyTo(stream);
-        //                    }
-        //                    product.ImageName = fileName;
-        //                    product.ApplicationUserId = id;
-        //                    product.CreateDate = DateTime.Now;
-        //                    genericRepository.Insert(product);
-        //                    return new OkResult();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var productBase = genericRepository.Get(product.Id);
-        //                if (Request.Form.Files.Count() > decimal.Zero)
-        //                {
-        //                    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-        //                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-        //                    using (var stream = new FileStream(Path.Combine(pathToSave, fileName), FileMode.Create))
-        //                    {
-        //                        Request.Form.Files[0].CopyTo(stream);
-        //                    }
-        //                    fileDelete = string.Concat(fileDelete, productBase.ImageName);
-        //                    productBase.ImageName = fileName;
-        //                }
-        //                productBase.Description = product.Description;
-        //                productBase.Value = product.Value;
-        //                productBase.BoardModelId = product.BoardModelId;
-        //                productBase.BoardTypeId = product.BoardTypeId;
-        //                productBase.BottomId = product.BottomId;
-        //                productBase.ConstructionId = product.ConstructionId;
-        //                productBase.FinSystemId = product.FinSystemId;
-        //                productBase.LaminationId = product.LaminationId;
-        //                productBase.LitigationId = product.LitigationId;
-        //                productBase.TailId = product.TailId;
-        //                productBase.ProductStatusId = product.ProductStatusId;
-        //                productBase.ProductTypeId = product.ProductTypeId;
-        //                productBase.ShaperId = product.ShaperId;
-        //                productBase.SizeId = product.SizeId;
-        //                productBase.TypeSaleId = product.TypeSaleId;
-        //                productBase.WidthId = product.WidthId;
-        //                productBase.UpdateApplicationUserId = id;
-        //                productBase.UpdateDate = DateTime.Now;
-        //                genericRepository.Update(productBase);
-        //                if (System.IO.File.Exists(fileDelete))
-        //                {
-        //                    System.IO.File.Delete(fileDelete);
-        //                }
-        //                return new OkResult();
-        //            }
+        [HttpPost()]
+        [Route("filter")]
+        [Authorize()]
+        public IActionResult GetByFilter(FilterDefault filter)
+        {
+            ClaimsPrincipal currentUser = this.User;
+            var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
+            if (id == null)
+            {
+                return BadRequest("Identificação do usuário não encontrada.");
+            }
+            Expression<Func<Product, bool>> p2, p1;
+            var predicate = PredicateBuilder.New<Product>();
+            p1 = p => p.Active.Equals(true);
+            predicate = predicate.And(p1);
+            if (filter.Name != null)
+            {
+                p2 = p => p.Description.Contains(filter.Name);
+                predicate = predicate.And(p2);
+            }
+            return new JsonResult(genericRepository.Where(predicate).ToList());
+        }
 
-        //        }
+        [HttpPost()]
+        [Route("save")]
+        [Authorize()]
+        public IActionResult Save()
+        {
+            try
+            {
+                var product = JsonConvert.DeserializeObject<Product>(Convert.ToString(Request.Form["product"]));
+                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileProduct"]);
+                var fileDelete = pathToSave;
+                ClaimsPrincipal currentUser = this.User;
+                var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
+                if ((id != null) || (product != null))
+                {
+                    if (product.Id == decimal.Zero)
+                    {
+                        if (Request.Form.Files.Count() > decimal.Zero)
+                        {
+                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                            var fullPath = Path.Combine(pathToSave, fileName);
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            {
+                                Request.Form.Files[0].CopyTo(stream);
+                            }
+                            product.ImageName = fileName;
+                            product.ApplicationUserId = id;
+                            product.CreateDate = DateTime.Now;
+                            product.Active = true;
+                            genericRepository.Insert(product);
+                            return new OkResult();
+                        }
+                    }
+                    else
+                    {
+                        var productBase = genericRepository.Get(product.Id);
+                        if (Request.Form.Files.Count() > decimal.Zero)
+                        {
+                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                            using (var stream = new FileStream(Path.Combine(pathToSave, fileName), FileMode.Create))
+                            {
+                                Request.Form.Files[0].CopyTo(stream);
+                            }
+                            fileDelete = string.Concat(fileDelete, productBase.ImageName);
+                            productBase.ImageName = fileName;
+                        }
+                        productBase.Description = product.Description;
+                        productBase.Value = product.Value;
+                        productBase.BoardModelId = product.BoardModelId;
+                        productBase.BoardTypeId = product.BoardTypeId;
+                        productBase.BottomId = product.BottomId;
+                        productBase.ConstructionId = product.ConstructionId;
+                        productBase.FinSystemId = product.FinSystemId;
+                        productBase.LaminationId = product.LaminationId;
+                        productBase.LitigationId = product.LitigationId;
+                        productBase.TailId = product.TailId;
+                        productBase.ProductStatusId = product.ProductStatusId;
+                        productBase.ProductTypeId = product.ProductTypeId;
+                        productBase.ShaperId = product.ShaperId;
+                        productBase.SizeId = product.SizeId;
+                        productBase.TypeSaleId = product.TypeSaleId;
+                        productBase.WidthId = product.WidthId;
+                        productBase.UpdateApplicationUserId = id;
+                        productBase.UpdateDate = DateTime.Now;
+                        genericRepository.Update(productBase);
+                        if (System.IO.File.Exists(fileDelete))
+                        {
+                            System.IO.File.Delete(fileDelete);
+                        }
+                        return new OkResult();
+                    }
 
-        //        return new OkResult();
+                }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex}");
-        //    }
+                return new OkResult();
 
-        //}
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+        }
+
+
+        [HttpGet()]
+        [Route("getProductStatus")]
+        [Authorize()]
+        public IActionResult GetProductStatus()
+        {
+            try
+            {
+                return new JsonResult(productStatusRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpGet()]
+        [Route("getTypeSale")]
+        [Authorize()]
+        public IActionResult GetTypeSale()
+        {
+            return new JsonResult(typeSaleRepository.GetAll().ToList());
+        }
+
+        [HttpGet()]
+        [Route("getProductType")]
+        [Authorize()]
+        public IActionResult GetProductType()
+        {
+            return new JsonResult(productTypeRepository.GetAll().ToList());
+        }
+
+        [HttpGet()]
+        [Route("getAllProduct")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return new JsonResult(genericRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }

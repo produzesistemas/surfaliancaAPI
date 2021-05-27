@@ -43,6 +43,7 @@ namespace surfaliancaAPI
             services.AddScoped(typeof(IShaperRepository<>), typeof(ShaperRepository<>));
             services.AddScoped(typeof(IBottomRepository<>), typeof(BottomRepository<>));
             services.AddScoped(typeof(IBoardModelRepository<>), typeof(BoardModelRepository<>));
+            services.AddScoped(typeof(IProductRepository<>), typeof(ProductRepository<>));
 
 
             services.AddControllersWithViews();

@@ -24,11 +24,13 @@ namespace surfaliancaAPI.Controllers
         private IRepository<TypeSale> typeSaleRepository;
         private IRepository<ProductStatus> productStatusRepository;
         private IRepository<ProductType> productTypeRepository;
+        private IProductRepository<Product> productRepository;
 
         public ProductController(
            IWebHostEnvironment environment,
            IConfiguration Configuration,
            IRepository<Product> genericRepository,
+           IProductRepository<Product> productRepository,
            IRepository<TypeSale> typeSaleRepository,
         IRepository<ProductStatus> productStatusRepository,
         IRepository<ProductType> productTypeRepository
@@ -37,6 +39,7 @@ namespace surfaliancaAPI.Controllers
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
+            this.productRepository = productRepository;
             this.typeSaleRepository = typeSaleRepository;
             this.productStatusRepository = productStatusRepository;
             this.productTypeRepository = productTypeRepository;
@@ -193,6 +196,20 @@ namespace surfaliancaAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpGet("{id}")]
+        [AllowAnonymous()]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return new JsonResult(productRepository.Get(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Arquivo não encontrado!" + ex.Message);
             }
         }
     }

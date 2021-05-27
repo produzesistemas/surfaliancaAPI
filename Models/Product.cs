@@ -37,6 +37,9 @@ namespace Models
         [NotMapped]
         public BoardModel BoardModel { get; set; }
 
+        [NotMapped]
+        public ProductStatus ProductStatus { get; set; }
+
         public bool Active { get; set; }
         public bool IsPromotion { get; set; }
         public bool IsSpotlight { get; set; }

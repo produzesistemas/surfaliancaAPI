@@ -46,6 +46,7 @@ namespace surfaliancaAPI.Controllers
                 var store = JsonConvert.DeserializeObject<Store>(Convert.ToString(Request.Form["store"]));
                 var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
                 var fileDelete = pathToSave;
+                var fileDeleteStore = pathToSave;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
                 if ((id != null) || (store != null))
@@ -54,16 +55,34 @@ namespace surfaliancaAPI.Controllers
                     {
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
-                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                            var fullPath = Path.Combine(pathToSave, fileName);
-                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            foreach (var file in Request.Form.Files)
                             {
-                                Request.Form.Files[0].CopyTo(stream);
+                                if (file.Name == "fileLogo")
+                                {
+                                    var extension = Path.GetExtension(file.FileName);
+                                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                    var fullPath = Path.Combine(pathToSave, fileName);
+                                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                                    {
+                                        file.CopyTo(stream);
+                                    }
+                                    store.ImageName = fileName;
+                                }
+
+                                if (file.Name == "fileStore")
+                                {
+                                    var extension = Path.GetExtension(file.FileName);
+                                    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                    var fullPath = Path.Combine(pathToSave, fileName);
+                                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                                    {
+                                        file.CopyTo(stream);
+                                    }
+                                    store.ImageStore = fileName;
+                                }
+
                             }
-                            store.ImageName = fileName;
                             store.ApplicationUserId = id;
-                            store.CityId = cityRepository.GetByName(store.NameCity).Id;
                             store.CreateDate = DateTime.Now;
                             genericRepository.Insert(store);
                             return new OkResult();
@@ -74,20 +93,42 @@ namespace surfaliancaAPI.Controllers
                         var lojaBase = genericRepository.Get(store.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
-                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                            using (var stream = new FileStream(Path.Combine(pathToSave, fileName), FileMode.Create))
+                            foreach (var file in Request.Form.Files)
                             {
-                                Request.Form.Files[0].CopyTo(stream);
+                                if (file.Name == "fileLogo")
+                                {
+                                    var ext = Path.GetExtension(file.FileName);
+                                    var fileNameLogo = string.Concat(Guid.NewGuid().ToString(), ext);
+                                    var fullPath = Path.Combine(pathToSave, fileNameLogo);
+                                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                                    {
+                                        file.CopyTo(stream);
+                                    }
+                                    fileDelete = string.Concat(fileDelete, lojaBase.ImageName);
+                                    store.ImageName = fileNameLogo;
+                                }
+
+                                if (file.Name == "fileStore")
+                                {
+                                    var ext = Path.GetExtension(file.FileName);
+                                    var fileNameStore = string.Concat(Guid.NewGuid().ToString(), ext);
+                                    var fullPath = Path.Combine(pathToSave, fileNameStore);
+                                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                                    {
+                                        file.CopyTo(stream);
+                                    }
+                                    fileDeleteStore = string.Concat(fileDeleteStore, lojaBase.ImageName);
+                                    store.ImageStore = fileNameStore;
+                                }
+
                             }
-                            fileDelete = string.Concat(fileDelete, lojaBase.ImageName);
-                            lojaBase.ImageName = fileName;
+
                         }
                         lojaBase.Description = store.Description;
                         lojaBase.Name = store.Name;
                         lojaBase.District = store.District;
                         lojaBase.Cep = store.Cep;
-                        lojaBase.CityId = cityRepository.GetByName(store.NameCity).Id;
+                        lojaBase.City = store.City;
                         lojaBase.CNPJ = store.CNPJ;
                         lojaBase.Contact = store.Contact;
                         lojaBase.Number = store.Number;
@@ -100,6 +141,10 @@ namespace surfaliancaAPI.Controllers
                         if (System.IO.File.Exists(fileDelete))
                         {
                             System.IO.File.Delete(fileDelete);
+                        }
+                        if (System.IO.File.Exists(fileDeleteStore))
+                        {
+                            System.IO.File.Delete(fileDeleteStore);
                         }
                         return new OkResult();
                     }
@@ -132,13 +177,13 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpGet()]
-        [Route("getStore")]
-        [Authorize()]
-        public IActionResult GetStore()
+        [Route("getToIndex")]
+        public IActionResult GetToIndex()
         {
             try
             {
-                return new JsonResult(storeRepository.Get());
+                var c = storeRepository.GetToIndex();
+                return new JsonResult(c);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
@@ -8,8 +9,10 @@ namespace Models
     {
         public string Name { get; set; }
         public string ImageName { get; set; }
+        public string ImageStore { get; set; }
         public string Description { get; set; }
         public string Street { get; set; }
+        public string City { get; set; }
         public string Number { get; set; }
         public string District { get; set; }
         public string Cep { get; set; }
@@ -20,7 +23,6 @@ namespace Models
         public string DeliveryPolicy { get; set; }
         public decimal ValueMinimum { get; set; }
         public string ApplicationUserId { get; set; }
-        public int CityId { get; set; }
 
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
@@ -31,19 +33,11 @@ namespace Models
         [NotMapped]
         public string AlteradoPor { get; set; }
 
+        [NotMapped]
+        public List<Product> PromotionAndSpotlight { get; set; }
 
         [NotMapped]
-        public virtual City City { get; set; }
-        [NotMapped]
-        public virtual ApplicationUser ApplicationUser { get; set; }
-
-        [NotMapped]
-        public string imagemBase64 { get; set; }
-        [NotMapped]
-        public string NameCity { get; set; }
-
-        [NotMapped]
-        public decimal TaxDelivery { get; set; }
+        public List<BoardModel> BoardModels { get; set; }
 
     }
 }

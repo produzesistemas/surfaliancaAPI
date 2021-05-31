@@ -35,6 +35,12 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Files\Team\13d8fa76-80e8-4466-a292-2a239fd1d74d.jfif" />
+    <None Include="wwwroot\Files\Team\7433c242-dfb0-478a-9da4-1b80ce116c02.jfif" />
+    <None Include="wwwroot\Files\Team\df692a59-d889-41a4-a78b-24aae89ca8cb.jfif" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

@@ -197,7 +197,13 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                var teams = genericRepository.GetAll().ToList();
+                teams.ForEach(team => {
+                    team.teamImages = teamImageRepository.Where(x => x.TeamId == team.Id).ToList();
+
+                });
+
+                return new JsonResult(teams);
             }
             catch (Exception ex)
             {

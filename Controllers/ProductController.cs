@@ -62,7 +62,7 @@ namespace surfaliancaAPI.Controllers
             predicate = predicate.And(p1);
             if (filter.Name != null)
             {
-                p2 = p => p.Description.Contains(filter.Name);
+                p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
             return new JsonResult(genericRepository.Where(predicate).ToList());
@@ -116,6 +116,7 @@ namespace surfaliancaAPI.Controllers
                             productBase.ImageName = fileName;
                         }
                         productBase.Description = product.Description;
+                        productBase.Name = product.Name;
                         productBase.Value = product.Value;
                         productBase.BoardModelId = product.BoardModelId;
                         productBase.BoardTypeId = product.BoardTypeId;
@@ -130,6 +131,8 @@ namespace surfaliancaAPI.Controllers
                         productBase.ShaperId = product.ShaperId;
                         productBase.SizeId = product.SizeId;
                         productBase.TypeSaleId = product.TypeSaleId;
+                        productBase.IsPromotion = product.IsPromotion;
+                        productBase.IsSpotlight = product.IsSpotlight;
                         productBase.WidthId = product.WidthId;
                         productBase.UpdateApplicationUserId = id;
                         productBase.UpdateDate = DateTime.Now;

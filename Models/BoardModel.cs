@@ -6,9 +6,11 @@ namespace Models
     [Table("BoardModel")]
     public class BoardModel : BaseEntity
     {
+        public string Name { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
         public decimal Value { get; set; }
+        public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
@@ -27,12 +29,9 @@ namespace Models
         public List<BoardModelBottom> BoardModelBottoms { get; set; }
         [NotMapped]
         public List<BoardModelConstruction> BoardModelConstructions { get; set; }
-        [NotMapped]
-        public List<BoardModelFinSystem> BoardModelFinSystems { get; set; }
+
         [NotMapped]
         public List<BoardModelLamination> BoardModelLaminations { get; set; }
-        [NotMapped]
-        public List<BoardModelLitigation> BoardModelLitigations { get; set; }
         [NotMapped]
         public List<BoardModelSize> BoardModelSizes { get; set; }
         [NotMapped]

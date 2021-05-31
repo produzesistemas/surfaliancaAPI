@@ -5,6 +5,7 @@ namespace Models
     [Table("Product")]
     public class Product : BaseEntity
     {
+        public string Name { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
         public decimal Value { get; set; }
@@ -39,6 +40,9 @@ namespace Models
 
         [NotMapped]
         public ProductStatus ProductStatus { get; set; }
+
+        [NotMapped]
+        public ProductType ProductType { get; set; }
 
         public bool Active { get; set; }
         public bool IsPromotion { get; set; }

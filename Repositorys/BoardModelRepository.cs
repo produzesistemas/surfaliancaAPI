@@ -18,22 +18,25 @@ namespace Repositorys
 
         public BoardModel Get(int id)
         {
-            using (_context)
-            {
-                var c = entities.Include(x => x.BoardModelBoardTypes).ThenInclude(x => x.BoardType)
-                    .Include(x => x.BoardModelBottoms).ThenInclude(x => x.Bottom)
-                    .Include(x => x.BoardModelConstructions).ThenInclude(x => x.Construction)
-                    .Include(x => x.BoardModelFinSystems).ThenInclude(x => x.FinSystem)
-                    .Include(x => x.BoardModelLaminations).ThenInclude(x => x.Lamination)
-                    .Include(x => x.BoardModelLitigations).ThenInclude(x => x.Litigation)
-                    .Include(x => x.BoardModelShapers).ThenInclude(x => x.Shaper)
-                    .Include(x => x.BoardModelSizes).ThenInclude(x => x.Size)
-                    .Include(x => x.BoardModelTails).ThenInclude(x => x.Tail)
-                    .Include(x => x.BoardModelWidths).ThenInclude(x => x.Width)
-                    .FirstOrDefault(x => x.Id == id);
+            //using (_context)
+            //{
+                var b = _context.BoardModel.Single(b => b.Id == id);
+                _context.Entry(b).Collection(b => b.BoardModelBoardTypes).Load();
+                _context.Entry(b).Collection(b => b.BoardModelBottoms).Load();
+                _context.Entry(b).Collection(b => b.BoardModelConstructions).Load();
+                _context.Entry(b).Collection(b => b.BoardModelLaminations).Load();
+                _context.Entry(b).Collection(b => b.BoardModelShapers).Load();
+                _context.Entry(b).Collection(b => b.BoardModelSizes).Load();
+                _context.Entry(b).Collection(b => b.BoardModelTails).Load();
+                _context.Entry(b).Collection(b => b.BoardModelWidths).Load();
+                return b;
+            //}
+        }
 
-                return c;
-            }
+        public void Update(BoardModel entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

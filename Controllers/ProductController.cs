@@ -203,17 +203,24 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous()]
+        [Authorize()]
         public IActionResult Get(int id)
         {
             try
             {
-                return new JsonResult(productRepository.Get(id));
+                return new JsonResult(genericRepository.Get(id));
             }
             catch (Exception ex)
             {
                 return BadRequest("Arquivo não encontrado!" + ex.Message);
             }
+        }
+
+        [HttpPost()]
+        [Route("getDetails")]
+        public IActionResult GetDetails(FilterDefault filter)
+        {
+            return new JsonResult(productRepository.Get(filter.Id));
         }
     }
 }

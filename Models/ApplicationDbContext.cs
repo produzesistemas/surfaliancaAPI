@@ -80,9 +80,9 @@ namespace Models
             //    .HasForeignKey(c => c.WidthId);
 
             modelBuilder.Entity<Product>().HasKey(c => c.Id);
-            modelBuilder.Entity<Product>().HasOne(b => b.BoardModel).WithMany(b => b.Products);
-            modelBuilder.Entity<Product>().HasOne(b => b.ProductStatus).WithMany(b => b.Products);
-            modelBuilder.Entity<Product>().HasOne(b => b.ProductType).WithMany(b => b.Products);
+            //modelBuilder.Entity<Product>().HasOne(b => b.BoardModel).WithMany(b => b.Products);
+            //modelBuilder.Entity<Product>().HasOne(b => b.ProductStatus).WithMany(b => b.Products);
+            //modelBuilder.Entity<Product>().HasOne(b => b.ProductType).WithMany(b => b.Products);
 
             base.OnModelCreating(modelBuilder);
         }

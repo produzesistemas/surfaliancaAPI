@@ -21,8 +21,10 @@ namespace Repositorys
         {
             using (_context)
             {
-                return entities.Include(x => x.ProductStatus).Include(x => x.ProductType)
-                    .FirstOrDefault(x => x.Id == id);
+                var product = _context.Product.Single(b => b.Id == id);
+                product.ProductStatus = _context.ProductStatus.Single(b => b.Id == product.ProductStatusId);
+                product.ProductType = _context.ProductType.Single(b => b.Id == product.ProductTypeId);
+                return product;
             }
         }
     }

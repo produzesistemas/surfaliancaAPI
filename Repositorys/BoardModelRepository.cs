@@ -18,19 +18,16 @@ namespace Repositorys
 
         public BoardModel Get(int id)
         {
-            //using (_context)
-            //{
-                var b = _context.BoardModel.Single(b => b.Id == id);
-                _context.Entry(b).Collection(b => b.BoardModelBoardTypes).Load();
-                _context.Entry(b).Collection(b => b.BoardModelBottoms).Load();
-                _context.Entry(b).Collection(b => b.BoardModelConstructions).Load();
-                _context.Entry(b).Collection(b => b.BoardModelLaminations).Load();
-                _context.Entry(b).Collection(b => b.BoardModelShapers).Load();
-                _context.Entry(b).Collection(b => b.BoardModelSizes).Load();
-                _context.Entry(b).Collection(b => b.BoardModelTails).Load();
-                _context.Entry(b).Collection(b => b.BoardModelWidths).Load();
-                return b;
-            //}
+            var b = _context.BoardModel.Single(b => b.Id == id);
+            _context.Entry(b).Collection(b => b.BoardModelBoardTypes).Query().Include(x => x.BoardType).Load();
+            _context.Entry(b).Collection(b => b.BoardModelBottoms).Query().Include(x => x.Bottom).Load();
+            _context.Entry(b).Collection(b => b.BoardModelConstructions).Query().Include(x => x.Construction).Load();
+            _context.Entry(b).Collection(b => b.BoardModelLaminations).Query().Include(x => x.Lamination).Load();
+            _context.Entry(b).Collection(b => b.BoardModelShapers).Query().Include(x => x.Shaper).Load();
+            _context.Entry(b).Collection(b => b.BoardModelSizes).Query().Include(x => x.Size).Load();
+            _context.Entry(b).Collection(b => b.BoardModelTails).Query().Include(x => x.Tail).Load();
+            _context.Entry(b).Collection(b => b.BoardModelWidths).Query().Include(x => x.Width).Load();
+            return b;
         }
 
         public void Update(BoardModel entity)

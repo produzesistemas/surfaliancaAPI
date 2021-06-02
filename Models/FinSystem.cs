@@ -21,8 +21,6 @@ namespace Models
         [NotMapped]
         public string AlteradoPor { get; set; }
 
-        [NotMapped]
-        public List<BoardModelFinSystem> BoardModelFinSystems { get; set; }
 
         public FinSystem()
         {

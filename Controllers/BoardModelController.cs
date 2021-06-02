@@ -470,7 +470,15 @@ namespace surfaliancaAPI.Controllers
         [Route("getToOrder")]
         public IActionResult GetToOrder(BoardModel boardModel)
         {
-            return new JsonResult(boardModelRepository.Get(boardModel.Id));
+            try
+            {
+                return new JsonResult(boardModelRepository.Get(boardModel.Id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+           
         }
 
 

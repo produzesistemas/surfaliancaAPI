@@ -21,7 +21,7 @@ namespace surfaliancaAPI.Controllers
     {
         private IRepository<Size> sizeRepository;
         private IRepository<Width> widthRepository;
-        private IRepository<Litigation> litigationRepository;
+        private IRepository<Paint> paintRepository;
         private IRepository<BoardModel> genericRepository;
         private IRepository<BoardModelBoardType> boardModelBoardTypeRepository;
         private IRepository<BoardModelBottom> boardModelBottomRepository;
@@ -40,7 +40,7 @@ namespace surfaliancaAPI.Controllers
         public BoardModelController(
     IRepository<Size> sizeRepository,
     IRepository<Width> widthRepository,
-    IRepository<Litigation> litigationRepository,
+    IRepository<Paint> paintRepository,
                 IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<BoardModel> genericRepository,
@@ -57,7 +57,7 @@ namespace surfaliancaAPI.Controllers
         {
             this.sizeRepository = sizeRepository;
             this.widthRepository = widthRepository;
-            this.litigationRepository = litigationRepository;
+            this.paintRepository = paintRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
@@ -100,21 +100,6 @@ namespace surfaliancaAPI.Controllers
                 predicate = predicate.And(p2);
             }
             return new JsonResult(widthRepository.Where(predicate).ToList());
-        }
-
-        [HttpPost()]
-        [Route("getLitigations")]
-        [Authorize()]
-        public IActionResult GetLitigations(FilterDefault filter)
-        {
-            Expression<Func<Litigation, bool>> p2;
-            var predicate = PredicateBuilder.New<Litigation>();
-            if (filter.Name != null)
-            {
-                p2 = p => p.Description.Contains(filter.Name);
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(litigationRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]

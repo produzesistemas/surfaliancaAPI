@@ -1,31 +1,31 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
 using System.Linq;
 using UnitOfWork;
 
-
 namespace Repositorys
 {
-    public class ConstructionRepository<T> : IConstructionRepository<Construction> where T : BaseEntity
+    public class PaintRepository<T> : IPaintRepository<Paint> where T : BaseEntity
     {
-        private DbSet<Construction> entities;
+        private DbSet<Paint> entities;
         private DbSet<IdentityUser> users;
 
-        public ConstructionRepository(ApplicationDbContext context)
+        public PaintRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Construction>();
+            entities = context.Set<Paint>();
             users = context.Set<IdentityUser>();
         }
 
-        public Construction Get(int id)
+        public Paint Get(int id)
         {
-            return entities.Select(x => new Construction
+            return entities.Select(x => new Paint
             {
                 Id = x.Id,
                 Name = x.Name,
+                ImageName = x.ImageName,
                 Value = x.Value,
+                Active = x.Active,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
@@ -33,17 +33,6 @@ namespace Repositorys
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
                 AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
             }).FirstOrDefault(x => x.Id == id);
-        }
-
-        public IQueryable<Construction> Where(Func<Construction, bool> expression)
-        {
-            return entities.Select(x => new Construction
-            {
-                Id = x.Id,
-                Name = x.Name,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).Where(expression).AsQueryable();
         }
     }
 }

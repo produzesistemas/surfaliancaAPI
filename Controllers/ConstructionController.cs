@@ -63,7 +63,10 @@ namespace surfaliancaAPI.Controllers
                 {
                     var entityBase = genericRepository.Get(entity.Id);
                     entityBase.Name = entity.Name;
-                    entityBase.Details = entity.Details;
+                    if (entity.Value.HasValue)
+                    {
+                        entityBase.Value = entity.Value;
+                    }
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
                     genericRepository.Update(entityBase);

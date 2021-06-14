@@ -27,8 +27,6 @@ namespace Models
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelSizes);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTails);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelWidths);
-
-
             modelBuilder.Entity<BoardType>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModelBoardType>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModelBoardType>().HasOne(c => c.BoardType);
@@ -43,20 +41,10 @@ namespace Models
                 .WithOne(b => b.Construction)
                 .HasForeignKey(c => c.ConstructionId);
 
-            //modelBuilder.Entity<FinSystem>().HasKey(c => c.Id);
-            //modelBuilder.Entity<FinSystem>().HasMany(c => c.BoardModelFinSystems)
-            //    .WithOne(b => b.FinSystem)
-            //    .HasForeignKey(c => c.FinSystemId);
-
             modelBuilder.Entity<Lamination>().HasKey(c => c.Id);
             modelBuilder.Entity<Lamination>().HasMany(c => c.BoardModelLaminations)
                 .WithOne(b => b.Lamination)
                 .HasForeignKey(c => c.LaminationId);
-
-            //modelBuilder.Entity<Litigation>().HasKey(c => c.Id);
-            //modelBuilder.Entity<Litigation>().HasMany(c => c.BoardModelLitigations)
-            //    .WithOne(b => b.Litigation)
-            //    .HasForeignKey(c => c.LitigationId);
 
             modelBuilder.Entity<Shaper>().HasKey(c => c.Id);
             modelBuilder.Entity<Shaper>().HasMany(c => c.BoardModelShapers)
@@ -79,10 +67,7 @@ namespace Models
                 .HasForeignKey(c => c.WidthId);
 
             modelBuilder.Entity<Product>().HasKey(c => c.Id);
-            //modelBuilder.Entity<Product>().HasOne(b => b.BoardModel).WithMany(b => b.Products);
-            //modelBuilder.Entity<Product>().HasOne(b => b.ProductStatus).WithMany(b => b.Products);
-            //modelBuilder.Entity<Product>().HasOne(b => b.ProductType).WithMany(b => b.Products);
-
+            modelBuilder.Entity<Paint>().HasKey(c => c.Id);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -98,21 +83,17 @@ namespace Models
         public DbSet<FinSystem> FinSystem { get; set; }
         public DbSet<FinColor> FinColor { get; set; }
         public DbSet<FinSystemColor> FinSystemColor { get; set; }
-
         public DbSet<Team> Team { get; set; }
         public DbSet<TeamImage> TeamImage { get; set; }
         public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Shaper> Shaper { get; set; }
-
         public DbSet<Construction> Construction { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
-
         public DbSet<Bottom> Bottom { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<Width> Width { get; set; }
-
-
+        public DbSet<Paint> Paint { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
         public DbSet<BoardModelBoardType> BoardModelBoardType { get; set; }
         public DbSet<BoardModelShaper> BoardModelShaper { get; set; }

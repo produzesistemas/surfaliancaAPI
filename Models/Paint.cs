@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
-    [Table("Construction")]
-    public class Construction : BaseEntity
+    [Table("Paint")]
+    public class Paint : BaseEntity
     {
         public string Name { get; set; }
         public decimal? Value { get; set; }
+        public string ImageName { get; set; }
+        public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
@@ -19,8 +20,5 @@ namespace Models
         [NotMapped]
         public string AlteradoPor { get; set; }
 
-        [NotMapped]
-        public List<BoardModelConstruction> BoardModelConstructions { get; set; }
     }
 }
-

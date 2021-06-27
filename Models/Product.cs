@@ -23,20 +23,6 @@ namespace Models
 
         [NotMapped]
         public string AlteradoPor { get; set; }
-        public int? BoardModelId { get; set; }
-        public int? BottomId { get; set; }
-        public int? SizeId { get; set; }
-        public int? WidthId { get; set; }
-        public int? ConstructionId { get; set; }
-        public int? LitigationId { get; set; }
-        public int? LaminationId { get; set; }
-        public int? ShaperId { get; set; }
-        public int? BoardTypeId { get; set; }
-        public int? FinSystemId { get; set; }
-        public int? TailId { get; set; }
-
-        [NotMapped]
-        public BoardModel BoardModel { get; set; }
 
         [NotMapped]
         public ProductStatus ProductStatus { get; set; }

@@ -118,22 +118,14 @@ namespace surfaliancaAPI.Controllers
                         productBase.Description = product.Description;
                         productBase.Name = product.Name;
                         productBase.Value = product.Value;
-                        productBase.BoardModelId = product.BoardModelId;
-                        productBase.BoardTypeId = product.BoardTypeId;
-                        productBase.BottomId = product.BottomId;
-                        productBase.ConstructionId = product.ConstructionId;
-                        productBase.FinSystemId = product.FinSystemId;
-                        productBase.LaminationId = product.LaminationId;
-                        productBase.LitigationId = product.LitigationId;
-                        productBase.TailId = product.TailId;
                         productBase.ProductStatusId = product.ProductStatusId;
                         productBase.ProductTypeId = product.ProductTypeId;
-                        productBase.ShaperId = product.ShaperId;
-                        productBase.SizeId = product.SizeId;
-                        productBase.TypeSaleId = product.TypeSaleId;
                         productBase.IsPromotion = product.IsPromotion;
                         productBase.IsSpotlight = product.IsSpotlight;
-                        productBase.WidthId = product.WidthId;
+                        if ((product.IsPromotion) && (product.ValuePromotion.HasValue))
+                        {
+                            productBase.ValuePromotion = product.ValuePromotion.Value;
+                        }
                         productBase.UpdateApplicationUserId = id;
                         productBase.UpdateDate = DateTime.Now;
                         genericRepository.Update(productBase);
@@ -170,14 +162,6 @@ namespace surfaliancaAPI.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
-        }
-
-        [HttpGet()]
-        [Route("getTypeSale")]
-        [Authorize()]
-        public IActionResult GetTypeSale()
-        {
-            return new JsonResult(typeSaleRepository.GetAll().ToList());
         }
 
         [HttpGet()]

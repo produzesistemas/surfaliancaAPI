@@ -36,6 +36,7 @@ namespace Repositorys
                 var store = entities.FirstOrDefault();
                 store.PromotionAndSpotlight = products.Where(x => x.IsPromotion == true || x.IsSpotlight == true).ToList();
                 store.BoardModels = boardModels.ToList();
+                store.ProductBoardTypes = products.Where(x => x.ProductTypeId == 1 && x.Active == true).ToList();
                 return store;
             }
         }

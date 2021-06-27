@@ -37,6 +37,9 @@ namespace Models
         public List<Product> PromotionAndSpotlight { get; set; }
 
         [NotMapped]
+        public List<Product> ProductBoardTypes { get; set; }
+
+        [NotMapped]
         public List<BoardModel> BoardModels { get; set; }
 
     }

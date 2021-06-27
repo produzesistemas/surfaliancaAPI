@@ -140,6 +140,7 @@ namespace surfaliancaAPI.Controllers
                     boardModelBase.Description = boardModel.Description;
                     boardModelBase.Name = boardModel.Name;
                     boardModelBase.Value = boardModel.Value;
+                    boardModelBase.DaysProduction = boardModel.DaysProduction;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;
                     boardModelRepository.Update(boardModelBase);

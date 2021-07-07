@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
@@ -22,6 +23,33 @@ namespace Models
         public int WidthId { get; set; }
         public int? PaintId { get; set; }
         public int? FinishingId { get; set; }
+
+        [NotMapped]
+        public Finishing Finishing { get; set; }
+        [NotMapped]
+        public Paint Paint { get; set; }
+        [NotMapped]
+        public Width Width { get; set; }
+        [NotMapped]
+        public Tail Tail { get; set; }
+        [NotMapped]
+        public Size Size { get; set; }
+        [NotMapped]
+        public Shaper Shaper { get; set; }
+        [NotMapped]
+        public Lamination Lamination { get; set; }
+        [NotMapped]
+        public Construction Construction { get; set; }
+        [NotMapped]
+        public Bottom Bottom { get; set; }
+        [NotMapped]
+        public BoardType BoardType { get; set; }
+        [NotMapped]
+        public BoardModel BoardModel { get; set; }
+
+        [NotMapped]
+        public List<Order> Orders { get; set; }
+
 
     }
 }

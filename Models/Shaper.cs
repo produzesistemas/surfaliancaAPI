@@ -23,5 +23,7 @@ namespace Models
 
         [NotMapped]
         public List<BoardModelShaper> BoardModelShapers { get; set; }
+        [NotMapped]
+        public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }
 }

@@ -66,8 +66,44 @@ namespace Models
                 .WithOne(b => b.Width)
                 .HasForeignKey(c => c.WidthId);
 
-            modelBuilder.Entity<Product>().HasKey(c => c.Id);
+            
             modelBuilder.Entity<Paint>().HasKey(c => c.Id);
+
+            modelBuilder.Entity<Order>().HasKey(c => c.Id);
+            modelBuilder.Entity<OrderProduct>().HasKey(c => c.Id);
+            modelBuilder.Entity<OrderProductOrdered>().HasKey(c => c.Id);
+            modelBuilder.Entity<OrderTracking>().HasKey(c => c.Id);
+
+            modelBuilder.Entity<Order>().HasMany(c => c.OrderProduct);
+            modelBuilder.Entity<Order>().HasMany(c => c.OrderProductOrdered);
+            modelBuilder.Entity<Order>().HasMany(c => c.OrderTracking);
+            modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Finishing);
+            modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Paint);
+
+
+            modelBuilder.Entity<Product>().HasKey(c => c.Id);
+            modelBuilder.Entity<Product>().HasMany(c => c.OrderProducts)
+                .WithOne(b => b.Product)
+                .HasForeignKey(c => c.ProductId);
+
+            modelBuilder.Entity<StatusOrder>().HasMany(c => c.OrderTrackings)
+                .WithOne(b => b.StatusOrder)
+                .HasForeignKey(c => c.StatusOrderId);
+
+            modelBuilder.Entity<StatusPaymentOrder>().HasMany(c => c.OrderTrackings)
+                .WithOne(b => b.StatusPaymentOrder)
+                .HasForeignKey(c => c.StatusPaymentOrderId);
+
+            modelBuilder.Entity<Width>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Width).HasForeignKey(c => c.WidthId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
+            modelBuilder.Entity<Size>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Size).HasForeignKey(c => c.SizeId);
+            modelBuilder.Entity<Shaper>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Shaper).HasForeignKey(c => c.ShaperId);
+            modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
+            modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
+            modelBuilder.Entity<Bottom>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Bottom).HasForeignKey(c => c.BottomId);
+            modelBuilder.Entity<BoardType>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardType).HasForeignKey(c => c.BoardTypeId);
+
             base.OnModelCreating(modelBuilder);
         }
 

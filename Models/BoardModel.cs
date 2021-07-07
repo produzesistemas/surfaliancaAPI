@@ -43,5 +43,8 @@ namespace Models
         [NotMapped]
         public List<Product> Products { get; set; }
 
+        [NotMapped]
+        public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
+
     }
 }

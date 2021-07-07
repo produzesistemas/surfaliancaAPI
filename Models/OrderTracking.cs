@@ -13,10 +13,9 @@ namespace Models
         public int StatusPaymentOrderId { get; set; }
 
         [NotMapped]
-        public virtual StatusOrder StatusOrder { get; set; }
+        public StatusOrder StatusOrder { get; set; }
         [NotMapped]
-        public virtual StatusPaymentOrder StatusPaymentOrder { get; set; }
-        //[NotMapped]
-        //public virtual Order Order { get; set; }
+        public StatusPaymentOrder StatusPaymentOrder { get; set; }
+
     }
 }

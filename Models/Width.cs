@@ -10,5 +10,8 @@ namespace Models
 
         [NotMapped]
         public List<BoardModelWidth> BoardModelWidths { get; set; }
+
+        [NotMapped]
+        public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }
 }

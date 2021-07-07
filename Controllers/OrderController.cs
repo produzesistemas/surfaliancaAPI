@@ -71,16 +71,16 @@ namespace surfaliancaAPI.Controllers
                     StatusOrderId = 1,
                     StatusPaymentOrderId = 1
                 });
-                order.OrderProduct.ForEach(item =>
-                {
-                    item.OrderId = order.Id;
-                    OrderProductRepository.Insert(item);
-                });
-                order.OrderProductOrdered.ForEach(item =>
-                {
-                    item.OrderId = order.Id;
-                    OrderProductOrderedRepository.Insert(item);
-                });
+                //order.OrderProduct.ForEach(item =>
+                //{
+                //    item.OrderId = order.Id;
+                //    OrderProductRepository.Insert(item);
+                //});
+                //order.OrderProductOrdered.ForEach(item =>
+                //{
+                //    item.OrderId = order.Id;
+                //    OrderProductOrderedRepository.Insert(item);
+                //});
 
                 return new JsonResult(order);
             }

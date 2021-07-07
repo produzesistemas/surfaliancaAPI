@@ -20,5 +20,7 @@ namespace Models
 
         [NotMapped]
         public List<BoardModelBoardType> BoardModelBoardTypes { get; set; }
+        [NotMapped]
+        public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }
 }

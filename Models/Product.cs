@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Models
 {
@@ -34,6 +35,9 @@ namespace Models
         public bool IsPromotion { get; set; }
         public bool IsSpotlight { get; set; }
         public decimal? ValuePromotion { get; set; }
+
+        [NotMapped]
+        public List<OrderProduct> OrderProducts { get; set; }
 
     }
 }

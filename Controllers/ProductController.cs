@@ -69,6 +69,22 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpPost()]
+        [Route("getByProductType")]
+        public IActionResult GetByProductType(FilterDefault filter)
+        {
+            Expression<Func<Product, bool>> p2, p1;
+            var predicate = PredicateBuilder.New<Product>();
+            p1 = p => p.Active.Equals(true);
+            predicate = predicate.And(p1);
+            if (filter.ProductTypeId > decimal.Zero)
+            {
+                p2 = p => p.ProductTypeId == filter.ProductTypeId;
+                predicate = predicate.And(p2);
+            }
+            return new JsonResult(genericRepository.Where(predicate).ToList());
+        }
+
+        [HttpPost()]
         [Route("save")]
         [Authorize()]
         public IActionResult Save()

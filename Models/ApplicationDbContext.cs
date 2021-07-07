@@ -106,6 +106,14 @@ namespace Models
         public DbSet<Product> Product { get; set; }
         public DbSet<TypeSale> TypeSale { get; set; }
         public DbSet<ProductStatus> ProductStatus { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderEmail> OrderEmail { get; set; }
+        public DbSet<OrderTracking> OrderTracking { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
+        public DbSet<OrderProductOrdered> OrderProductOrdered { get; set; }
+        public DbSet<PaymentCondition> PaymentCondition { get; set; }
+
+        public DbSet<Finishing> Finishing { get; set; }
 
     }
 }

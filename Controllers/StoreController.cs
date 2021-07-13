@@ -133,6 +133,10 @@ namespace surfaliancaAPI.Controllers
                         lojaBase.Contact = store.Contact;
                         lojaBase.Number = store.Number;
                         lojaBase.ValueMinimum = store.ValueMinimum;
+                        if (store.NumberInstallmentsCard.HasValue)
+                        {
+                            lojaBase.NumberInstallmentsCard = store.NumberInstallmentsCard.Value;
+                        }
                         lojaBase.ExchangePolicy = store.ExchangePolicy;
                         lojaBase.DeliveryPolicy = store.DeliveryPolicy;
                         lojaBase.UpdateApplicationUserId = id;
@@ -168,22 +172,6 @@ namespace surfaliancaAPI.Controllers
             try
             {
                 return new JsonResult(storeRepository.Get());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
-
-        }
-
-        [HttpGet()]
-        [Route("getToIndex")]
-        public IActionResult GetToIndex()
-        {
-            try
-            {
-                var c = storeRepository.GetToIndex();
-                return new JsonResult(c);
             }
             catch (Exception ex)
             {

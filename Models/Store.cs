@@ -24,6 +24,8 @@ namespace Models
         public decimal ValueMinimum { get; set; }
         public string ApplicationUserId { get; set; }
 
+        public int? NumberInstallmentsCard { get; set; }
+
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }

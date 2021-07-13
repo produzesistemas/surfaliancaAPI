@@ -58,7 +58,10 @@ namespace surfaliancaAPI.Controllers
                 } else
                 {
                     var claimscurrentUser = userManager.GetClaimsAsync(exist).Result.ToList();
-                    var permissions = claimscurrentUser.Select(c => c.Value).ToList();
+
+                    //var claimsPrincipal = await signInManager.CreateUserPrincipalAsync(user);
+                    //var claims = claimsPrincipal.Claims.ToList();
+                    var permissions = claimscurrentUser.Where(c => c.Type.Contains("role")).Select(c => c.Value).ToList();
                     var applicationUser = new ApplicationUser();
                     applicationUser = (ApplicationUser)exist;
                     applicationUser.Token = TokenService.GenerateToken(applicationUser, configuration, permissions);
@@ -69,6 +72,7 @@ namespace surfaliancaAPI.Controllers
                     applicationUserDTO.ProviderId = applicationUser.ProviderId;
                     applicationUserDTO.Email = applicationUser.Email;
                     applicationUserDTO.UserName = applicationUser.UserName;
+                    applicationUserDTO.Role = permissions.FirstOrDefault();
                     return new JsonResult(applicationUserDTO);
                 }
 
@@ -112,6 +116,7 @@ namespace surfaliancaAPI.Controllers
                 applicationUserDTO.Token = TokenService.GenerateToken(applicationUser, configuration, permissions);
                 applicationUserDTO.Email = user.Email;
                 applicationUserDTO.UserName = user.UserName;
+                applicationUserDTO.Role = permissions.FirstOrDefault();
                 return new JsonResult(applicationUserDTO);
             }
             catch (Exception ex)

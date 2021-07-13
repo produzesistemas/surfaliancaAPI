@@ -71,17 +71,6 @@ namespace surfaliancaAPI.Controllers
                     StatusOrderId = 1,
                     StatusPaymentOrderId = 1
                 });
-                //order.OrderProduct.ForEach(item =>
-                //{
-                //    item.OrderId = order.Id;
-                //    OrderProductRepository.Insert(item);
-                //});
-                //order.OrderProductOrdered.ForEach(item =>
-                //{
-                //    item.OrderId = order.Id;
-                //    OrderProductOrderedRepository.Insert(item);
-                //});
-
                 return new JsonResult(order);
             }
             catch (Exception ex)
@@ -127,6 +116,27 @@ namespace surfaliancaAPI.Controllers
 
         }
 
+        [HttpGet()]
+        [Route("getByUser")]
+        [Authorize()]
+        public IActionResult GetByUser()
+        {
+            try
+            {
+                ClaimsPrincipal currentUser = this.User;
+                var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
+                if (id == null)
+                {
+                    return BadRequest("Identificação do usuário não encontrada.");
+                }
+                return new JsonResult(OrderRepository.GetByUser(id).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(string.Concat("Falha no carregamento dos pedidos ", ex.Message));
+            }
+        }
+
         [HttpGet("{id}")]
         [Authorize()]
         public IActionResult Get(int id)
@@ -139,6 +149,37 @@ namespace surfaliancaAPI.Controllers
             {
                 return BadRequest("Não foi possível carregar o pedido: " + ex.Message);
             }
+        }
+
+        [HttpPost()]
+        [Route("sendPaymentCielo")]
+        [Authorize()]
+        public IActionResult SendPaymentCielo(SendPaymentCielo sendPaymentCielo)
+        {
+            try
+            {
+                if (sendPaymentCielo != null)
+                {
+                    var orderBase = GenericRepository.Get(sendPaymentCielo.OrderId);
+                    orderBase.PaymentId = sendPaymentCielo.PaymentId;
+                    orderBase.CapturedAmount = sendPaymentCielo.CapturedAmount;
+                    orderBase.Installments = sendPaymentCielo.Installments;
+                    GenericRepository.Update(orderBase);
+                    OrderTrackingRepository.Insert(new OrderTracking()
+                    {
+                        DateTracking = DateTime.Now,
+                        OrderId = orderBase.Id,
+                        StatusOrderId = 1,
+                        StatusPaymentOrderId = 2
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Falha no envio do Pagamento. Entre em contato com o administrador do sistema. " + ex);
+            }
+
+            return Ok(); ;
         }
     }
 }

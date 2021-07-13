@@ -69,19 +69,10 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpPost()]
-        [Route("getByProductType")]
-        public IActionResult GetByProductType(FilterDefault filter)
+        [Route("getByType")]
+        public IActionResult GetByType(FilterDefault filter)
         {
-            Expression<Func<Product, bool>> p2, p1;
-            var predicate = PredicateBuilder.New<Product>();
-            p1 = p => p.Active.Equals(true);
-            predicate = predicate.And(p1);
-            if (filter.ProductTypeId > decimal.Zero)
-            {
-                p2 = p => p.ProductTypeId == filter.ProductTypeId;
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(productRepository.GetByType(filter.Id).ToList());
         }
 
         [HttpPost()]
@@ -195,6 +186,20 @@ namespace surfaliancaAPI.Controllers
             try
             {
                 return new JsonResult(genericRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpGet()]
+        [Route("getPromotionSpotlight")]
+        public IActionResult GetPromotionSpotlight()
+        {
+            try
+            {
+                return new JsonResult(productRepository.GetPromotionSpotlight().ToList());
             }
             catch (Exception ex)
             {

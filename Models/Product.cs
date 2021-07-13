@@ -9,6 +9,8 @@ namespace Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageName { get; set; }
+        public string ImageName1 { get; set; }
+        public string ImageName2 { get; set; }
         public decimal Value { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }

@@ -9,7 +9,7 @@ namespace Models
     public class Order : BaseEntity
     {
         public string Obs { get; set; }
-        public string PaymentId { get; set; }
+        
         public string Address { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }
@@ -20,6 +20,10 @@ namespace Models
         public decimal TaxValue { get; set; }
         public string ApplicationUserId { get; set; }
         public int PaymentConditionId { get; set; }
+
+        public int Installments { get; set; }
+        public int CapturedAmount { get; set; }
+        public string PaymentId { get; set; }
 
         [NotMapped]
         public string EnviadoPor { get; set; }

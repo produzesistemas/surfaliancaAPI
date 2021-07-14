@@ -49,6 +49,7 @@ namespace Repositorys
             var lst = _context.Order
                 .Include(c => c.OrderProduct)
                 .Include(c => c.OrderTracking).ThenInclude(x => x.StatusPaymentOrder)
+                .Include(c => c.OrderTracking).ThenInclude(x => x.StatusOrder)
                 .Include(c => c.OrderProductOrdered)
                 .Where(x => x.ApplicationUserId == id).AsQueryable();
             

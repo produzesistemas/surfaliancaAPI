@@ -85,6 +85,7 @@ namespace surfaliancaAPI.Controllers
                 var product = JsonConvert.DeserializeObject<Product>(Convert.ToString(Request.Form["product"]));
                 var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileProduct"]);
                 var fileDelete = pathToSave;
+                var files = Request.Form.Files;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
                 if ((id != null) || (product != null))
@@ -93,14 +94,31 @@ namespace surfaliancaAPI.Controllers
                     {
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
-                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                            var fullPath = Path.Combine(pathToSave, fileName);
-                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            for (var counter = 0; counter < files.Count; counter++)
                             {
-                                Request.Form.Files[0].CopyTo(stream);
-                            }
-                            product.ImageName = fileName;
+                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                var fullPath = Path.Combine(pathToSave, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    files[counter].CopyTo(stream);
+                                }
+
+                                switch (counter)
+                                {
+                                    case 0:
+                                        product.ImageName = fileName;
+                                        break;
+                                    case 1:
+                                        product.ImageName1 = fileName;
+                                        break;
+                                    case 2:
+                                        product.ImageName2 = fileName;
+                                        break;
+                                }
+                
+                            };
+
                             product.ApplicationUserId = id;
                             product.CreateDate = DateTime.Now;
                             product.Active = true;
@@ -113,14 +131,30 @@ namespace surfaliancaAPI.Controllers
                         var productBase = genericRepository.Get(product.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
-                            var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                            using (var stream = new FileStream(Path.Combine(pathToSave, fileName), FileMode.Create))
+                            for (var counter = 0; counter < files.Count; counter++)
                             {
-                                Request.Form.Files[0].CopyTo(stream);
-                            }
-                            fileDelete = string.Concat(fileDelete, productBase.ImageName);
-                            productBase.ImageName = fileName;
+                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                var fullPath = Path.Combine(pathToSave, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    files[counter].CopyTo(stream);
+                                }
+
+                                switch (counter)
+                                {
+                                    case 0:
+                                        productBase.ImageName = fileName;
+                                        break;
+                                    case 1:
+                                        productBase.ImageName1 = fileName;
+                                        break;
+                                    case 2:
+                                        productBase.ImageName2 = fileName;
+                                        break;
+                                }
+
+                            };
                         }
                         productBase.Description = product.Description;
                         productBase.Name = product.Name;
@@ -154,7 +188,6 @@ namespace surfaliancaAPI.Controllers
             }
 
         }
-
 
         [HttpGet()]
         [Route("getProductStatus")]

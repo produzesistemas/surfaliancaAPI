@@ -13,6 +13,7 @@ namespace Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string ApplicationUserId { get; set; }
+        public bool Active { get; set; }
 
         [NotMapped]
         public List<FinSystemColor> FinSystemColors { get; set; }

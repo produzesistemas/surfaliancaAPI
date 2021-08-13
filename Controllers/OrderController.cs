@@ -154,7 +154,7 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("sendPaymentCielo")]
         [Authorize()]
-        public IActionResult SendPaymentCielo(SendPaymentCielo sendPaymentCielo)
+        public IActionResult SendPaymentCielo([FromBody] SendPaymentCielo sendPaymentCielo)
         {
             try
             {

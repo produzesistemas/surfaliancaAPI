@@ -28,7 +28,6 @@ namespace Repositorys
                     .Include(x => x.BoardModel)
                     .Include(x => x.Tail)
                     .Include(x => x.Size)
-                    .Include(x => x.Shaper)
                     .Include(x => x.Lamination)
                     .Include(x => x.Construction)
                     .Include(x => x.Bottom)

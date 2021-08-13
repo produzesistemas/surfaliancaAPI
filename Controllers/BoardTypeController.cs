@@ -122,5 +122,19 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
+        [HttpGet()]
+        [Route("getAll")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return new JsonResult(genericRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
     }
 }

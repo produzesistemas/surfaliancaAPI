@@ -8,9 +8,14 @@ namespace Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string UrlMovie { get; set; }
         public string ImageName { get; set; }
+        public string ImageName1 { get; set; }
+        public string ImageName2 { get; set; }
+        public string ImageName3 { get; set; }
         public decimal Value { get; set; }
         public int DaysProduction { get; set; }
+        public int BoardTypeId { get; set; }
         public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
@@ -23,22 +28,10 @@ namespace Models
         public string AlteradoPor { get; set; }
 
         [NotMapped]
-        public List<BoardModelBoardType> BoardModelBoardTypes { get; set; }
+        public List<BoardModelDimensions> BoardModelDimensions { get; set; }
         [NotMapped]
-        public List<BoardModelShaper> BoardModelShapers { get; set; }
-        [NotMapped]
-        public List<BoardModelBottom> BoardModelBottoms { get; set; }
-        [NotMapped]
-        public List<BoardModelConstruction> BoardModelConstructions { get; set; }
+        public List<BoardModelColors> BoardModelColors { get; set; }
 
-        [NotMapped]
-        public List<BoardModelLamination> BoardModelLaminations { get; set; }
-        [NotMapped]
-        public List<BoardModelSize> BoardModelSizes { get; set; }
-        [NotMapped]
-        public List<BoardModelTail> BoardModelTails { get; set; }
-        [NotMapped]
-        public List<BoardModelWidth> BoardModelWidths { get; set; }
 
         [NotMapped]
         public List<Product> Products { get; set; }

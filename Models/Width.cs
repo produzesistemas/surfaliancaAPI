@@ -8,8 +8,6 @@ namespace Models
     {
         public string Description { get; set; }
 
-        [NotMapped]
-        public List<BoardModelWidth> BoardModelWidths { get; set; }
 
         [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }

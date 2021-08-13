@@ -34,8 +34,7 @@ namespace Models
         public Tail Tail { get; set; }
         [NotMapped]
         public Size Size { get; set; }
-        [NotMapped]
-        public Shaper Shaper { get; set; }
+
         [NotMapped]
         public Lamination Lamination { get; set; }
         [NotMapped]

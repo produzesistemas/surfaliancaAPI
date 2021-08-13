@@ -89,6 +89,7 @@ namespace surfaliancaAPI.Controllers
                     {
                         finSystem.ApplicationUserId = id;
                         finSystem.CreateDate = DateTime.Now;
+                        finSystem.Active = true;
                         genericRepository.Insert(finSystem);
                         finSystem.FinSystemColors.ForEach(finSystemColor =>
                         {

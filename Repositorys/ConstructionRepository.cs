@@ -26,6 +26,7 @@ namespace Repositorys
                 Id = x.Id,
                 Name = x.Name,
                 Value = x.Value,
+                Details = x.Details,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,

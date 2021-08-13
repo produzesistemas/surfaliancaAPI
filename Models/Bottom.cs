@@ -21,8 +21,6 @@ namespace Models
         public string AlteradoPor { get; set; }
 
         [NotMapped]
-        public List<BoardModelBottom> BoardModelBottoms { get; set; }
-        [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }
 }

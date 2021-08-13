@@ -9,8 +9,6 @@ namespace Models
         public string Description { get; set; }
 
         [NotMapped]
-        public List<BoardModelSize> BoardModelSizes { get; set; }
-        [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }
 }

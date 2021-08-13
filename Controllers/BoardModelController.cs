@@ -23,16 +23,8 @@ namespace surfaliancaAPI.Controllers
         private IRepository<Width> widthRepository;
         private IRepository<Paint> paintRepository;
         private IRepository<BoardModel> genericRepository;
-        private IRepository<BoardModelBoardType> boardModelBoardTypeRepository;
-        private IRepository<BoardModelBottom> boardModelBottomRepository;
-        private IRepository<BoardModelSize> boardModelSizeRepository;
-        private IRepository<BoardModelWidth> boardModelWidthRepository;
-        private IRepository<BoardModelLamination> boardModelLaminationRepository;
-        private IRepository<BoardModelConstruction> boardModelConstructionRepository;
-        private IRepository<BoardModelShaper> boardModelShaperRepository;
-        private IRepository<BoardModelTail> boardModelTailRepository;
-
-
+        private IRepository<BoardModelColors> BoardModelColorsRepository;
+        private IRepository<BoardModelDimensions> BoardModelDimensionsRepository;
         private IBoardModelRepository<BoardModel> boardModelRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
@@ -44,14 +36,8 @@ namespace surfaliancaAPI.Controllers
                 IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<BoardModel> genericRepository,
-            IRepository<BoardModelBoardType> boardModelBoardTypeRepository,
-            IRepository<BoardModelBottom> boardModelBottomRepository,
-            IRepository<BoardModelSize> boardModelSizeRepository,
-            IRepository<BoardModelWidth> boardModelWidthRepository,
-            IRepository<BoardModelLamination> boardModelLaminationRepository,
-            IRepository<BoardModelConstruction> boardModelConstructionRepository,
-            IRepository<BoardModelShaper> boardModelShaperRepository,
-            IRepository<BoardModelTail> boardModelTailRepository,
+            IRepository<BoardModelColors> BoardModelColorsRepository,
+            IRepository<BoardModelDimensions> BoardModelDimensionsRepository,
             IBoardModelRepository<BoardModel> boardModelRepository
     )
         {
@@ -61,14 +47,8 @@ namespace surfaliancaAPI.Controllers
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
-            this.boardModelBoardTypeRepository = boardModelBoardTypeRepository;
-            this.boardModelBottomRepository = boardModelBottomRepository;
-            this.boardModelSizeRepository = boardModelSizeRepository;
-            this.boardModelWidthRepository = boardModelWidthRepository;
-            this.boardModelLaminationRepository = boardModelLaminationRepository;
-            this.boardModelConstructionRepository = boardModelConstructionRepository;
-            this.boardModelShaperRepository = boardModelShaperRepository;
-            this.boardModelTailRepository = boardModelTailRepository;
+            this.BoardModelDimensionsRepository = BoardModelDimensionsRepository;
+            this.BoardModelColorsRepository = BoardModelColorsRepository;
             this.boardModelRepository = boardModelRepository;
         }
 
@@ -124,23 +104,40 @@ namespace surfaliancaAPI.Controllers
                 if (boardModel.Id > decimal.Zero)
                 {
                     var boardModelBase = boardModelRepository.Get(boardModel.Id);
-                    if (Request.Form.Files.Count() > decimal.Zero)
+                    for (var counter = 0; counter < files.Count; counter++)
                     {
-                        var extension = Path.GetExtension(files[0].FileName);
+                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
                         var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
                         var fullPath = Path.Combine(pathToSave, fileName);
                         using (var stream = new FileStream(fullPath, FileMode.Create))
                         {
-                            files[0].CopyTo(stream);
+                            files[counter].CopyTo(stream);
                         }
-                        fileDelete = string.Concat(fileDelete, boardModelBase.ImageName);
-                        boardModelBase.ImageName = fileName;
-                    }
+
+                        switch (counter)
+                        {
+                            case 0:
+                                boardModelBase.ImageName = fileName;
+                                break;
+                            case 1:
+                                boardModelBase.ImageName1 = fileName;
+                                break;
+                            case 2:
+                                boardModelBase.ImageName2 = fileName;
+                                break;
+                            case 3:
+                                boardModelBase.ImageName3 = fileName;
+                                break;
+                        }
+
+                    };
 
                     boardModelBase.Description = boardModel.Description;
                     boardModelBase.Name = boardModel.Name;
                     boardModelBase.Value = boardModel.Value;
                     boardModelBase.DaysProduction = boardModel.DaysProduction;
+                    boardModelBase.BoardTypeId = boardModel.BoardTypeId;
+                    boardModelBase.UrlMovie = boardModel.UrlMovie;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;
                     boardModelRepository.Update(boardModelBase);
@@ -148,121 +145,41 @@ namespace surfaliancaAPI.Controllers
                     {
                         System.IO.File.Delete(fileDelete);
                     }
-
-                    var toDelete = boardModelBase.BoardModelBoardTypes.Except(boardModel.BoardModelBoardTypes, new EqualityComparerBoardModelBoardType()).ToList();
-                    var toInsert = boardModel.BoardModelBoardTypes.Except(boardModelBase.BoardModelBoardTypes, new EqualityComparerBoardModelBoardType()).ToList();
-                    toDelete.ForEach(x =>
-                    {
-                        boardModelBoardTypeRepository.Delete(x);
-                    });
-                    toInsert.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelBoardTypeRepository.Insert(x);
-                    });
-
-                    var toDeleteBottom = boardModelBase.BoardModelBottoms.Except(boardModel.BoardModelBottoms, new EqualityComparerBoardModelBottom()).ToList();
-                    var toInsertBottom = boardModel.BoardModelBottoms.Except(boardModelBase.BoardModelBottoms, new EqualityComparerBoardModelBottom()).ToList();
-                    toDeleteBottom.ForEach(x =>
-                    {
-                        boardModelBottomRepository.Delete(x);
-                    });
-                    toInsertBottom.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelBottomRepository.Insert(x);
-                    });
-
-                    var toDeleteConstruction = boardModelBase.BoardModelConstructions.Except(boardModel.BoardModelConstructions, new EqualityComparerBoardModelConstruction()).ToList();
-                    var toInsertConstruction = boardModel.BoardModelConstructions.Except(boardModelBase.BoardModelConstructions, new EqualityComparerBoardModelConstruction()).ToList();
-                    toDeleteConstruction.ForEach(x =>
-                    {
-                        boardModelConstructionRepository.Delete(x);
-                    });
-                    toInsertConstruction.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelConstructionRepository.Insert(x);
-                    });
-
-                    var toDeleteLamination = boardModelBase.BoardModelLaminations.Except(boardModel.BoardModelLaminations, new EqualityComparerBoardModelLamination()).ToList();
-                    var toInsertLamination = boardModel.BoardModelLaminations.Except(boardModelBase.BoardModelLaminations, new EqualityComparerBoardModelLamination()).ToList();
-                    toDeleteLamination.ForEach(x =>
-                    {
-                        boardModelLaminationRepository.Delete(x);
-                    });
-                    toInsertLamination.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelLaminationRepository.Insert(x);
-                    });
-
-                    var toDeleteShaper = boardModelBase.BoardModelShapers.Except(boardModel.BoardModelShapers, new EqualityComparerBoardModelShaper()).ToList();
-                    var toInsertShaper = boardModel.BoardModelShapers.Except(boardModelBase.BoardModelShapers, new EqualityComparerBoardModelShaper()).ToList();
-                    toDeleteShaper.ForEach(x =>
-                    {
-                        boardModelShaperRepository.Delete(x);
-                    });
-                    toInsertShaper.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelShaperRepository.Insert(x);
-                    });
-
-                    var toDeleteSize = boardModelBase.BoardModelSizes.Except(boardModel.BoardModelSizes, new EqualityComparerBoardModelSize()).ToList();
-                    var toInsertSize = boardModel.BoardModelSizes.Except(boardModelBase.BoardModelSizes, new EqualityComparerBoardModelSize()).ToList();
-                    toDeleteSize.ForEach(x =>
-                    {
-                        boardModelSizeRepository.Delete(x);
-                    });
-                    toInsertSize.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelSizeRepository.Insert(x);
-                    });
-
-                    var toDeleteTail = boardModelBase.BoardModelTails.Except(boardModel.BoardModelTails, new EqualityComparerBoardModelTail()).ToList();
-                    var toInsertTail = boardModel.BoardModelTails.Except(boardModelBase.BoardModelTails, new EqualityComparerBoardModelTail()).ToList();
-                    toDeleteTail.ForEach(x =>
-                    {
-                        boardModelTailRepository.Delete(x);
-                    });
-                    toInsertTail.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelTailRepository.Insert(x);
-                    });
-
-                    var toDeleteWidth = boardModelBase.BoardModelWidths.Except(boardModel.BoardModelWidths, new EqualityComparerBoardModelWidth()).ToList();
-                    var toInsertWidth = boardModel.BoardModelWidths.Except(boardModelBase.BoardModelWidths, new EqualityComparerBoardModelWidth()).ToList();
-                    toDeleteWidth.ForEach(x =>
-                    {
-                        boardModelWidthRepository.Delete(x);
-                    });
-                    toInsertWidth.ForEach(x =>
-                    {
-                        x.BoardModelId = boardModelBase.Id;
-                        boardModelWidthRepository.Insert(x);
-                    });
-
                 }
                 else
                 {
-                    if (Request.Form.Files.Count() > decimal.Zero)
+                    for (var counter = 0; counter < files.Count; counter++)
                     {
-                            var extension = Path.GetExtension(files[0].FileName);
-                            var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                            var fullPath = Path.Combine(pathToSave, fileName);
-                            using (var stream = new FileStream(fullPath, FileMode.Create))
-                            {
-                                files[0].CopyTo(stream);
-                            }
-                        boardModel.ImageName = fileName;
+                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                        var fullPath = Path.Combine(pathToSave, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            files[counter].CopyTo(stream);
+                        }
+
+                        switch (counter)
+                        {
+                            case 0:
+                                boardModel.ImageName = fileName;
+                                break;
+                            case 1:
+                                boardModel.ImageName1 = fileName;
+                                break;
+                            case 2:
+                                boardModel.ImageName2 = fileName;
+                                break;
+                            case 3:
+                                boardModel.ImageName3 = fileName;
+                                break;
+                        }
+
+                    };
+
                         boardModel.ApplicationUserId = id;
                         boardModel.CreateDate = DateTime.Now;
                         boardModel.Active = true;
                         genericRepository.Insert(boardModel);
-                    }
                 }
                 return new OkResult();
             }
@@ -315,142 +232,40 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
-        class EqualityComparerBoardModelBoardType : IEqualityComparer<BoardModelBoardType>
-        {
-            public bool Equals(BoardModelBoardType x, BoardModelBoardType y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId 
-                    && x.BoardTypeId == y.BoardTypeId;
-            }
+        //class EqualityComparerBoardModelConstruction : IEqualityComparer<BoardModelConstruction>
+        //{
+        //    public bool Equals(BoardModelConstruction x, BoardModelConstruction y)
+        //    {
+        //        if (object.ReferenceEquals(x, y))
+        //            return true;
+        //        if (x == null || y == null)
+        //            return false;
+        //        return x.BoardModelId == y.BoardModelId
+        //            && x.ConstructionId == y.ConstructionId;
+        //    }
 
-            public int GetHashCode(BoardModelBoardType obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelBottom : IEqualityComparer<BoardModelBottom>
-        {
-            public bool Equals(BoardModelBottom x, BoardModelBottom y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.BottomId == y.BottomId;
-            }
+        //    public int GetHashCode(BoardModelConstruction obj)
+        //    {
+        //        return obj.Id.GetHashCode();
+        //    }
+        //}
+        //class EqualityComparerBoardModelLamination : IEqualityComparer<BoardModelLamination>
+        //{
+        //    public bool Equals(BoardModelLamination x, BoardModelLamination y)
+        //    {
+        //        if (object.ReferenceEquals(x, y))
+        //            return true;
+        //        if (x == null || y == null)
+        //            return false;
+        //        return x.BoardModelId == y.BoardModelId
+        //            && x.LaminationId == y.LaminationId;
+        //    }
 
-            public int GetHashCode(BoardModelBottom obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelConstruction : IEqualityComparer<BoardModelConstruction>
-        {
-            public bool Equals(BoardModelConstruction x, BoardModelConstruction y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.ConstructionId == y.ConstructionId;
-            }
-
-            public int GetHashCode(BoardModelConstruction obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelLamination : IEqualityComparer<BoardModelLamination>
-        {
-            public bool Equals(BoardModelLamination x, BoardModelLamination y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.LaminationId == y.LaminationId;
-            }
-
-            public int GetHashCode(BoardModelLamination obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelShaper : IEqualityComparer<BoardModelShaper>
-        {
-            public bool Equals(BoardModelShaper x, BoardModelShaper y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.ShaperId == y.ShaperId;
-            }
-
-            public int GetHashCode(BoardModelShaper obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelSize : IEqualityComparer<BoardModelSize>
-        {
-            public bool Equals(BoardModelSize x, BoardModelSize y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.SizeId == y.SizeId;
-            }
-
-            public int GetHashCode(BoardModelSize obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelTail : IEqualityComparer<BoardModelTail>
-        {
-            public bool Equals(BoardModelTail x, BoardModelTail y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.TailId == y.TailId;
-            }
-
-            public int GetHashCode(BoardModelTail obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
-        class EqualityComparerBoardModelWidth : IEqualityComparer<BoardModelWidth>
-        {
-            public bool Equals(BoardModelWidth x, BoardModelWidth y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.BoardModelId == y.BoardModelId
-                    && x.WidthId == y.WidthId;
-            }
-
-            public int GetHashCode(BoardModelWidth obj)
-            {
-                return obj.Id.GetHashCode();
-            }
-        }
+        //    public int GetHashCode(BoardModelLamination obj)
+        //    {
+        //        return obj.Id.GetHashCode();
+        //    }
+        //}
 
         [HttpPost()]
         [Route("getToOrder")]

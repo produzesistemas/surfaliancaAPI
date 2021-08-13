@@ -67,6 +67,7 @@ namespace surfaliancaAPI.Controllers
                     {
                         entityBase.Value = entity.Value;
                     }
+                    entityBase.Details = entity.Details;
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
                     genericRepository.Update(entityBase);

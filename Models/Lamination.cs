@@ -17,8 +17,7 @@ namespace Models
         public string CriadoPor { get; set; }
         [NotMapped]
         public string AlteradoPor { get; set; }
-        [NotMapped]
-        public List<BoardModelLamination> BoardModelLaminations { get; set; }
+
         [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }

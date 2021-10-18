@@ -115,6 +115,7 @@ namespace Models
         public DbSet<PaymentCondition> PaymentCondition { get; set; }
 
         public DbSet<Finishing> Finishing { get; set; }
+        public DbSet<Logo> Logo { get; set; }
 
     }
 }

@@ -137,6 +137,7 @@ namespace surfaliancaAPI.Controllers
                     boardModelBase.Value = boardModel.Value;
                     boardModelBase.DaysProduction = boardModel.DaysProduction;
                     boardModelBase.BoardTypeId = boardModel.BoardTypeId;
+
                     boardModelBase.UrlMovie = boardModel.UrlMovie;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;

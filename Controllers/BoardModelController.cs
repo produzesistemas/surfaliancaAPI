@@ -137,7 +137,6 @@ namespace surfaliancaAPI.Controllers
                     boardModelBase.Value = boardModel.Value;
                     boardModelBase.DaysProduction = boardModel.DaysProduction;
                     boardModelBase.BoardTypeId = boardModel.BoardTypeId;
-
                     boardModelBase.UrlMovie = boardModel.UrlMovie;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;
@@ -146,6 +145,17 @@ namespace surfaliancaAPI.Controllers
                     {
                         System.IO.File.Delete(fileDelete);
                     }
+                    var lstDimensions = BoardModelDimensionsRepository.Where(w => w.BoardModelId == boardModelBase.Id).ToList();
+                    lstDimensions.ForEach(x =>
+                    {
+                        BoardModelDimensionsRepository.Delete(x);
+                    });
+                    boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
+                    {
+                        boardModelDimensions.BoardModelId = boardModel.Id;
+                        BoardModelDimensionsRepository.Insert(boardModelDimensions);
+                    });
+
                 }
                 else
                 {
@@ -181,6 +191,11 @@ namespace surfaliancaAPI.Controllers
                         boardModel.CreateDate = DateTime.Now;
                         boardModel.Active = true;
                         genericRepository.Insert(boardModel);
+                        boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
+                        {
+                            boardModelDimensions.BoardModelId = boardModel.Id;
+                            BoardModelDimensionsRepository.Insert(boardModelDimensions);
+                        });
                 }
                 return new OkResult();
             }

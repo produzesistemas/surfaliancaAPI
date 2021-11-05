@@ -191,11 +191,11 @@ namespace surfaliancaAPI.Controllers
                         boardModel.CreateDate = DateTime.Now;
                         boardModel.Active = true;
                         genericRepository.Insert(boardModel);
-                        boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
-                        {
-                            boardModelDimensions.BoardModelId = boardModel.Id;
-                            BoardModelDimensionsRepository.Insert(boardModelDimensions);
-                        });
+                        //boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
+                        //{
+                        //    boardModelDimensions.BoardModelId = boardModel.Id;
+                        //    BoardModelDimensionsRepository.Insert(boardModelDimensions);
+                        //});
                 }
                 return new OkResult();
             }

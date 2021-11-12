@@ -19,9 +19,6 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class BoardModelController : ControllerBase
     {
-        private IRepository<Size> sizeRepository;
-        private IRepository<Width> widthRepository;
-        private IRepository<Paint> paintRepository;
         private IRepository<BoardModel> genericRepository;
         private IRepository<BoardModelColors> BoardModelColorsRepository;
         private IRepository<BoardModelDimensions> BoardModelDimensionsRepository;
@@ -41,9 +38,6 @@ namespace surfaliancaAPI.Controllers
             IBoardModelRepository<BoardModel> boardModelRepository
     )
         {
-            this.sizeRepository = sizeRepository;
-            this.widthRepository = widthRepository;
-            this.paintRepository = paintRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
@@ -52,35 +46,35 @@ namespace surfaliancaAPI.Controllers
             this.boardModelRepository = boardModelRepository;
         }
 
-        [HttpPost()]
-        [Route("getSizes")]
-        [Authorize()]
-        public IActionResult GetSizes(FilterDefault filter)
-        {
-            Expression<Func<Size, bool>> p2;
-            var predicate = PredicateBuilder.New<Size>();
-            if (filter.Name != null)
-            {
-                p2 = p => p.Description.Contains(filter.Name);
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(sizeRepository.Where(predicate).ToList());
-        }
+        //[HttpPost()]
+        //[Route("getSizes")]
+        //[Authorize()]
+        //public IActionResult GetSizes(FilterDefault filter)
+        //{
+        //    Expression<Func<Size, bool>> p2;
+        //    var predicate = PredicateBuilder.New<Size>();
+        //    if (filter.Name != null)
+        //    {
+        //        p2 = p => p.Description.Contains(filter.Name);
+        //        predicate = predicate.And(p2);
+        //    }
+        //    return new JsonResult(sizeRepository.Where(predicate).ToList());
+        //}
 
-        [HttpPost()]
-        [Route("getWidths")]
-        [Authorize()]
-        public IActionResult GetWidths(FilterDefault filter)
-        {
-            Expression<Func<Width, bool>> p2;
-            var predicate = PredicateBuilder.New<Width>();
-            if (filter.Name != null)
-            {
-                p2 = p => p.Description.Contains(filter.Name);
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(widthRepository.Where(predicate).ToList());
-        }
+        //[HttpPost()]
+        //[Route("getWidths")]
+        //[Authorize()]
+        //public IActionResult GetWidths(FilterDefault filter)
+        //{
+        //    Expression<Func<Width, bool>> p2;
+        //    var predicate = PredicateBuilder.New<Width>();
+        //    if (filter.Name != null)
+        //    {
+        //        p2 = p => p.Description.Contains(filter.Name);
+        //        predicate = predicate.And(p2);
+        //    }
+        //    return new JsonResult(widthRepository.Where(predicate).ToList());
+        //}
 
         [HttpPost()]
         [Route("save")]
@@ -191,11 +185,7 @@ namespace surfaliancaAPI.Controllers
                         boardModel.CreateDate = DateTime.Now;
                         boardModel.Active = true;
                         genericRepository.Insert(boardModel);
-                        //boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
-                        //{
-                        //    boardModelDimensions.BoardModelId = boardModel.Id;
-                        //    BoardModelDimensionsRepository.Insert(boardModelDimensions);
-                        //});
+                      
                 }
                 return new OkResult();
             }

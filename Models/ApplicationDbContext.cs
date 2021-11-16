@@ -117,5 +117,7 @@ namespace Models
         public DbSet<Finishing> Finishing { get; set; }
         public DbSet<Logo> Logo { get; set; }
 
+        public DbSet<Blog> Blog { get; set; }
+
     }
 }

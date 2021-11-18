@@ -118,6 +118,7 @@ namespace Models
         public DbSet<Logo> Logo { get; set; }
 
         public DbSet<Blog> Blog { get; set; }
+        public DbSet<TypeBlog> TypeBlog { get; set; }
 
     }
 }

@@ -19,18 +19,21 @@ namespace surfaliancaAPI.Controllers
     public class BlogController : ControllerBase
     {
         private IRepository<Blog> genericRepository;
+        private IRepository<TypeBlog> typeBlogRepository;
         private IBlogRepository<Blog> blogRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public BlogController(
             IRepository<Blog> genericRepository,
+             IRepository<TypeBlog> typeBlogRepository,
                             IWebHostEnvironment environment,
             IConfiguration Configuration,
              IBlogRepository<Blog> blogRepository)
         {
             this.genericRepository = genericRepository;
             this.blogRepository = blogRepository;
+            this.typeBlogRepository = typeBlogRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
         }
@@ -92,6 +95,8 @@ namespace surfaliancaAPI.Controllers
                     }
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
+                    entityBase.Description = blog.Description;
+                    entityBase.Details = blog.Details;
                     genericRepository.Update(entityBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
@@ -152,6 +157,21 @@ namespace surfaliancaAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Arquivo não encontrado!" + ex.Message);
+            }
+        }
+
+
+        [HttpGet()]
+        [Route("getAll")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return new JsonResult(typeBlogRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
             }
         }
 

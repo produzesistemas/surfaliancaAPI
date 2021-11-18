@@ -29,6 +29,7 @@ namespace Repositorys
                 Details = x.Details,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
+                ImageName = x.ImageName,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
                 UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,

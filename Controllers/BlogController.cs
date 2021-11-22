@@ -175,5 +175,19 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
+        [HttpPost()]
+        [Route("getAllByFilter")]
+        public IActionResult GetAllByFilter(FilterDefault filter)
+        {
+            Expression<Func<Blog, bool>> p2;
+            var predicate = PredicateBuilder.New<Blog>();
+            if (filter.Name != null)
+            {
+                p2 = p => p.Description.Contains(filter.Name);
+                predicate = predicate.And(p2);
+            }
+            return new JsonResult(genericRepository.GetAll().ToList());
+        }
+
     }
 }

@@ -8,5 +8,7 @@ namespace UnitOfWork
     {
         T Get(int id);
         IQueryable<T> Where(Func<T, bool> expression);
+
+        IQueryable<T> GetAll();
     }
 }

@@ -20,5 +20,8 @@ namespace Models
         public string CriadoPor { get; set; }
         [NotMapped]
         public string AlteradoPor { get; set; }
+
+        [NotMapped]
+        public TypeBlog TypeBlog { get; set; }
     }
 }

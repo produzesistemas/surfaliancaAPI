@@ -186,7 +186,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Description.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.GetAll().ToList());
+            return new JsonResult(blogRepository.GetAll().ToList());
         }
 
     }

@@ -46,35 +46,6 @@ namespace surfaliancaAPI.Controllers
             this.boardModelRepository = boardModelRepository;
         }
 
-        //[HttpPost()]
-        //[Route("getSizes")]
-        //[Authorize()]
-        //public IActionResult GetSizes(FilterDefault filter)
-        //{
-        //    Expression<Func<Size, bool>> p2;
-        //    var predicate = PredicateBuilder.New<Size>();
-        //    if (filter.Name != null)
-        //    {
-        //        p2 = p => p.Description.Contains(filter.Name);
-        //        predicate = predicate.And(p2);
-        //    }
-        //    return new JsonResult(sizeRepository.Where(predicate).ToList());
-        //}
-
-        //[HttpPost()]
-        //[Route("getWidths")]
-        //[Authorize()]
-        //public IActionResult GetWidths(FilterDefault filter)
-        //{
-        //    Expression<Func<Width, bool>> p2;
-        //    var predicate = PredicateBuilder.New<Width>();
-        //    if (filter.Name != null)
-        //    {
-        //        p2 = p => p.Description.Contains(filter.Name);
-        //        predicate = predicate.And(p2);
-        //    }
-        //    return new JsonResult(widthRepository.Where(predicate).ToList());
-        //}
 
         [HttpPost()]
         [Route("save")]
@@ -237,41 +208,6 @@ namespace surfaliancaAPI.Controllers
                 return BadRequest("Não foi possível carregar o model: " + ex.Message);
             }
         }
-
-        //class EqualityComparerBoardModelConstruction : IEqualityComparer<BoardModelConstruction>
-        //{
-        //    public bool Equals(BoardModelConstruction x, BoardModelConstruction y)
-        //    {
-        //        if (object.ReferenceEquals(x, y))
-        //            return true;
-        //        if (x == null || y == null)
-        //            return false;
-        //        return x.BoardModelId == y.BoardModelId
-        //            && x.ConstructionId == y.ConstructionId;
-        //    }
-
-        //    public int GetHashCode(BoardModelConstruction obj)
-        //    {
-        //        return obj.Id.GetHashCode();
-        //    }
-        //}
-        //class EqualityComparerBoardModelLamination : IEqualityComparer<BoardModelLamination>
-        //{
-        //    public bool Equals(BoardModelLamination x, BoardModelLamination y)
-        //    {
-        //        if (object.ReferenceEquals(x, y))
-        //            return true;
-        //        if (x == null || y == null)
-        //            return false;
-        //        return x.BoardModelId == y.BoardModelId
-        //            && x.LaminationId == y.LaminationId;
-        //    }
-
-        //    public int GetHashCode(BoardModelLamination obj)
-        //    {
-        //        return obj.Id.GetHashCode();
-        //    }
-        //}
 
         [HttpPost()]
         [Route("getToOrder")]

@@ -43,6 +43,8 @@ namespace Models
 
             
             modelBuilder.Entity<Paint>().HasKey(c => c.Id);
+            modelBuilder.Entity<Color>().HasKey(c => c.Id);
+            modelBuilder.Entity<BorderColor>().HasKey(c => c.Id);
 
             modelBuilder.Entity<Order>().HasKey(c => c.Id);
             modelBuilder.Entity<OrderProduct>().HasKey(c => c.Id);
@@ -102,6 +104,8 @@ namespace Models
         public DbSet<Size> Size { get; set; }
         public DbSet<Width> Width { get; set; }
         public DbSet<Paint> Paint { get; set; }
+        public DbSet<Color> Color { get; set; }
+        public DbSet<BorderColor> BorderColor { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
         public DbSet<BoardModelColors> BoardModelColors { get; set; }
         public DbSet<Product> Product { get; set; }

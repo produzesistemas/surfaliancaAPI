@@ -17,19 +17,19 @@ namespace surfaliancaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ColorController : ControllerBase
+    public class BorderColorController : ControllerBase
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Color> genericRepository;
-        private IColorRepository<Color> colorRepository;
+        private IRepository<BorderColor> genericRepository;
+        private IBorderColorRepository<BorderColor> colorRepository;
         private readonly UserManager<IdentityUser> userManager;
 
-        public ColorController(UserManager<IdentityUser> userManager,
+        public BorderColorController(UserManager<IdentityUser> userManager,
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Color> genericRepository,
-            IColorRepository<Color> colorRepository
+            IRepository<BorderColor> genericRepository,
+            IBorderColorRepository<BorderColor> colorRepository
             )
         {
             _hostEnvironment = environment;
@@ -50,8 +50,8 @@ namespace surfaliancaAPI.Controllers
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-            Expression<Func<Color, bool>> p2;
-            var predicate = PredicateBuilder.New<Color>();
+            Expression<Func<BorderColor, bool>> p2;
+            var predicate = PredicateBuilder.New<BorderColor>();
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -67,7 +67,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var color = JsonConvert.DeserializeObject<Color>(Convert.ToString(Request.Form["color"]));
+                var color = JsonConvert.DeserializeObject<BorderColor>(Convert.ToString(Request.Form["borderColor"]));
                 var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
                 var fileDelete = pathToSave;
 
@@ -170,8 +170,8 @@ namespace surfaliancaAPI.Controllers
         [AllowAnonymous]
         public IActionResult GetAll(FilterDefault filter)
         {
-            Expression<Func<Color, bool>> p2;
-            var predicate = PredicateBuilder.New<Color>();
+            Expression<Func<BorderColor, bool>> p2;
+            var predicate = PredicateBuilder.New<BorderColor>();
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
@@ -183,7 +183,7 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("active")]
         [Authorize()]
-        public IActionResult Active(Color paint)
+        public IActionResult Active(BorderColor paint)
         {
             try
             {
@@ -206,5 +206,6 @@ namespace surfaliancaAPI.Controllers
         }
     }
 }
+
 
 

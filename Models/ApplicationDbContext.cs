@@ -22,6 +22,7 @@ namespace Models
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelDimensions);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelColors);
             modelBuilder.Entity<BoardType>().HasKey(c => c.Id);
+            modelBuilder.Entity<Cupom>().HasKey(c => c.Id);
 
             modelBuilder.Entity<Bottom>().HasKey(c => c.Id);
 
@@ -79,6 +80,8 @@ namespace Models
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
             modelBuilder.Entity<Bottom>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Bottom).HasForeignKey(c => c.BottomId);
             modelBuilder.Entity<BoardType>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardType).HasForeignKey(c => c.BoardTypeId);
+            modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
+
 
             base.OnModelCreating(modelBuilder);
         }
@@ -87,6 +90,7 @@ namespace Models
         public DbSet<City> City { get; set; }
         public DbSet<State> State { get; set; }
         public DbSet<Country> Country { get; set; }
+        public DbSet<Cupom> Cupom { get; set; }
         public DbSet<TypeEmail> TypeEmail { get; set; }
         public DbSet<StatusPaymentOrder> StatusPaymentOrder { get; set; }
         public DbSet<StatusOrder> StatusOrder { get; set; }

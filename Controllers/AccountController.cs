@@ -113,6 +113,7 @@ namespace surfaliancaAPI.Controllers
                 var applicationUser = new ApplicationUser();
                 applicationUser.Id = user.Id;
                 var applicationUserDTO = new ApplicationUserDTO();
+                applicationUserDTO.Id = user.Id;
                 applicationUserDTO.Token = TokenService.GenerateToken(applicationUser, configuration, permissions);
                 applicationUserDTO.Email = user.Email;
                 applicationUserDTO.UserName = user.UserName;
@@ -160,5 +161,21 @@ namespace surfaliancaAPI.Controllers
 
         }
 
+        [HttpGet()]
+        [Route("getClients")]
+        [Authorize()]
+        public IActionResult GetClients()
+        {
+            try
+            {
+                Claim claim = new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Cliente");
+                var users = userManager.GetUsersForClaimAsync(claim).Result.ToList();
+                return new JsonResult(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(string.Concat("Falha no carregamento dos usuários: ", ex.Message));
+            }
+        }
     }
 }

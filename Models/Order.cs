@@ -21,6 +21,8 @@ namespace Models
         public string ApplicationUserId { get; set; }
         public int PaymentConditionId { get; set; }
 
+        public int CupomId { get; set; }
+
         public int Installments { get; set; }
         public int CapturedAmount { get; set; }
         public string PaymentId { get; set; }
@@ -38,7 +40,8 @@ namespace Models
         public virtual ApplicationUser ApplicationUser { get; set; }
         [NotMapped]
         public virtual PaymentCondition PaymentCondition { get; set; }
-
+        [NotMapped]
+        public virtual Cupom Cupom { get; set; }
         public Order()
         {
             OrderTracking = new List<OrderTracking>();

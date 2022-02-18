@@ -33,7 +33,6 @@ namespace surfaliancaAPI
             services.AddIdentity<IdentityUser, IdentityRole>()
                          .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ICityRepository<>), typeof(CityRepository<>));
             services.AddScoped(typeof(IStoreRepository<>), typeof(StoreRepository<>));
             services.AddScoped(typeof(ITeamRepository<>), typeof(TeamRepository<>));
             services.AddScoped(typeof(IFinSystemRepository<>), typeof(FinSystemRepository<>));

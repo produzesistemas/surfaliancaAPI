@@ -21,19 +21,17 @@ namespace surfaliancaAPI.Controllers
         private IConfiguration _configuration;
         private IRepository<Store> genericRepository;
         private IStoreRepository<Store> storeRepository;
-        private ICityRepository<City> cityRepository;
         public StoreController(
             IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<Store> genericRepository,
-            IStoreRepository<Store> storeRepository,
-            ICityRepository<City> cityRepository)
+            IStoreRepository<Store> storeRepository)
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
             this.storeRepository = storeRepository;
-            this.cityRepository = cityRepository;
+
         }
 
         [HttpPost()]

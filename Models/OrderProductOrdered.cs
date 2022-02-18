@@ -28,12 +28,9 @@ namespace Models
         public Finishing Finishing { get; set; }
         [NotMapped]
         public Paint Paint { get; set; }
-        [NotMapped]
-        public Width Width { get; set; }
+
         [NotMapped]
         public Tail Tail { get; set; }
-        [NotMapped]
-        public Size Size { get; set; }
 
         [NotMapped]
         public Lamination Lamination { get; set; }

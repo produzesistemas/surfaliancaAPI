@@ -17,7 +17,6 @@ namespace Repositorys
         public BoardModel Get(int id)
         {
                 var b = _context.BoardModel.Single(b => b.Id == id);
-                _context.Entry(b).Collection(b => b.BoardModelColors).Query().Load();
                 _context.Entry(b).Collection(b => b.BoardModelDimensions).Query().Load();
                 return b;
         }

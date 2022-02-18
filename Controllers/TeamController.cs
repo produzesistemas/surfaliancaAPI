@@ -32,8 +32,7 @@ namespace surfaliancaAPI.Controllers
             IRepository<Team> genericRepository,
             IStoreRepository<Store> storeRepository,
             ITeamRepository<Team> teamRepository,
-            IRepository<TeamImage> teamImageRepository,
-            ICityRepository<City> cityRepository)
+            IRepository<TeamImage> teamImageRepository)
         {
             _hostEnvironment = environment;
             _configuration = Configuration;

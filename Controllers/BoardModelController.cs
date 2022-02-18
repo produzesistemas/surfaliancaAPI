@@ -20,20 +20,16 @@ namespace surfaliancaAPI.Controllers
     public class BoardModelController : ControllerBase
     {
         private IRepository<BoardModel> genericRepository;
-        private IRepository<BoardModelColors> BoardModelColorsRepository;
         private IRepository<BoardModelDimensions> BoardModelDimensionsRepository;
         private IBoardModelRepository<BoardModel> boardModelRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public BoardModelController(
-    IRepository<Size> sizeRepository,
-    IRepository<Width> widthRepository,
     IRepository<Paint> paintRepository,
                 IWebHostEnvironment environment,
             IConfiguration Configuration,
             IRepository<BoardModel> genericRepository,
-            IRepository<BoardModelColors> BoardModelColorsRepository,
             IRepository<BoardModelDimensions> BoardModelDimensionsRepository,
             IBoardModelRepository<BoardModel> boardModelRepository
     )
@@ -42,7 +38,6 @@ namespace surfaliancaAPI.Controllers
             _configuration = Configuration;
             this.genericRepository = genericRepository;
             this.BoardModelDimensionsRepository = BoardModelDimensionsRepository;
-            this.BoardModelColorsRepository = BoardModelColorsRepository;
             this.boardModelRepository = boardModelRepository;
         }
 

@@ -29,8 +29,6 @@ namespace Models
 
         [NotMapped]
         public List<BoardModelDimensions> BoardModelDimensions { get; set; }
-        [NotMapped]
-        public List<BoardModelColors> BoardModelColors { get; set; }
 
 
         [NotMapped]

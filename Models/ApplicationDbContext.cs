@@ -20,7 +20,6 @@ namespace Models
         {
             modelBuilder.Entity<BoardModel>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelDimensions);
-            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelColors);
             modelBuilder.Entity<BoardType>().HasKey(c => c.Id);
             modelBuilder.Entity<Cupom>().HasKey(c => c.Id);
 
@@ -36,13 +35,8 @@ namespace Models
             //    .WithOne(b => b.Lamination)
             //    .HasForeignKey(c => c.LaminationId);
 
-            modelBuilder.Entity<Size>().HasKey(c => c.Id);
-
             modelBuilder.Entity<Tail>().HasKey(c => c.Id);
-
-            modelBuilder.Entity<Width>().HasKey(c => c.Id);
-
-            
+           
             modelBuilder.Entity<Paint>().HasKey(c => c.Id);
             modelBuilder.Entity<Color>().HasKey(c => c.Id);
             modelBuilder.Entity<BorderColor>().HasKey(c => c.Id);
@@ -72,10 +66,8 @@ namespace Models
                 .WithOne(b => b.StatusPaymentOrder)
                 .HasForeignKey(c => c.StatusPaymentOrderId);
 
-            modelBuilder.Entity<Width>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Width).HasForeignKey(c => c.WidthId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
-            modelBuilder.Entity<Size>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Size).HasForeignKey(c => c.SizeId);
             modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
             modelBuilder.Entity<Bottom>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Bottom).HasForeignKey(c => c.BottomId);
@@ -87,9 +79,6 @@ namespace Models
         }
 
         public DbSet<ProductType> ProductType { get; set; }
-        public DbSet<City> City { get; set; }
-        public DbSet<State> State { get; set; }
-        public DbSet<Country> Country { get; set; }
         public DbSet<Cupom> Cupom { get; set; }
         public DbSet<TypeEmail> TypeEmail { get; set; }
         public DbSet<StatusPaymentOrder> StatusPaymentOrder { get; set; }
@@ -105,13 +94,10 @@ namespace Models
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
         public DbSet<Bottom> Bottom { get; set; }
-        public DbSet<Size> Size { get; set; }
-        public DbSet<Width> Width { get; set; }
         public DbSet<Paint> Paint { get; set; }
         public DbSet<Color> Color { get; set; }
         public DbSet<BorderColor> BorderColor { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
-        public DbSet<BoardModelColors> BoardModelColors { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<TypeSale> TypeSale { get; set; }
         public DbSet<ProductStatus> ProductStatus { get; set; }

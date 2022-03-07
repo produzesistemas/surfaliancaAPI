@@ -165,19 +165,18 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
-        [HttpPost()]
+        [HttpGet()]
         [Route("getAll")]
-        [AllowAnonymous]
-        public IActionResult GetAll(FilterDefault filter)
+        public IActionResult GetAll()
         {
-            Expression<Func<Logo, bool>> p2;
-            var predicate = PredicateBuilder.New<Logo>();
-            if (filter.Name != null)
+            try
             {
-                p2 = p => p.Name.Contains(filter.Name);
-                predicate = predicate.And(p2);
+                return new JsonResult(genericRepository.GetAll().ToList());
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
 
         [HttpPost()]

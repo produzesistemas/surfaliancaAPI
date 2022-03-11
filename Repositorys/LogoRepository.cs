@@ -24,7 +24,6 @@ namespace Repositorys
                 Id = x.Id,
                 Name = x.Name,
                 ImageName = x.ImageName,
-                Value = x.Value,
                 Active = x.Active,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,

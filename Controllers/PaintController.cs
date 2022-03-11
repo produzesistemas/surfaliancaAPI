@@ -83,6 +83,7 @@ namespace surfaliancaAPI.Controllers
                 {
                     var paintBase = genericRepository.Get(paint.Id);
                     paintBase.Name = paint.Name;
+                    paintBase.BoardModelId = paint.BoardModelId;
                     if (paintBase.Value.HasValue)
                     {
                         paintBase.Value = paint.Value;
@@ -101,6 +102,7 @@ namespace surfaliancaAPI.Controllers
                     }
                     paintBase.UpdateApplicationUserId = id;
                     paintBase.UpdateDate = DateTime.Now;
+
                     genericRepository.Update(paintBase);
                     if (System.IO.File.Exists(fileDelete))
                     {

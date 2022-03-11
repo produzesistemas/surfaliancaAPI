@@ -83,10 +83,6 @@ namespace surfaliancaAPI.Controllers
                 {
                     var logoBase = genericRepository.Get(logo.Id);
                     logoBase.Name = logo.Name;
-                    if (logoBase.Value.HasValue)
-                    {
-                        logoBase.Value = logo.Value;
-                    }
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);

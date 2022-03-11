@@ -10,12 +10,9 @@ namespace Models
         public string Description { get; set; }
         public string UrlMovie { get; set; }
         public string ImageName { get; set; }
-        public string ImageName1 { get; set; }
-        public string ImageName2 { get; set; }
-        public string ImageName3 { get; set; }
         public decimal Value { get; set; }
         public int DaysProduction { get; set; }
-        public int BoardTypeId { get; set; }
+        public int LogoId { get; set; }
         public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }

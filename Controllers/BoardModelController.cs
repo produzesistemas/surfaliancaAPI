@@ -79,15 +79,6 @@ namespace surfaliancaAPI.Controllers
                             case 0:
                                 boardModelBase.ImageName = fileName;
                                 break;
-                            case 1:
-                                boardModelBase.ImageName1 = fileName;
-                                break;
-                            case 2:
-                                boardModelBase.ImageName2 = fileName;
-                                break;
-                            case 3:
-                                boardModelBase.ImageName3 = fileName;
-                                break;
                         }
 
                     };
@@ -96,7 +87,7 @@ namespace surfaliancaAPI.Controllers
                     boardModelBase.Name = boardModel.Name;
                     boardModelBase.Value = boardModel.Value;
                     boardModelBase.DaysProduction = boardModel.DaysProduction;
-                    boardModelBase.BoardTypeId = boardModel.BoardTypeId;
+                    boardModelBase.LogoId = boardModel.LogoId;
                     boardModelBase.UrlMovie = boardModel.UrlMovie;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;
@@ -134,15 +125,6 @@ namespace surfaliancaAPI.Controllers
                             case 0:
                                 boardModel.ImageName = fileName;
                                 break;
-                            case 1:
-                                boardModel.ImageName1 = fileName;
-                                break;
-                            case 2:
-                                boardModel.ImageName2 = fileName;
-                                break;
-                            case 3:
-                                boardModel.ImageName3 = fileName;
-                                break;
                         }
 
                     };
@@ -174,13 +156,20 @@ namespace surfaliancaAPI.Controllers
             }
             try
             {
-                Expression<Func<BoardModel, bool>> p2;
+                Expression<Func<BoardModel, bool>> p2,p1;
                 var predicate = PredicateBuilder.New<BoardModel>();
                 if (filter.Name != null)
                 {
                     p2 = p => p.Name.Contains(filter.Name);
                     predicate = predicate.And(p2);
                 }
+
+                if (filter.Id > decimal.Zero)
+                {
+                    p1 = p => p.LogoId ==filter.Id;
+                    predicate = predicate.And(p1);
+                }
+
                 return new JsonResult(genericRepository.Where(predicate).ToList());
             }
             catch (Exception ex)
@@ -234,5 +223,29 @@ namespace surfaliancaAPI.Controllers
             }
 
         }
+        [HttpPost()]
+        [Route("getBoardModelByLogo")]
+        [AllowAnonymous]
+        public IActionResult GetBoardModelByLogo(FilterDefault filter)
+        {
+            try
+            {
+                Expression<Func<BoardModel, bool>> p1;
+                var predicate = PredicateBuilder.New<BoardModel>();
+
+                if (filter.Id > decimal.Zero)
+                {
+                    p1 = p => p.LogoId == filter.Id;
+                    predicate = predicate.And(p1);
+                }
+
+                return new JsonResult(genericRepository.Where(predicate).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Faha no carregamento: " + ex.Message);
+            }
+        }
+
     }
 }

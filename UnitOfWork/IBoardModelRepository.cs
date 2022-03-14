@@ -1,4 +1,6 @@
 ﻿using Models;
+using System;
+using System.Linq;
 
 namespace UnitOfWork
 {
@@ -6,5 +8,7 @@ namespace UnitOfWork
     {
         T Get(int id);
         void Update(T entity);
+
+        IQueryable<T> Where(Func<T, bool> expression);
     }
 }

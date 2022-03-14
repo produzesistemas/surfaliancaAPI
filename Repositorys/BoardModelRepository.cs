@@ -1,7 +1,10 @@
 ﻿using Models;
-using System.Linq;
-using UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using UnitOfWork;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Repositorys
 {
@@ -25,6 +28,11 @@ namespace Repositorys
         {
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
+        }
+
+        public IQueryable<BoardModel> Where(Func<BoardModel, bool> expression)
+        {
+            return _context.BoardModel.Include(c => c.BoardModelDimensions).Where(expression).AsQueryable();
         }
     }
 }

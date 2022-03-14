@@ -239,7 +239,7 @@ namespace surfaliancaAPI.Controllers
                     predicate = predicate.And(p1);
                 }
 
-                return new JsonResult(genericRepository.Where(predicate).ToList());
+                return new JsonResult(boardModelRepository.Where(predicate).ToList());
             }
             catch (Exception ex)
             {

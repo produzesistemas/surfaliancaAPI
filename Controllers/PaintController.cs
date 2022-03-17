@@ -206,6 +206,21 @@ namespace surfaliancaAPI.Controllers
                 return new JsonResult(ex);
             }
         }
+
+        [HttpPost()]
+        [Route("getByModel")]
+        [AllowAnonymous]
+        public IActionResult GetByModel(FilterDefault filter)
+        {
+            Expression<Func<Paint, bool>> p2;
+            var predicate = PredicateBuilder.New<Paint>();
+            if (filter.Id > 0)
+            {
+                p2 = p => p.BoardModelId == filter.Id;
+                predicate = predicate.And(p2);
+            }
+            return new JsonResult(genericRepository.Where(predicate).ToList());
+        }
     }
 }
 

@@ -247,5 +247,27 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
+        [HttpPost()]
+        [Route("delete")]
+        [Authorize()]
+        public IActionResult Delete(BoardModel boardModel)
+        {
+            try
+            {
+                var entityBase = genericRepository.Get(boardModel.Id);
+                genericRepository.Delete(entityBase);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException.Message.Contains("UNIQUE KEY"))
+                {
+                    return BadRequest("Bairro já cadastrado");
+                }
+                return BadRequest(string.Concat("Falha no save do bairro: ", ex.Message));
+            }
+        }
+
     }
 }
+

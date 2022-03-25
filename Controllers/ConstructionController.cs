@@ -116,6 +116,7 @@ namespace surfaliancaAPI.Controllers
                     entityBase.Details = construction.Details;
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
+                    entityBase.UrlMovie = construction.UrlMovie;
                     genericRepository.Update(entityBase);
                     if (System.IO.File.Exists(fileDelete))
                     {

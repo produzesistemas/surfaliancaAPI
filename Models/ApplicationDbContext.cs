@@ -70,9 +70,7 @@ namespace Models
             modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
             modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
-            modelBuilder.Entity<Bottom>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Bottom).HasForeignKey(c => c.BottomId);
-            modelBuilder.Entity<BoardType>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardType).HasForeignKey(c => c.BoardTypeId);
-            modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
+modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
 
 
             base.OnModelCreating(modelBuilder);
@@ -86,17 +84,13 @@ namespace Models
         public DbSet<Store> Store { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<FinSystem> FinSystem { get; set; }
-        public DbSet<FinSystemColor> FinSystemColor { get; set; }
         public DbSet<Team> Team { get; set; }
         public DbSet<TeamImage> TeamImage { get; set; }
         public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Construction> Construction { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
-        public DbSet<Bottom> Bottom { get; set; }
         public DbSet<Paint> Paint { get; set; }
-        public DbSet<Color> Color { get; set; }
-        public DbSet<BorderColor> BorderColor { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<TypeSale> TypeSale { get; set; }

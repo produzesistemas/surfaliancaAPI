@@ -162,8 +162,8 @@ namespace surfaliancaAPI.Controllers
                 {
                     var orderBase = GenericRepository.Get(sendPaymentCielo.OrderId);
                     orderBase.PaymentId = sendPaymentCielo.PaymentId;
-                    orderBase.CapturedAmount = sendPaymentCielo.CapturedAmount;
-                    orderBase.Installments = sendPaymentCielo.Installments;
+                    //orderBase.CapturedAmount = sendPaymentCielo.CapturedAmount;
+                    //orderBase.Installments = sendPaymentCielo.Installments;
                     GenericRepository.Update(orderBase);
                     OrderTrackingRepository.Insert(new OrderTracking()
                     {

@@ -27,9 +27,6 @@ namespace Repositorys
                     .Include(x => x.Tail)
                     .Include(x => x.Lamination)
                     .Include(x => x.Construction)
-                    .Include(x => x.Bottom)
-                    .Include(x => x.BoardType)
-                    .Include(x => x.Finishing)
                     .Include(x => x.Paint)
                     .Load();
                 _context.Entry(b).Collection(b => b.OrderTracking).Query()

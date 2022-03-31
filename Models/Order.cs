@@ -18,13 +18,14 @@ namespace Models
         public string Reference { get; set; }
         public string State { get; set; }
         public decimal TaxValue { get; set; }
+        public DateTime DeliveryDate { get; set; }
         public string ApplicationUserId { get; set; }
-        public int PaymentConditionId { get; set; }
+        public int? PaymentConditionId { get; set; }
 
-        public int CupomId { get; set; }
+        public int? CupomId { get; set; }
 
-        public int Installments { get; set; }
-        public int CapturedAmount { get; set; }
+        //public int Installments { get; set; }
+        //public int CapturedAmount { get; set; }
         public string PaymentId { get; set; }
 
         [NotMapped]

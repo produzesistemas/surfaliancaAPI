@@ -49,7 +49,7 @@ namespace Models
             modelBuilder.Entity<Order>().HasMany(c => c.OrderProduct);
             modelBuilder.Entity<Order>().HasMany(c => c.OrderProductOrdered);
             modelBuilder.Entity<Order>().HasMany(c => c.OrderTracking);
-            modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Finishing);
+            //modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Finishing);
             modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Paint);
 
 

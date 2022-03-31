@@ -7,7 +7,7 @@ namespace Models
     [Table("OrderProductOrdered")]
     public class OrderProductOrdered : BaseEntity
     {
-        public int Quantity { get; set; }
+        public int Qtd { get; set; }
         public decimal Value { get; set; }
         public string Obs { get; set; }
         public int OrderId { get; set; }
@@ -20,8 +20,8 @@ namespace Models
         public int? TailId { get; set; }
         public int? PaintId { get; set; }
 
-        [NotMapped]
-        public Finishing Finishing { get; set; }
+        //[NotMapped]
+        //public Finishing Finishing { get; set; }
         [NotMapped]
         public Paint Paint { get; set; }
 

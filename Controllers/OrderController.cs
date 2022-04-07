@@ -181,5 +181,44 @@ namespace surfaliancaAPI.Controllers
 
             return Ok(); ;
         }
+
+        [HttpPost()]
+        [Route("cancel")]
+        [Authorize()]
+        public IActionResult CancelarPedido(FilterDefault filter)
+        {
+            try
+            {
+                if (filter != null)
+                {
+                    var pedidoBase = OrderRepository.Get(filter.Id);
+                    if (pedidoBase == null)
+                    {
+                        return BadRequest("Pedido não encontrado.");
+                    }
+                    OrderTrackingRepository.Insert(new OrderTracking()
+                    {
+                        DateTracking = DateTime.Now,
+                        OrderId = pedidoBase.Id,
+                        StatusOrderId = 1,
+                        StatusPaymentOrderId = 1
+                    });
+                    OrderEmailRepository.Insert(new OrderEmail()
+                    {
+                        OrderId = filter.Id,
+                        Send = false,
+                        TypeEmailId = 3
+                    });
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Falha no envio do Pagamento. Entre em contato com o administrador do sistema. " + ex);
+            }
+
+            return Ok(); ;
+        }
+
     }
 }

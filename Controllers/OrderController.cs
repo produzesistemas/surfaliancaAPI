@@ -19,7 +19,7 @@ namespace surfaliancaAPI.Controllers
         private IRepository<OrderProduct> OrderProductRepository;
         private IRepository<OrderProductOrdered> OrderProductOrderedRepository;
         private IRepository<OrderEmail> OrderEmailRepository;
-        private IRepository<OrderTracking> OrderTrackingRepository;
+        private IRepository<OrderTracking> orderTrackingRepository;
         private IRepository<Finishing> FinishingRepository;
 
         public OrderController(
@@ -29,7 +29,7 @@ namespace surfaliancaAPI.Controllers
             IRepository<OrderProduct> OrderProductRepository,
             IRepository<OrderProductOrdered> OrderProductOrderedRepository,
             IRepository<OrderEmail> OrderEmailRepository,
-            IRepository<OrderTracking> OrderTrackingRepository
+            IRepository<OrderTracking> orderTrackingRepository
             )
         {
             this.GenericRepository = GenericRepository;
@@ -37,7 +37,7 @@ namespace surfaliancaAPI.Controllers
             this.OrderProductRepository = OrderProductRepository;
             this.OrderProductOrderedRepository = OrderProductOrderedRepository;
             this.OrderEmailRepository = OrderEmailRepository;
-            this.OrderTrackingRepository = OrderTrackingRepository;
+            this.orderTrackingRepository = orderTrackingRepository;
             this.FinishingRepository = FinishingRepository;
 
         }
@@ -64,7 +64,7 @@ namespace surfaliancaAPI.Controllers
                     Send = false,
                     TypeEmailId = 1
                 });
-                OrderTrackingRepository.Insert(new OrderTracking()
+                orderTrackingRepository.Insert(new OrderTracking()
                 {
                     DateTracking = DateTime.Now,
                     OrderId = order.Id,
@@ -165,7 +165,7 @@ namespace surfaliancaAPI.Controllers
                     //orderBase.CapturedAmount = sendPaymentCielo.CapturedAmount;
                     //orderBase.Installments = sendPaymentCielo.Installments;
                     GenericRepository.Update(orderBase);
-                    OrderTrackingRepository.Insert(new OrderTracking()
+                    orderTrackingRepository.Insert(new OrderTracking()
                     {
                         DateTracking = DateTime.Now,
                         OrderId = orderBase.Id,
@@ -191,24 +191,26 @@ namespace surfaliancaAPI.Controllers
             {
                 if (filter != null)
                 {
-                    var pedidoBase = OrderRepository.Get(filter.Id);
-                    if (pedidoBase == null)
+                    var orderBase = GenericRepository.Get(filter.Id);
+                    if (orderBase == null)
                     {
                         return BadRequest("Pedido não encontrado.");
                     }
-                    OrderTrackingRepository.Insert(new OrderTracking()
-                    {
-                        DateTracking = DateTime.Now,
-                        OrderId = pedidoBase.Id,
-                        StatusOrderId = 1,
-                        StatusPaymentOrderId = 1
-                    });
+                    GenericRepository.Update(orderBase);
                     OrderEmailRepository.Insert(new OrderEmail()
                     {
-                        OrderId = filter.Id,
+                        OrderId = orderBase.Id,
                         Send = false,
                         TypeEmailId = 3
                     });
+                    orderTrackingRepository.Insert(new OrderTracking()
+                    {
+                        DateTracking = DateTime.Now,
+                        OrderId = orderBase.Id,
+                        StatusOrderId = 3,
+                        StatusPaymentOrderId = 3
+                    });
+                    return Ok();
 
                 }
             }
@@ -217,8 +219,9 @@ namespace surfaliancaAPI.Controllers
                 return BadRequest("Falha no envio do Pagamento. Entre em contato com o administrador do sistema. " + ex);
             }
 
-            return Ok(); ;
+            return Ok();
         }
+
 
     }
 }

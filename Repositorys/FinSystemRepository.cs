@@ -29,7 +29,6 @@ namespace Repositorys
                 Id = x.Id,
                 Name = x.Name,
                 Details = x.Details,
-                FinSystemColors = finSystemColors.Where(t => t.FinSystemId == x.Id).ToList(),
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
@@ -45,7 +44,6 @@ namespace Repositorys
             {
                 Id = x.Id,
                 Name = x.Name,
-                FinSystemColors = finSystemColors.Where(t => t.FinSystemId == x.Id).ToList(),
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
                 AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
             }).Where(expression).AsQueryable();

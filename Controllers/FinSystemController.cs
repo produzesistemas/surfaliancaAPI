@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using LinqKit;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace surfaliancaAPI.Controllers
 {
@@ -19,13 +23,18 @@ namespace surfaliancaAPI.Controllers
         private IFinSystemRepository<FinSystem> finSystemRepository;
         private IRepository<FinColor> finColorRepository;
         private IRepository<FinSystemColor> finSystemColorRepository;
-
+        private IWebHostEnvironment _hostEnvironment;
+        private IConfiguration _configuration;
         public FinSystemController(
+                       IWebHostEnvironment environment,
+           IConfiguration Configuration,
             IRepository<FinSystem> genericRepository,
              IFinSystemRepository<FinSystem> finSystemRepository,
             IRepository<FinSystemColor> finSystemColorRepository,
             IRepository<FinColor> finColorRepository)
         {
+            _hostEnvironment = environment;
+            _configuration = Configuration;
             this.genericRepository = genericRepository;
             this.finSystemRepository = finSystemRepository;
             this.finColorRepository = finColorRepository;
@@ -56,48 +65,75 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save(FinSystem finSystem)
+        public IActionResult Save()
         {
             try
             {
+                var finSystem = JsonConvert.DeserializeObject<FinSystem>(Convert.ToString(Request.Form["finSystem"]));
+                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileProduct"]);
+                var fileDelete = pathToSave;
+                var files = Request.Form.Files;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                if (id == null)
+                if ((id != null) || (finSystem != null))
                 {
-                    return BadRequest("Identificação do usuário não encontrada.");
-                }
-                if (finSystem.Id > decimal.Zero)
+                    if (finSystem.Id == decimal.Zero)
                     {
-                        var finSystemBase = finSystemRepository.Get(finSystem.Id);
+                        if (Request.Form.Files.Count() > decimal.Zero)
+                        {
+                            for (var counter = 0; counter < files.Count; counter++)
+                            {
+                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                var fullPath = Path.Combine(pathToSave, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    files[counter].CopyTo(stream);
+                                }
+
+                                finSystem.ImageName = fileName;
+
+                            };
+
+                            finSystem.ApplicationUserId = id;
+                            finSystem.CreateDate = DateTime.Now;
+                            finSystem.Active = true;
+                            genericRepository.Insert(finSystem);
+                            return new OkResult();
+                        }
+                    }
+                    else
+                    {
+                        var finSystemBase = genericRepository.Get(finSystem.Id);
+                        if (Request.Form.Files.Count() > decimal.Zero)
+                        {
+                            for (var counter = 0; counter < files.Count; counter++)
+                            {
+                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                                var fullPath = Path.Combine(pathToSave, fileName);
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    files[counter].CopyTo(stream);
+                                }
+                                finSystemBase.ImageName = fileName;
+                            };
+                        }
+                        finSystemBase.Details = finSystem.Details;
                         finSystemBase.Name = finSystem.Name;
                         finSystemBase.UpdateApplicationUserId = id;
                         finSystemBase.UpdateDate = DateTime.Now;
                         genericRepository.Update(finSystemBase);
-                        var toDelete = finSystemBase.FinSystemColors.Except(finSystem.FinSystemColors, new EqualityComparer()).ToList();
-                        var toInsert = finSystem.FinSystemColors.Except(finSystemBase.FinSystemColors, new EqualityComparer()).ToList();
-                        toDelete.ForEach(x =>
+                        if (System.IO.File.Exists(fileDelete))
                         {
-                            finSystemColorRepository.Delete(x);
-                        });
-                        toInsert.ForEach(x =>
-                        {
-                            x.FinSystemId = finSystemBase.Id;
-                            finSystemColorRepository.Insert(x);
-                        });
-                }
-                    else
-                    {
-                        finSystem.ApplicationUserId = id;
-                        finSystem.CreateDate = DateTime.Now;
-                        finSystem.Active = true;
-                        genericRepository.Insert(finSystem);
-                        finSystem.FinSystemColors.ForEach(finSystemColor =>
-                        {
-                            finSystemColor.FinSystemId = finSystem.Id;
-                            finSystemColorRepository.Insert(finSystemColor);
-                        });
+                            System.IO.File.Delete(fileDelete);
+                        }
+                        return new OkResult();
                     }
-                    return new JsonResult(finSystem);
+
+                }
+
+                return new OkResult();
             }
             catch (Exception ex)
             {
@@ -154,6 +190,21 @@ namespace surfaliancaAPI.Controllers
             {
                 return obj.Id.GetHashCode();
             }
+        }
+
+        [HttpGet()]
+        [Route("getAll")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return new JsonResult(genericRepository.GetAll().ToList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
         }
     }
 }

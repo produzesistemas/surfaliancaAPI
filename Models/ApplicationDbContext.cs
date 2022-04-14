@@ -38,6 +38,7 @@ namespace Models
             modelBuilder.Entity<Tail>().HasKey(c => c.Id);
            
             modelBuilder.Entity<Paint>().HasKey(c => c.Id);
+            modelBuilder.Entity<Stringer>().HasKey(c => c.Id);
             modelBuilder.Entity<Color>().HasKey(c => c.Id);
             modelBuilder.Entity<BorderColor>().HasKey(c => c.Id);
 
@@ -70,8 +71,7 @@ namespace Models
             modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
             modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
-modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
-
+            modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -91,6 +91,7 @@ modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasFor
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
         public DbSet<Paint> Paint { get; set; }
+        public DbSet<Stringer> Stringer { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<TypeSale> TypeSale { get; set; }
@@ -101,10 +102,8 @@ modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasFor
         public DbSet<OrderProduct> OrderProduct { get; set; }
         public DbSet<OrderProductOrdered> OrderProductOrdered { get; set; }
         public DbSet<PaymentCondition> PaymentCondition { get; set; }
-
         public DbSet<Finishing> Finishing { get; set; }
         public DbSet<Logo> Logo { get; set; }
-
         public DbSet<Blog> Blog { get; set; }
         public DbSet<TypeBlog> TypeBlog { get; set; }
 

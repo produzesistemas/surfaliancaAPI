@@ -206,5 +206,30 @@ namespace surfaliancaAPI.Controllers
             }
 
         }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(FinSystem finSystem)
+        {
+            try
+            {
+                var entity = genericRepository.Get(finSystem.Id);
+                if (entity.Active)
+                {
+                    entity.Active = false;
+                }
+                else
+                {
+                    entity.Active = true;
+                }
+                genericRepository.Update(entity);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
+        }
     }
 }

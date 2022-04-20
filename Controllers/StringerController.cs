@@ -19,6 +19,7 @@ namespace surfaliancaAPI.Controllers
     public class StringerController : ControllerBase
     {
         private IRepository<Stringer> genericRepository;
+        private IStringerRepository<Stringer> stringerRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
@@ -28,6 +29,7 @@ namespace surfaliancaAPI.Controllers
             IConfiguration Configuration)
         {
             this.genericRepository = genericRepository;
+            this.stringerRepository = stringerRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
         }
@@ -145,13 +147,16 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+               stringerRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("A longarina não pode ser excluída. Está relacionada com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão da construção: ", ex.Message));
             }
 
 
@@ -179,6 +184,7 @@ namespace surfaliancaAPI.Controllers
             return new JsonResult(genericRepository.GetAll().ToList());
         }
 
+
         [HttpPost()]
         [Route("active")]
         [Authorize()]
@@ -186,16 +192,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entity = genericRepository.Get(stringer.Id);
-                if (entity.Active)
-                {
-                    entity.Active = false;
-                }
-                else
-                {
-                    entity.Active = true;
-                }
-                genericRepository.Update(entity);
+                stringerRepository.Active(stringer.Id);
                 return new OkResult();
             }
             catch (Exception ex)

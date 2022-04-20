@@ -12,6 +12,7 @@ namespace Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string ApplicationUserId { get; set; }
+        public bool Active { get; set; }
 
         [NotMapped]
         public string CriadoPor { get; set; }

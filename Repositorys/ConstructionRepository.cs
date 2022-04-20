@@ -12,9 +12,10 @@ namespace Repositorys
     {
         private DbSet<Construction> entities;
         private DbSet<IdentityUser> users;
-
+        private readonly ApplicationDbContext _context;
         public ConstructionRepository(ApplicationDbContext context)
         {
+            _context = context;
             entities = context.Set<Construction>();
             users = context.Set<IdentityUser>();
         }
@@ -29,10 +30,6 @@ namespace Repositorys
                 Details = x.Details,
                 CreateDate = x.CreateDate,
                 UpdateDate = x.UpdateDate,
-                ImageName = x.ImageName,
-                ImageName1 = x.ImageName1,
-                ImageName2 = x.ImageName2,
-                ImageName3 = x.ImageName3,
                 UrlMovie = x.UrlMovie,
                 ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
                 UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
@@ -50,6 +47,28 @@ namespace Repositorys
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
                 AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
             }).Where(expression).AsQueryable();
+        }
+
+        public void Delete(int id)
+        {
+            var entity = _context.Construction.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void Active(int id)
+        {
+            var entity = _context.Construction.Single(x => x.Id == id);
+            if (entity.Active)
+            {
+                entity.Active = false;
+            }
+            else
+            {
+                entity.Active = true;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

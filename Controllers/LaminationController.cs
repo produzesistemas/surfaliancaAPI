@@ -88,13 +88,16 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                laminationRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("A laminação não pode ser excluída. Está relacionada com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão da construção: ", ex.Message));
             }
 
 
@@ -127,6 +130,22 @@ namespace surfaliancaAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
 
+        }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(Lamination lamination)
+        {
+            try
+            {
+                laminationRepository.Active(lamination.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
         }
 
     }

@@ -64,8 +64,6 @@ namespace surfaliancaAPI.Controllers
             try
             {
                 var construction = JsonConvert.DeserializeObject<Construction>(Convert.ToString(Request.Form["construction"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
-                var fileDelete = pathToSave;
 
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
@@ -73,41 +71,10 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                var files = Request.Form.Files;
 
                 if (construction.Id > decimal.Zero)
                 {
                     var entityBase = genericRepository.Get(construction.Id);
-
-                    for (var counter = 0; counter < files.Count; counter++)
-                    {
-                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                        var fullPath = Path.Combine(pathToSave, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            files[counter].CopyTo(stream);
-                        }
-
-                        switch (counter)
-                        {
-                            case 0:
-                                entityBase.ImageName = fileName;
-                                break;
-                            case 1:
-                                entityBase.ImageName1 = fileName;
-                                break;
-                            case 2:
-                                entityBase.ImageName2 = fileName;
-                                break;
-                            case 3:
-                                entityBase.ImageName3 = fileName;
-                                break;
-                        }
-
-                    };
-
-
                     entityBase.Name = construction.Name;
                     if (construction.Value.HasValue)
                     {
@@ -118,41 +85,11 @@ namespace surfaliancaAPI.Controllers
                     entityBase.UpdateDate = DateTime.Now;
                     entityBase.UrlMovie = construction.UrlMovie;
                     genericRepository.Update(entityBase);
-                    if (System.IO.File.Exists(fileDelete))
-                    {
-                        System.IO.File.Delete(fileDelete);
-                    }
+
                 }
                 else
                 {
-                    for (var counter = 0; counter < files.Count; counter++)
-                    {
-                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                        var fullPath = Path.Combine(pathToSave, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            files[counter].CopyTo(stream);
-                        }
-
-                        switch (counter)
-                        {
-                            case 0:
-                                construction.ImageName = fileName;
-                                break;
-                            case 1:
-                                construction.ImageName1 = fileName;
-                                break;
-                            case 2:
-                                construction.ImageName2 = fileName;
-                                break;
-                            case 3:
-                                construction.ImageName3 = fileName;
-                                break;
-                        }
-
-                    };
-
+                    construction.Active = true;
                     construction.ApplicationUserId = id;
                     construction.CreateDate = DateTime.Now;
                     genericRepository.Insert(construction);
@@ -171,13 +108,16 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                constructionRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("A tecnologia / construção não pode ser excluída. Está relacionada com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão da construção: ", ex.Message));
             }
 
 
@@ -203,6 +143,22 @@ namespace surfaliancaAPI.Controllers
         public IActionResult GetAll()
         {
             return new JsonResult(genericRepository.GetAll().ToList());
+        }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(Construction construction)
+        {
+            try
+            {
+                constructionRepository.Active(construction.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
         }
 
     }

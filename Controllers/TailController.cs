@@ -128,13 +128,16 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                tailRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("O reforço da rabeta não pode ser excluído. Está relacionada com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão do reforço da rabeta: ", ex.Message));
             }
 
 
@@ -167,6 +170,22 @@ namespace surfaliancaAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
 
+        }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(Tail tail)
+        {
+            try
+            {
+                tailRepository.Active(tail.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
         }
     }
 }

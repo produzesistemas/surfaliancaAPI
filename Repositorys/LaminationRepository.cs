@@ -11,11 +11,13 @@ namespace Repositorys
     {
         private DbSet<Lamination> entities;
         private DbSet<IdentityUser> users;
+        private readonly ApplicationDbContext _context;
 
         public LaminationRepository(ApplicationDbContext context)
         {
             entities = context.Set<Lamination>();
             users = context.Set<IdentityUser>();
+            _context = context;
         }
 
         public Lamination Get(int id)
@@ -32,6 +34,28 @@ namespace Repositorys
                 CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
                 AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
             }).FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Delete(int id)
+        {
+            var entity = _context.Lamination.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void Active(int id)
+        {
+            var entity = _context.Lamination.Single(x => x.Id == id);
+            if (entity.Active)
+            {
+                entity.Active = false;
+            }
+            else
+            {
+                entity.Active = true;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

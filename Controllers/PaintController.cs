@@ -141,13 +141,16 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                paintRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("A pintura não pode ser excluída. Está relacionada com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão da construção: ", ex.Message));
             }
 
 
@@ -189,16 +192,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var paintBase = genericRepository.Get(paint.Id);
-                if (paintBase.Active)
-                {
-                    paintBase.Active = false;
-                }
-                else
-                {
-                    paintBase.Active = true;
-                }
-                genericRepository.Update(paintBase);
+                paintRepository.Active(paint.Id);
                 return new OkResult();
             }
             catch (Exception ex)

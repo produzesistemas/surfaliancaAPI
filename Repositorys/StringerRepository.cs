@@ -1,35 +1,29 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Models;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using System.Linq;
 using UnitOfWork;
 
 namespace Repositorys
 {
-    public class PaintRepository<T> : IPaintRepository<Paint> where T : BaseEntity
+    public class StringerRepository<T> : IStringerRepository<Stringer> where T : BaseEntity
     {
         private readonly ApplicationDbContext _context;
-
-        public PaintRepository(ApplicationDbContext context)
+        public StringerRepository(ApplicationDbContext context)
         {
             _context = context;
-        }
 
-        public Paint Get(int id)
-        {
-            return _context.Paint.Single(b => b.Id == id);
         }
 
         public void Delete(int id)
         {
-            var entity = _context.Paint.Single(x => x.Id == id);
+            var entity = _context.Stringer.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
         }
 
         public void Active(int id)
         {
-            var entity = _context.Paint.Single(x => x.Id == id);
+            var entity = _context.Stringer.Single(x => x.Id == id);
             if (entity.Active)
             {
                 entity.Active = false;

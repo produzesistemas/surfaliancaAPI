@@ -31,6 +31,7 @@ namespace Models
             //    .HasForeignKey(c => c.ConstructionId);
 
             modelBuilder.Entity<Lamination>().HasKey(c => c.Id);
+            modelBuilder.Entity<State>().HasKey(c => c.Id);
             //modelBuilder.Entity<Lamination>().HasMany(c => c.BoardModelLaminations)
             //    .WithOne(b => b.Lamination)
             //    .HasForeignKey(c => c.LaminationId);
@@ -82,6 +83,7 @@ namespace Models
         public DbSet<StatusPaymentOrder> StatusPaymentOrder { get; set; }
         public DbSet<StatusOrder> StatusOrder { get; set; }
         public DbSet<Store> Store { get; set; }
+        public DbSet<State> State { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<FinSystem> FinSystem { get; set; }
         public DbSet<Team> Team { get; set; }

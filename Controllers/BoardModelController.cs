@@ -247,27 +247,42 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
-        [HttpPost()]
-        [Route("delete")]
+        [HttpDelete("{id}")]
         [Authorize()]
-        public IActionResult Delete(BoardModel boardModel)
+        public IActionResult Delete(int id)
         {
             try
             {
-                var entityBase = genericRepository.Get(boardModel.Id);
-                genericRepository.Delete(entityBase);
+                //var entityBase = genericRepository.Get(id);
+                boardModelRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                if (ex.InnerException.Message.Contains("UNIQUE KEY"))
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
                 {
-                    return BadRequest("Bairro já cadastrado");
+                    return BadRequest("O modelo não pode ser excluído. Está relacionado com um pedido. Considere desativar!");
                 }
-                return BadRequest(string.Concat("Falha no save do bairro: ", ex.Message));
+                return BadRequest(string.Concat("Falha na exclusão do modelo: ", ex.Message));
+
             }
         }
 
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(BoardModel boardModel)
+        {
+            try
+            {
+                boardModelRepository.Active(boardModel.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
+        }
     }
 }
 

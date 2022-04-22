@@ -17,6 +17,28 @@ namespace Repositorys
             _context = context;
         }
 
+        public void Active(int id)
+        {
+            var entity = _context.BoardModel.Single(x => x.Id == id);
+            if (entity.Active)
+            {
+                entity.Active = false;
+            }
+            else
+            {
+                entity.Active = true;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var entity = _context.BoardModel.Single(x => x.Id == id);  
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
         public BoardModel Get(int id)
         {
                 var b = _context.BoardModel.Single(b => b.Id == id);

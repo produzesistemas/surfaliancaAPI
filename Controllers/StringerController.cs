@@ -25,6 +25,7 @@ namespace surfaliancaAPI.Controllers
 
         public StringerController(
             IRepository<Stringer> genericRepository,
+            IStringerRepository<Stringer> stringerRepository,
                             IWebHostEnvironment environment,
             IConfiguration Configuration)
         {

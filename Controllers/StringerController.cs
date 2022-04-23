@@ -59,13 +59,13 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save()
+        public IActionResult Save(Stringer stringer)
         {
             try
             {
-                var stringer = JsonConvert.DeserializeObject<Stringer>(Convert.ToString(Request.Form["stringer"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
-                var fileDelete = pathToSave;
+                //var stringer = JsonConvert.DeserializeObject<Stringer>(Convert.ToString(Request.Form["stringer"]));
+                //var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
+                //var fileDelete = pathToSave;
 
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
@@ -73,24 +73,24 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                var files = Request.Form.Files;
+                //var files = Request.Form.Files;
 
                 if (stringer.Id > decimal.Zero)
                 {
                     var entityBase = genericRepository.Get(stringer.Id);
 
-                    for (var counter = 0; counter < files.Count; counter++)
-                    {
-                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                        var fullPath = Path.Combine(pathToSave, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            files[counter].CopyTo(stream);
-                        }
+                    //for (var counter = 0; counter < files.Count; counter++)
+                    //{
+                    //    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                    //    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                    //    var fullPath = Path.Combine(pathToSave, fileName);
+                    //    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    //    {
+                    //        files[counter].CopyTo(stream);
+                    //    }
 
-                        entityBase.ImageName = fileName;
-                    };
+                    //    entityBase.ImageName = fileName;
+                    //};
 
 
                     entityBase.Name = stringer.Name;
@@ -110,24 +110,24 @@ namespace surfaliancaAPI.Controllers
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
                     genericRepository.Update(entityBase);
-                    if (System.IO.File.Exists(fileDelete))
-                    {
-                        System.IO.File.Delete(fileDelete);
-                    }
+                    //if (System.IO.File.Exists(fileDelete))
+                    //{
+                    //    System.IO.File.Delete(fileDelete);
+                    //}
                 }
                 else
                 {
-                    for (var counter = 0; counter < files.Count; counter++)
-                    {
-                        var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                        var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                        var fullPath = Path.Combine(pathToSave, fileName);
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            files[counter].CopyTo(stream);
-                        }
-                        stringer.ImageName = fileName;
-                    };
+                    //for (var counter = 0; counter < files.Count; counter++)
+                    //{
+                    //    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
+                    //    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
+                    //    var fullPath = Path.Combine(pathToSave, fileName);
+                    //    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    //    {
+                    //        files[counter].CopyTo(stream);
+                    //    }
+                    //    stringer.ImageName = fileName;
+                    //};
 
                     stringer.ApplicationUserId = id;
                     stringer.CreateDate = DateTime.Now;

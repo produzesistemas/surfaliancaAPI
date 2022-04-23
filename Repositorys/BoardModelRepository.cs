@@ -34,9 +34,20 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            var entity = _context.BoardModel.Single(x => x.Id == id);  
+            if ((_context.OrderProductOrdered.Any(c => c.BoardModelId == id)) ||
+                (_context.Paint.Any(c => c.BoardModelId == id)))
+            {
+                throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
+            };
+
+            var dimensions = _context.BoardModelDimensions.Where(c => c.BoardModelId == id);
+            _context.RemoveRange(dimensions);
+            var paints = _context.Paint.Where(c => c.BoardModelId == id);
+            _context.RemoveRange(paints);
+            var entity = _context.BoardModel.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
+            _context.Dispose();
         }
 
         public BoardModel Get(int id)

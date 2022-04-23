@@ -215,7 +215,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                return new JsonResult(genericRepository.Where(x => x.Active == true));
             }
             catch (Exception ex)
             {
@@ -259,10 +259,6 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
-                {
-                    return BadRequest("O modelo não pode ser excluído. Está relacionado com um pedido. Considere desativar!");
-                }
                 return BadRequest(string.Concat("Falha na exclusão do modelo: ", ex.Message));
 
             }

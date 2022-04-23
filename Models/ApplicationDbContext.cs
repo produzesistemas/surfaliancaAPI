@@ -95,6 +95,7 @@ namespace Models
         public DbSet<Paint> Paint { get; set; }
         public DbSet<Stringer> Stringer { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }
+        public DbSet<BoardModelDimensions> BoardModelDimensions { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<TypeSale> TypeSale { get; set; }
         public DbSet<ProductStatus> ProductStatus { get; set; }

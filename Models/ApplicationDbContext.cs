@@ -74,6 +74,13 @@ namespace Models
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
             modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
 
+            modelBuilder.Entity<ShippingCompany>().HasKey(c => c.Id);
+            modelBuilder.Entity<ShippingCompanyState>().HasKey(c => c.Id);
+            modelBuilder.Entity<ShippingCompany>().HasMany(c => c.ShippingCompanyStates)
+            .WithOne(b => b.ShippingCompany)
+            .HasForeignKey(c => c.ShippingCompanyId);
+            modelBuilder.Entity<ShippingCompanyState>().HasOne(c => c.ShippingCompany);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -90,6 +97,8 @@ namespace Models
         public DbSet<TeamImage> TeamImage { get; set; }
         public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Construction> Construction { get; set; }
+        public DbSet<ShippingCompany> ShippingCompany { get; set; }
+        public DbSet<ShippingCompanyState> ShippingCompanyState { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
         public DbSet<Paint> Paint { get; set; }

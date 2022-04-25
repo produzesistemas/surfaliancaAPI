@@ -50,7 +50,7 @@ namespace surfaliancaAPI
             services.AddScoped(typeof(IBlogRepository<>), typeof(BlogRepository<>));
             services.AddScoped(typeof(ICupomRepository<>), typeof(CupomRepository<>));
             services.AddScoped(typeof(IStringerRepository<>), typeof(StringerRepository<>));
-
+            services.AddScoped(typeof(IShippingCompanyRepository<>), typeof(ShippingCompanyRepository<>));
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

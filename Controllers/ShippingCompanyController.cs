@@ -128,14 +128,29 @@ namespace petixcoAPI.Controllers
                         System.IO.File.Delete(fileDelete);
                     }
                     var lstDimensions = ShippingCompanyStateRepository.Where(w => w.ShippingCompanyId == shippingCompanyBase.Id).ToList();
-                    lstDimensions.ForEach(x =>
+                    //lstDimensions.ForEach(x =>
+                    //{
+                    //    ShippingCompanyStateRepository.Delete(x);
+                    //});
+                    //shippingCompany.ShippingCompanyStates.ForEach(s =>
+                    //{
+                    //    s.ShippingCompanyId = shippingCompany.Id;
+                    //    ShippingCompanyStateRepository.Insert(s);
+                    //});
+
+                    var toDelete = lstDimensions.Except(shippingCompany.ShippingCompanyStates, new EqualityComparer()).ToList();
+                    var toInsert = shippingCompany.ShippingCompanyStates.Except(lstDimensions, new EqualityComparer()).ToList();
+                    toDelete.ForEach(x =>
                     {
+                        x.ShippingCompany = null;
                         ShippingCompanyStateRepository.Delete(x);
                     });
-                    shippingCompany.ShippingCompanyStates.ForEach(s =>
+                    toInsert.ForEach(x =>
                     {
-                        s.ShippingCompanyId = shippingCompany.Id;
-                        ShippingCompanyStateRepository.Insert(s);
+                        x.ShippingCompanyId = shippingCompany.Id;
+                        x.Id = 0;
+                        ShippingCompanyStateRepository.Insert(x);
+
                     });
 
                 }

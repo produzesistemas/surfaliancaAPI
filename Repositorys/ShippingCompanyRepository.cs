@@ -18,7 +18,7 @@ namespace Repositorys
         public ShippingCompany Get(int id)
         {
             var shipping =  _context.ShippingCompany.Include(x => x.ShippingCompanyStates).Single(x => x.Id == id);
-            _context.Dispose();
+            //_context.Dispose();
             return shipping;
         }
 

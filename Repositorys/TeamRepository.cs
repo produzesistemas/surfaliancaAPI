@@ -3,43 +3,71 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using UnitOfWork;
 
 namespace Repositorys
 {
-    public class TeamRepository<T> : ITeamRepository<Team> where T : BaseEntity
+    public class TeamRepository : ITeamRepository, IDisposable
     {
-        private DbSet<Team> entities;
-        private DbSet<IdentityUser> users;
-        private DbSet<TeamImage> teamImages;
-
+        private bool disposed = false;
+        private readonly ApplicationDbContext _context;
         public TeamRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Team>();
-            users = context.Set<IdentityUser>();
-            teamImages = context.Set<TeamImage>();
+            _context = context;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public Team Get(int id)
         {
-            return entities.Select(x => new Team
-            {
-                Id = x.Id,
-                Description = x.Description,
-                Name = x.Name,
-                teamImages = teamImages.Where(t => t.TeamId == x.Id).ToList()
-            }).FirstOrDefault(x => x.Id == id);
+            return _context.Team.Include(x => x.teamImages).Single(b => b.Id == id);
         }
 
-        public IQueryable<Team> Where(Func<Team, bool> expression)
+        public void Delete(int id)
         {
-            return entities.Select(x => new Team
-            {
-                Id = x.Id,
-                Description = x.Description,
-                Name = x.Name,
-                teamImages = teamImages.Where(t => t.TeamId == x.Id).ToList()
-            }).Where(expression).AsQueryable();
+            var entity = _context.Team.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
         }
+
+        public void Update(Team entity)
+        {
+            var entityBase = _context.Team.Single(x => x.Id == entity.Id);
+            entityBase.Name = entity.Name;
+            entityBase.Description = entity.Description;
+            entityBase.UpdateDate = DateTime.Now;
+
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Insert(Team entity)
+        {
+            _context.Team.Add(entity);
+            _context.SaveChanges();
+        }
+
+        public IQueryable<Team> GetAll()
+        {
+            return _context.Team.AsQueryable();
+        }
+
     }
 }

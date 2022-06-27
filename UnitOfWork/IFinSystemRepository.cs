@@ -8,7 +8,7 @@ namespace UnitOfWork
     public interface IFinSystemRepository : IDisposable
     {
         IQueryable<FinSystem> GetAll();
-        BoardModel Get(int id);
+        FinSystem Get(int id);
         IQueryable<FinSystem> Where(Expression<Func<FinSystem, bool>> expression);
         void Active(int id);
         void Delete(int id);

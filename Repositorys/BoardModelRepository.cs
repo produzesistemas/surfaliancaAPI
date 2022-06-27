@@ -8,13 +8,17 @@ using System.Collections.Generic;
 
 namespace Repositorys
 {
-    public class BoardModelRepository<T> : IBoardModelRepository<BoardModel> where T : BaseEntity
+    public class BoardModelRepository : IBoardModelRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
-
+        private bool disposed = false;
         public BoardModelRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+        public IQueryable<BoardModel> GetAll()
+        {
+            return _context.BoardModel.AsQueryable();
         }
 
         public void Active(int id)
@@ -34,16 +38,13 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            if ((_context.OrderProductOrdered.Any(c => c.BoardModelId == id)) ||
-                (_context.Paint.Any(c => c.BoardModelId == id)))
+            if (_context.OrderProductOrdered.Any(c => c.BoardModelId == id))
             {
                 throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
             };
 
             var dimensions = _context.BoardModelDimensions.Where(c => c.BoardModelId == id);
             _context.RemoveRange(dimensions);
-            var paints = _context.Paint.Where(c => c.BoardModelId == id);
-            _context.RemoveRange(paints);
             var entity = _context.BoardModel.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
@@ -52,9 +53,7 @@ namespace Repositorys
 
         public BoardModel Get(int id)
         {
-                var b = _context.BoardModel.Single(b => b.Id == id);
-                _context.Entry(b).Collection(b => b.BoardModelDimensions).Query().Load();
-                return b;
+               return _context.BoardModel.Include(c => c.BoardModelDimensions).Single(b => b.Id == id);
         }
 
         public void Update(BoardModel entity)
@@ -63,9 +62,33 @@ namespace Repositorys
             _context.SaveChanges();
         }
 
-        public IQueryable<BoardModel> Where(Func<BoardModel, bool> expression)
+        public IQueryable<BoardModel> Where(Expression<Func<BoardModel, bool>> expression)
         {
             return _context.BoardModel.Include(c => c.BoardModelDimensions).Where(expression).AsQueryable();
+        }
+
+        public void Insert(BoardModel entity)
+        {
+            _context.BoardModel.Add(entity);
+            _context.SaveChanges();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

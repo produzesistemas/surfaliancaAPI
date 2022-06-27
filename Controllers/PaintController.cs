@@ -21,20 +21,17 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Paint> genericRepository;
-        private IPaintRepository<Paint> paintRepository;
+        private IPaintRepository paintRepository;
         private readonly UserManager<IdentityUser> userManager;
 
         public PaintController(UserManager<IdentityUser> userManager,
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Paint> genericRepository,
-            IPaintRepository<Paint> paintRepository
+            IPaintRepository paintRepository
             )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.paintRepository = paintRepository;
             this.userManager = userManager;
         }
@@ -57,7 +54,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(paintRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -81,13 +78,6 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 if (paint.Id > decimal.Zero)
                 {
-                    var paintBase = genericRepository.Get(paint.Id);
-                    paintBase.Name = paint.Name;
-                    paintBase.BoardModelId = paint.BoardModelId;
-                    if (paintBase.Value.HasValue)
-                    {
-                        paintBase.Value = paint.Value;
-                    }
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);
@@ -98,12 +88,12 @@ namespace surfaliancaAPI.Controllers
                             files[0].CopyTo(stream);
                         }
                         fileDelete = string.Concat(fileDelete, paint.ImageName);
-                        paintBase.ImageName = fileName;
+                        paint.ImageName = fileName;
                     }
-                    paintBase.UpdateApplicationUserId = id;
-                    paintBase.UpdateDate = DateTime.Now;
+                    paint.UpdateApplicationUserId = id;
+                    paint.UpdateDate = DateTime.Now;
 
-                    genericRepository.Update(paintBase);
+                    paintRepository.Update(paint);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
@@ -124,7 +114,7 @@ namespace surfaliancaAPI.Controllers
                         paint.ApplicationUserId = id;
                         paint.CreateDate = DateTime.Now;
                         paint.Active = true;
-                        genericRepository.Insert(paint);
+                        paintRepository.Insert(paint);
                     }
                 }
                 return new OkResult();
@@ -182,7 +172,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(paintRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -201,20 +191,6 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
-        [HttpPost()]
-        [Route("getByModel")]
-        [AllowAnonymous]
-        public IActionResult GetByModel(FilterDefault filter)
-        {
-            Expression<Func<Paint, bool>> p2;
-            var predicate = PredicateBuilder.New<Paint>();
-            if (filter.Id > 0)
-            {
-                p2 = p => p.BoardModelId == filter.Id;
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
-        }
     }
 }
 

@@ -8,7 +8,7 @@ namespace UnitOfWork
     public interface ICupomRepository : IDisposable
     {
         IQueryable<Coupon> GetAll();
-        BoardModel Get(int id);
+        Coupon Get(int id);
         IQueryable<Coupon> Where(Expression<Func<Coupon, bool>> expression);
         void Active(int id);
         void Delete(int id);

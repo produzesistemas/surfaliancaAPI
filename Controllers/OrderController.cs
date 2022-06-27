@@ -1,10 +1,8 @@
-﻿using LinqKit;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using UnitOfWork;
 
@@ -14,32 +12,19 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private IRepository<Order> GenericRepository;
-        private IOrderRepository<Order> OrderRepository;
-        private IRepository<OrderProduct> OrderProductRepository;
-        private IRepository<OrderProductOrdered> OrderProductOrderedRepository;
-        private IRepository<OrderEmail> OrderEmailRepository;
-        private IRepository<OrderTracking> orderTrackingRepository;
-        private IRepository<Finishing> FinishingRepository;
+        private IOrderRepository orderRepository;
+        private IOrderEmailRepository orderEmailRepository;
+        private IOrderTrackingRepository orderTrackingRepository;
 
         public OrderController(
-            IRepository<Order> GenericRepository,
-            IOrderRepository<Order> OrderRepository,
-            IRepository<Finishing> FinishingRepository,
-            IRepository<OrderProduct> OrderProductRepository,
-            IRepository<OrderProductOrdered> OrderProductOrderedRepository,
-            IRepository<OrderEmail> OrderEmailRepository,
-            IRepository<OrderTracking> orderTrackingRepository
+            IOrderRepository orderRepository,
+            IOrderEmailRepository orderEmailRepository,
+            IOrderTrackingRepository orderTrackingRepository
             )
         {
-            this.GenericRepository = GenericRepository;
-            this.OrderRepository = OrderRepository;
-            this.OrderProductRepository = OrderProductRepository;
-            this.OrderProductOrderedRepository = OrderProductOrderedRepository;
-            this.OrderEmailRepository = OrderEmailRepository;
+            this.orderRepository = orderRepository;
+            this.orderEmailRepository = orderEmailRepository;
             this.orderTrackingRepository = orderTrackingRepository;
-            this.FinishingRepository = FinishingRepository;
-
         }
 
         [HttpPost()]
@@ -56,9 +41,9 @@ namespace surfaliancaAPI.Controllers
                     return BadRequest("Identificação do usuário não encontrada ou Pedido não enviado.");
                 }
                 order.ApplicationUserId = id;
-                GenericRepository.Insert(order);
+                orderRepository.Insert(order);
 
-                OrderEmailRepository.Insert(new OrderEmail()
+                orderEmailRepository.Insert(new OrderEmail()
                 {
                     OrderId = order.Id,
                     Send = false,
@@ -80,21 +65,6 @@ namespace surfaliancaAPI.Controllers
         }
 
         [HttpGet()]
-        [Route("getAllFinishing")]
-        public IActionResult GetAllFinishing()
-        {
-            try
-            {
-                return new JsonResult(FinishingRepository.GetAll().ToList());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex}");
-            }
-
-        }
-
-        [HttpGet()]
         [Route("getLastOrderByUser")]
         [Authorize()]
         public IActionResult GetLastOrderByUser()
@@ -107,7 +77,7 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada ou Pedido não enviado.");
                 }
-                return new JsonResult(GenericRepository.Where(x => x.ApplicationUserId == id).OrderByDescending(x => x.Id).FirstOrDefault());
+                return new JsonResult(orderRepository.Where(x => x.ApplicationUserId == id).OrderByDescending(x => x.Id).FirstOrDefault());
             }
             catch (Exception ex)
             {
@@ -129,7 +99,7 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                return new JsonResult(OrderRepository.GetByUser(id).ToList());
+                return new JsonResult(orderRepository.Where(x => x.ApplicationUserId == id).OrderByDescending(x => x.Id).FirstOrDefault());
             }
             catch (Exception ex)
             {
@@ -143,7 +113,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(OrderRepository.Get(id));
+                return new JsonResult(orderRepository.Get(id));
             }
             catch (Exception ex)
             {
@@ -160,11 +130,11 @@ namespace surfaliancaAPI.Controllers
             {
                 if (sendPaymentCielo != null)
                 {
-                    var orderBase = GenericRepository.Get(sendPaymentCielo.OrderId);
+                    var orderBase = orderRepository.Get(sendPaymentCielo.OrderId);
                     orderBase.PaymentId = sendPaymentCielo.PaymentId;
                     //orderBase.CapturedAmount = sendPaymentCielo.CapturedAmount;
                     //orderBase.Installments = sendPaymentCielo.Installments;
-                    GenericRepository.Update(orderBase);
+                    orderRepository.Update(orderBase);
                     orderTrackingRepository.Insert(new OrderTracking()
                     {
                         DateTracking = DateTime.Now,
@@ -191,13 +161,13 @@ namespace surfaliancaAPI.Controllers
             {
                 if (filter != null)
                 {
-                    var orderBase = GenericRepository.Get(filter.Id);
+                    var orderBase = orderRepository.Get(filter.Id);
                     if (orderBase == null)
                     {
                         return BadRequest("Pedido não encontrado.");
                     }
-                    GenericRepository.Update(orderBase);
-                    OrderEmailRepository.Insert(new OrderEmail()
+                    orderRepository.Update(orderBase);
+                    orderEmailRepository.Insert(new OrderEmail()
                     {
                         OrderId = orderBase.Id,
                         Send = false,

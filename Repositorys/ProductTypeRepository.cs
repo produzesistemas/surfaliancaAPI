@@ -1,20 +1,19 @@
-﻿using System;
-using Models;
+﻿using Models;
+using System;
 using System.Linq;
 using UnitOfWork;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Repositorys
 {
-    public class StoreRepository : IStoreRepository, IDisposable
+    public class ProductTypeRepository : IProductTypeRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
         private bool disposed = false;
 
-        public StoreRepository(ApplicationDbContext context)
+        public ProductTypeRepository(ApplicationDbContext context)
         {
             _context = context;
-
         }
 
         protected virtual void Dispose(bool disposing)
@@ -35,21 +34,10 @@ namespace Repositorys
             GC.SuppressFinalize(this);
         }
 
-        public Store Get()
+        public IQueryable<ProductType> GetAll()
         {
-            return _context.Store.FirstOrDefault();
+            return _context.ProductType.AsQueryable();
         }
 
-        public void Update(Store entity)
-        {
-
-            var entityBase = _context.Store.Single(x => x.Id == entity.Id);
-
-            entityBase.Name = entity.Name;
-            entityBase.UpdateDate = DateTime.Now;
-
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
-        }
     }
 }

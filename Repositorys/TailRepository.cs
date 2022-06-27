@@ -3,43 +3,52 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Linq;
 using UnitOfWork;
+using System;
+using System.Linq.Expressions;
 
 namespace Repositorys
 {
-    public class TailRepository<T> : ITailRepository<Tail> where T : BaseEntity
+    public class TailRepository : ITailRepository, IDisposable
     {
-        private DbSet<Tail> entities;
-        private DbSet<IdentityUser> users;
+        private bool disposed = false;
         private readonly ApplicationDbContext _context;
 
         public TailRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Tail>();
-            users = context.Set<IdentityUser>();
             _context = context;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<Tail> GetAll()
+        {
+            return _context.Tail.AsQueryable();
         }
 
         public Tail Get(int id)
         {
-            return entities.Select(x => new Tail
-            {
-                Id = x.Id,
-                Name = x.Name,
-                ImageName = x.ImageName,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
-                UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).FirstOrDefault(x => x.Id == id);
+            return _context.Tail.Single(b => b.Id == id);
         }
 
-        public void Delete(int id)
+        public IQueryable<Tail> Where(Expression<Func<Tail, bool>> expression)
         {
-            var entity = _context.Tail.Single(x => x.Id == id);
-            _context.Remove(entity);
-            _context.SaveChanges();
+            return _context.Tail.Where(expression).AsQueryable();
         }
 
         public void Active(int id)
@@ -54,6 +63,35 @@ namespace Repositorys
                 entity.Active = true;
             }
             _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            if (_context.OrderProductOrdered.Any(c => c.TailId == id))
+            {
+                throw new Exception("A Rabeta não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
+            };
+
+            var entity = _context.Tail.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void Update(Tail entity)
+        {
+            var entityBase = _context.Tail.Single(x => x.Id == entity.Id);
+            entityBase.Name = entity.Name;
+            entityBase.ImageName = entity.ImageName;
+            entityBase.UpdateDate = DateTime.Now;
+
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Insert(Tail entity)
+        {
+            _context.Tail.Add(entity);
             _context.SaveChanges();
         }
     }

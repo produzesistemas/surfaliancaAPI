@@ -10,9 +10,7 @@ namespace UnitOfWork
         IQueryable<Order> GetAll();
         Order Get(int id);
         IQueryable<Order> Where(Expression<Func<Order, bool>> expression);
-        void Active(int id);
-        void Delete(int id);
-        void Update(Order entity);
         void Insert(Order entity);
+        void Update(Order entity);
     }
 }

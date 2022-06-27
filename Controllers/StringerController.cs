@@ -18,18 +18,15 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class StringerController : ControllerBase
     {
-        private IRepository<Stringer> genericRepository;
-        private IStringerRepository<Stringer> stringerRepository;
+        private IStringerRepository stringerRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public StringerController(
-            IRepository<Stringer> genericRepository,
-            IStringerRepository<Stringer> stringerRepository,
+            IStringerRepository stringerRepository,
                             IWebHostEnvironment environment,
             IConfiguration Configuration)
         {
-            this.genericRepository = genericRepository;
             this.stringerRepository = stringerRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
@@ -53,7 +50,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(stringerRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -63,76 +60,23 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                //var stringer = JsonConvert.DeserializeObject<Stringer>(Convert.ToString(Request.Form["stringer"]));
-                //var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
-                //var fileDelete = pathToSave;
-
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
                 if (id == null)
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                //var files = Request.Form.Files;
 
                 if (stringer.Id > decimal.Zero)
                 {
-                    var entityBase = genericRepository.Get(stringer.Id);
-
-                    //for (var counter = 0; counter < files.Count; counter++)
-                    //{
-                    //    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                    //    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                    //    var fullPath = Path.Combine(pathToSave, fileName);
-                    //    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    //    {
-                    //        files[counter].CopyTo(stream);
-                    //    }
-
-                    //    entityBase.ImageName = fileName;
-                    //};
-
-
-                    entityBase.Name = stringer.Name;
-                    if (stringer.Value.HasValue)
-                    {
-                        entityBase.Value = stringer.Value;
-                    }
-                    entityBase.Details = stringer.Details;
-                    if (stringer.Value.HasValue)
-                    {
-                        entityBase.Value = stringer.Value.Value;
-                    } else
-                    {
-                        entityBase.Value = null;
-                    }
-
-                    entityBase.UpdateApplicationUserId = id;
-                    entityBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(entityBase);
-                    //if (System.IO.File.Exists(fileDelete))
-                    //{
-                    //    System.IO.File.Delete(fileDelete);
-                    //}
+                    stringerRepository.Update(stringer);
                 }
                 else
                 {
-                    //for (var counter = 0; counter < files.Count; counter++)
-                    //{
-                    //    var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                    //    var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                    //    var fullPath = Path.Combine(pathToSave, fileName);
-                    //    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    //    {
-                    //        files[counter].CopyTo(stream);
-                    //    }
-                    //    stringer.ImageName = fileName;
-                    //};
-
                     stringer.ApplicationUserId = id;
                     stringer.CreateDate = DateTime.Now;
                     stringer.Active = true;
-                    genericRepository.Insert(stringer);
+                    stringerRepository.Insert(stringer);
                 }
                 return new OkResult();
             }
@@ -169,7 +113,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.Get(id));
+                return new JsonResult(stringerRepository.Get(id));
             }
             catch (Exception ex)
             {
@@ -182,7 +126,7 @@ namespace surfaliancaAPI.Controllers
         [AllowAnonymous]
         public IActionResult GetAll()
         {
-            return new JsonResult(genericRepository.GetAll().ToList());
+            return new JsonResult(stringerRepository.GetAll().ToList());
         }
 
 

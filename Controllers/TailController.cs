@@ -20,18 +20,16 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Tail> genericRepository;
-        private ITailRepository<Tail> tailRepository;
+        private ITailRepository tailRepository;
 
         public TailController(
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Tail> genericRepository, ITailRepository<Tail> tailRepository
+            ITailRepository tailRepository
             )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.tailRepository = tailRepository;
         }
 
@@ -53,7 +51,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(tailRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -75,7 +73,7 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 if (tail.Id > decimal.Zero)
                 {
-                    var tailBase = genericRepository.Get(tail.Id);
+                    var tailBase = tailRepository.Get(tail.Id);
                     tailBase.Name = tail.Name;
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
@@ -91,7 +89,7 @@ namespace surfaliancaAPI.Controllers
                     }
                     tailBase.UpdateApplicationUserId = id;
                     tailBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(tailBase);
+                    tailRepository.Update(tailBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
@@ -111,7 +109,7 @@ namespace surfaliancaAPI.Controllers
                         tail.ImageName = fileName;
                         tail.ApplicationUserId = id;
                         tail.CreateDate = DateTime.Now;
-                        genericRepository.Insert(tail);
+                        tailRepository.Insert(tail);
                     }
                 }
                 return new OkResult();
@@ -163,7 +161,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                return new JsonResult(tailRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {

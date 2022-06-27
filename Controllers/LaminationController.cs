@@ -14,14 +14,11 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class LaminationController : ControllerBase
     {
-        private IRepository<Lamination> genericRepository;
-        private ILaminationRepository<Lamination> laminationRepository;
+        private ILaminationRepository laminationRepository;
 
         public LaminationController(
-            IRepository<Lamination> genericRepository,
-             ILaminationRepository<Lamination> laminationRepository)
+             ILaminationRepository laminationRepository)
         {
-            this.genericRepository = genericRepository;
             this.laminationRepository = laminationRepository;
         }
 
@@ -43,7 +40,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(laminationRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -61,18 +58,11 @@ namespace surfaliancaAPI.Controllers
                 }
                 if (entity.Id > decimal.Zero)
                 {
-                    var entityBase = genericRepository.Get(entity.Id);
-                    entityBase.Name = entity.Name;
-                    entityBase.Details = entity.Details;
-                    entityBase.UpdateApplicationUserId = id;
-                    entityBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(entityBase);
+                    laminationRepository.Update(entity);
                 }
                 else
                 {
-                    entity.ApplicationUserId = id;
-                    entity.CreateDate = DateTime.Now;
-                    genericRepository.Insert(entity);
+                    laminationRepository.Insert(entity);
                 }
                 return new OkResult();
             }
@@ -123,7 +113,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                return new JsonResult(laminationRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {

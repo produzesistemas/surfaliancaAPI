@@ -2,52 +2,65 @@
 using System.Linq;
 using UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
 
 namespace Repositorys
 {
-    public class OrderRepository<T> : IOrderRepository<Order> where T : BaseEntity
+    public class OrderRepository : IOrderRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
-        //private DbSet<Order> entities;
+        private bool disposed = false;
 
         public OrderRepository(ApplicationDbContext context)
         {
             _context = context;
-            //entities = context.Set<Order>();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public Order Get(int id)
         {
-            using (_context)
-            {
-                var b = _context.Order.Single(b => b.Id == id);
-                _context.Entry(b).Collection(b => b.OrderProduct).Query().Include(x => x.Product).Load();
-                _context.Entry(b).Collection(b => b.OrderProductOrdered).Query()
-                    .Include(x => x.BoardModel)
-                    .Include(x => x.Tail)
-                    .Include(x => x.Lamination)
-                    .Include(x => x.Construction)
-                    .Include(x => x.Paint)
-                    .Load();
-                _context.Entry(b).Collection(b => b.OrderTracking).Query()
-                    .Include(x => x.StatusOrder)
-                    .Include(x => x.StatusPaymentOrder)
-                    .Load();
-                return b;
-            }
+            var b = _context.Order.Single(b => b.Id == id);
+            return b;
         }
 
-        public IQueryable<Order> GetByUser(string id)
+        public IQueryable<Order> Where(Expression<Func<Order, bool>> expression)
         {
-            var lst = _context.Order
-                .Include(c => c.OrderProduct)
-                .Include(c => c.OrderTracking).ThenInclude(x => x.StatusPaymentOrder)
-                .Include(c => c.OrderTracking).ThenInclude(x => x.StatusOrder)
-                .Include(c => c.OrderProductOrdered)
-                .Where(x => x.ApplicationUserId == id).AsQueryable();
-            
-            return lst;
+            return _context.Order.Include(x => x.PaymentCondition).Where(expression).AsQueryable();
         }
 
+        public void Insert(Order entity)
+        {
+            _context.Order.Add(entity);
+            _context.SaveChanges();
         }
+
+        public IQueryable<Order> GetAll()
+        {
+            return _context.Order.AsQueryable();
+        }
+
+        public void Update(Order entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+    }
 }

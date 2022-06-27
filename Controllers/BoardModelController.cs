@@ -19,26 +19,21 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class BoardModelController : ControllerBase
     {
-        private IRepository<BoardModel> genericRepository;
-        private IRepository<BoardModelDimensions> BoardModelDimensionsRepository;
-        private IBoardModelRepository<BoardModel> boardModelRepository;
+        private IBoardModelRepository boardModelRepository;
+        private IBoardModelDimensionsRepository boardModelDimensionsRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public BoardModelController(
-    IRepository<Paint> paintRepository,
                 IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<BoardModel> genericRepository,
-            IRepository<BoardModelDimensions> BoardModelDimensionsRepository,
-            IBoardModelRepository<BoardModel> boardModelRepository
+            IBoardModelRepository boardModelRepository, IBoardModelDimensionsRepository boardModelDimensionsRepository
     )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
-            this.BoardModelDimensionsRepository = BoardModelDimensionsRepository;
             this.boardModelRepository = boardModelRepository;
+            this.boardModelDimensionsRepository = boardModelDimensionsRepository;
         }
 
 
@@ -87,7 +82,6 @@ namespace surfaliancaAPI.Controllers
                     boardModelBase.Name = boardModel.Name;
                     boardModelBase.Value = boardModel.Value;
                     boardModelBase.DaysProduction = boardModel.DaysProduction;
-                    boardModelBase.LogoId = boardModel.LogoId;
                     boardModelBase.UrlMovie = boardModel.UrlMovie;
                     boardModelBase.UpdateApplicationUserId = id;
                     boardModelBase.UpdateDate = DateTime.Now;
@@ -96,15 +90,14 @@ namespace surfaliancaAPI.Controllers
                     {
                         System.IO.File.Delete(fileDelete);
                     }
-                    var lstDimensions = BoardModelDimensionsRepository.Where(w => w.BoardModelId == boardModelBase.Id).ToList();
-                    lstDimensions.ForEach(x =>
+                    boardModelBase.BoardModelDimensions.ForEach(x =>
                     {
-                        BoardModelDimensionsRepository.Delete(x);
+                        boardModelDimensionsRepository.Delete(x.Id);
                     });
                     boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
                     {
                         boardModelDimensions.BoardModelId = boardModel.Id;
-                        BoardModelDimensionsRepository.Insert(boardModelDimensions);
+                        boardModelDimensionsRepository.Insert(boardModelDimensions);
                     });
 
                 }
@@ -132,7 +125,7 @@ namespace surfaliancaAPI.Controllers
                         boardModel.ApplicationUserId = id;
                         boardModel.CreateDate = DateTime.Now;
                         boardModel.Active = true;
-                        genericRepository.Insert(boardModel);
+                    boardModelRepository.Insert(boardModel);
                       
                 }
                 return new OkResult();
@@ -164,13 +157,7 @@ namespace surfaliancaAPI.Controllers
                     predicate = predicate.And(p2);
                 }
 
-                if (filter.Id > decimal.Zero)
-                {
-                    p1 = p => p.LogoId ==filter.Id;
-                    predicate = predicate.And(p1);
-                }
-
-                return new JsonResult(genericRepository.Where(predicate).ToList());
+                return new JsonResult(boardModelRepository.Where(predicate).ToList());
             }
             catch (Exception ex)
             {
@@ -215,7 +202,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.Where(x => x.Active == true));
+                return new JsonResult(boardModelRepository.Where(x => x.Active == true));
             }
             catch (Exception ex)
             {
@@ -223,29 +210,7 @@ namespace surfaliancaAPI.Controllers
             }
 
         }
-        [HttpPost()]
-        [Route("getBoardModelByLogo")]
-        [AllowAnonymous]
-        public IActionResult GetBoardModelByLogo(FilterDefault filter)
-        {
-            try
-            {
-                Expression<Func<BoardModel, bool>> p1;
-                var predicate = PredicateBuilder.New<BoardModel>();
 
-                if (filter.Id > decimal.Zero)
-                {
-                    p1 = p => p.LogoId == filter.Id;
-                    predicate = predicate.And(p1);
-                }
-
-                return new JsonResult(boardModelRepository.Where(predicate).ToList());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Faha no carregamento: " + ex.Message);
-            }
-        }
 
         [HttpDelete("{id}")]
         [Authorize()]

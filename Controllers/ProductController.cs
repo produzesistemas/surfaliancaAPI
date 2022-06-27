@@ -20,27 +20,29 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Product> genericRepository;
-        private IRepository<TypeSale> typeSaleRepository;
-        private IRepository<ProductStatus> productStatusRepository;
-        private IRepository<ProductType> productTypeRepository;
-        private IProductRepository<Product> productRepository;
+        private IProductRepository productRepository;
+        private IProductTypeRepository productTypeRepository;
+        private IProductStatusRepository productStatusRepository;
+        //private IRepository<TypeSale> typeSaleRepository;
+        //private IRepository<ProductStatus> productStatusRepository;
+        //private IRepository<ProductType> productTypeRepository;
+        //private IProductRepository<Product> productRepository;
 
         public ProductController(
            IWebHostEnvironment environment,
            IConfiguration Configuration,
-           IRepository<Product> genericRepository,
-           IProductRepository<Product> productRepository,
-           IRepository<TypeSale> typeSaleRepository,
-        IRepository<ProductStatus> productStatusRepository,
-        IRepository<ProductType> productTypeRepository
+           IProductRepository productRepository,
+           IProductTypeRepository productTypeRepository,
+           IProductStatusRepository productStatusRepository
+        //   IProductRepository<Product> productRepository,
+        //   IRepository<TypeSale> typeSaleRepository,
+        //IRepository<ProductStatus> productStatusRepository,
+        //IRepository<ProductType> productTypeRepository
            )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.productRepository = productRepository;
-            this.typeSaleRepository = typeSaleRepository;
             this.productStatusRepository = productStatusRepository;
             this.productTypeRepository = productTypeRepository;
         }
@@ -65,14 +67,23 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(productRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
         [Route("getByType")]
         public IActionResult GetByType(FilterDefault filter)
         {
-            return new JsonResult(productRepository.GetByType(filter.Id).ToList());
+            Expression<Func<Product, bool>> p2, p1;
+            var predicate = PredicateBuilder.New<Product>();
+            p1 = p => p.Active.Equals(true);
+            predicate = predicate.And(p1);
+            if (filter.Id > 0)
+            {
+                p2 = p => p.ProductTypeId == filter.Id;
+                predicate = predicate.And(p2);
+            }
+            return new JsonResult(productRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -122,13 +133,13 @@ namespace surfaliancaAPI.Controllers
                             product.ApplicationUserId = id;
                             product.CreateDate = DateTime.Now;
                             product.Active = true;
-                            genericRepository.Insert(product);
+                            productRepository.Insert(product);
                             return new OkResult();
                         }
                     }
                     else
                     {
-                        var productBase = genericRepository.Get(product.Id);
+                        var productBase = productRepository.Get(product.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
                             for (var counter = 0; counter < files.Count; counter++)
@@ -144,13 +155,13 @@ namespace surfaliancaAPI.Controllers
                                 switch (counter)
                                 {
                                     case 0:
-                                        productBase.ImageName = fileName;
+                                        product.ImageName = fileName;
                                         break;
                                     case 1:
-                                        productBase.ImageName1 = fileName;
+                                        product.ImageName1 = fileName;
                                         break;
                                     case 2:
-                                        productBase.ImageName2 = fileName;
+                                        product.ImageName2 = fileName;
                                         break;
                                 }
 
@@ -169,7 +180,7 @@ namespace surfaliancaAPI.Controllers
                         }
                         productBase.UpdateApplicationUserId = id;
                         productBase.UpdateDate = DateTime.Now;
-                        genericRepository.Update(productBase);
+                        productRepository.Update(productBase);
                         if (System.IO.File.Exists(fileDelete))
                         {
                             System.IO.File.Delete(fileDelete);
@@ -218,7 +229,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                return new JsonResult(productRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {
@@ -232,7 +243,15 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(productRepository.GetPromotionSpotlight().ToList());
+                Expression<Func<Product, bool>> p2, p1, p3;
+                var predicate = PredicateBuilder.New<Product>();
+                p1 = p => p.Active.Equals(true);
+                predicate = predicate.And(p1);
+                p2 = p => p.IsPromotion.Equals(true);
+                predicate = predicate.And(p2);
+                p3 = p => p.IsSpotlight.Equals(true);
+                predicate = predicate.And(p3);
+                return new JsonResult(productRepository.Where(predicate).ToList());
             }
             catch (Exception ex)
             {
@@ -246,7 +265,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.Get(id));
+                return new JsonResult(productRepository.Get(id));
             }
             catch (Exception ex)
             {

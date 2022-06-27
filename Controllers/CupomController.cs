@@ -14,20 +14,14 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class CupomController : ControllerBase
     {
-        private ICupomRepository<Coupon> cupomRepository;
-        private IRepository<Coupon> genericRepository;
-        private IRepository<Order> pedidoRepository;
+        private ICupomRepository cupomRepository;
         private readonly UserManager<IdentityUser> userManager;
 
         public CupomController(UserManager<IdentityUser> userManager,
-            IRepository<Coupon> genericRepository,
-            IRepository<Order> pedidoRepository,
-            ICupomRepository<Coupon> cupomRepository)
+            ICupomRepository cupomRepository)
         {
             this.cupomRepository = cupomRepository;
             this.userManager = userManager;
-            this.genericRepository = genericRepository;
-            this.pedidoRepository = pedidoRepository;
         }
 
         [HttpPost()]
@@ -47,7 +41,7 @@ namespace surfaliancaAPI.Controllers
                 var predicate = PredicateBuilder.New<Coupon>();
                 if (filter.Name != null)
                 {
-                    p1 = p => p.Codigo == filter.Name;
+                    p1 = p => p.Code == filter.Name;
                     predicate = predicate.And(p1);
                     return new JsonResult(cupomRepository.Where(predicate).ToList());
                 }
@@ -75,18 +69,18 @@ namespace surfaliancaAPI.Controllers
                 }
                 Expression<Func<Coupon, bool>> p1;
                 var predicate = PredicateBuilder.New<Coupon>();
-                p1 = p => p.Codigo == filter.Name;
+                p1 = p => p.Code == filter.Name;
                 predicate = predicate.And(p1);
                 var cupom = cupomRepository.Where(predicate).FirstOrDefault();
                 if (cupom != null)
                 {
-                    if (!cupom.Ativo)
+                    if (!cupom.Active)
                     {
                         return BadRequest("Cupom expirado!");
                     }
-                    if (!cupom.Geral)
+                    if (!cupom.General)
                     {
-                        if (cupom.ClienteId != id)
+                        if (cupom.ClientId != id)
                         {
                             return BadRequest("Esse cupom pertence a outro usuário!");
                         }
@@ -100,16 +94,16 @@ namespace surfaliancaAPI.Controllers
                         return BadRequest("Cupom expirado!");
                     }
 
-                    Expression<Func<Order, bool>> p2, p3;
-                    var pred = PredicateBuilder.New<Order>();
-                    p2 = p => p.CupomId == cupom.Id;
-                    p3 = p => p.ApplicationUserId == id;
-                    pred = pred.And(p2);
-                    pred = pred.And(p3);
-                    if (pedidoRepository.Where(pred).Any())
-                    {
-                        return BadRequest("Cupom já utilizado!");
-                    }
+                    //Expression<Func<Order, bool>> p2, p3;
+                    //var pred = PredicateBuilder.New<Order>();
+                    //p2 = p => p.CouponId == cupom.Id;
+                    //p3 = p => p.ApplicationUserId == id;
+                    //pred = pred.And(p2);
+                    //pred = pred.And(p3);
+                    //if (cupomRepository.Where(pred).Any())
+                    //{
+                    //    return BadRequest("Cupom já utilizado!");
+                    //}
 
                 }
 
@@ -137,32 +131,11 @@ namespace surfaliancaAPI.Controllers
 
                 if (cupom.Id > decimal.Zero)
                 {
-                    var cupomBase = genericRepository.Get(cupom.Id);
-                    cupomBase.Descricao = cupom.Descricao;
-                    cupomBase.UpdateApplicationUserId = id;
-                    cupomBase.UpdateDate = DateTime.Now;
-                    cupomBase.Codigo = cupom.Codigo;
-                    cupomBase.InitialDate = cupom.InitialDate;
-                    cupomBase.FinalDate = cupom.FinalDate;
-                    cupomBase.Geral = cupom.Geral;
-                    cupomBase.Quantidade = cupom.Quantidade;
-                    cupomBase.Tipo = cupom.Tipo;
-                    cupomBase.Valor = cupom.Valor;
-                    cupomBase.ValorMinimo = cupom.ValorMinimo;
-                    if (cupom.ClienteId != null)
-                    {
-                        cupomBase.ClienteId = cupom.ClienteId;
-                    }
-
-                    genericRepository.Update(cupomBase);
+                    cupomRepository.Update(cupom);
                 }
                 else
                 {
-                    cupom.Ativo = true;
-                    cupom.AspNetUsersId = id;
-                    cupom.CreateDate = DateTime.Now;
-                    if (cupom.ClienteId == "") cupom.ClienteId = null;
-                    genericRepository.Insert(cupom);
+                    cupomRepository.Insert(cupom);
                 }
                 return new OkResult();
             }
@@ -191,12 +164,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                //if (pedidoRepository.Where(x => x.CupomId == id).Any())
-                //{
-                //    return BadRequest("Sem permissão para excluir. Cupom já foi aplicado!");
-                //}
-                var entityBase = cupomRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                cupomRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -212,16 +180,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var cupomBase = cupomRepository.Get(cupom.Id);
-                if (cupomBase.Ativo)
-                {
-                    cupomBase.Ativo = false;
-                }
-                else
-                {
-                    cupomBase.Ativo = true;
-                }
-                genericRepository.Update(cupomBase);
+                cupomRepository.Active(cupom.Id);
                 return new OkResult();
             }
             catch (Exception ex)

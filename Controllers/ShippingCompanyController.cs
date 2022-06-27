@@ -19,22 +19,18 @@ namespace petixcoAPI.Controllers
     [ApiController]
     public class ShippingCompanyController : ControllerBase
     {
-        private IShippingCompanyRepository<ShippingCompany> ShippingCompanyRepository;
-        private IRepository<ShippingCompany> genericRepository;
-        private IRepository<ShippingCompanyState> ShippingCompanyStateRepository;
+        private IShippingCompanyRepository shippingCompanyRepository;
+        private IShippingCompanyStateRepository shippingCompanyStateRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public ShippingCompanyController(
                             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IShippingCompanyRepository<ShippingCompany> ShippingCompanyRepository,
-            IRepository<ShippingCompany> genericRepository, 
-            IRepository<ShippingCompanyState> ShippingCompanyStateRepository)
+            IShippingCompanyRepository shippingCompanyRepository, IShippingCompanyStateRepository shippingCompanyStateRepository)
         {
-            this.ShippingCompanyRepository = ShippingCompanyRepository;
-            this.genericRepository = genericRepository;
-            this.ShippingCompanyStateRepository = ShippingCompanyStateRepository;
+            this.shippingCompanyRepository = shippingCompanyRepository;
+            this.shippingCompanyStateRepository = shippingCompanyStateRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
         }
@@ -52,10 +48,10 @@ namespace petixcoAPI.Controllers
                 {
                     p1 = p => p.Name == filter.Name;
                     predicate = predicate.And(p1);
-                    return new JsonResult(genericRepository.Where(predicate).OrderBy(x => x.Name).ToList());
+                    return new JsonResult(shippingCompanyRepository.Where(predicate).OrderBy(x => x.Name).ToList());
                 }
 
-                return new JsonResult(genericRepository.GetAll().OrderBy(x => x.Name).ToList());
+                return new JsonResult(shippingCompanyRepository.GetAll().OrderBy(x => x.Name).ToList());
             }
             catch (Exception ex)
             {
@@ -69,7 +65,7 @@ namespace petixcoAPI.Controllers
         {
             try
             {
-                return new JsonResult(ShippingCompanyRepository.Get(id));
+                return new JsonResult(shippingCompanyRepository.Get(id));
             }
             catch (Exception ex)
             {
@@ -99,7 +95,7 @@ namespace petixcoAPI.Controllers
                 var files = Request.Form.Files;
                 if (shippingCompany.Id > decimal.Zero)
                 {
-                    var shippingCompanyBase = ShippingCompanyRepository.Get(shippingCompany.Id);
+                    var shippingCompanyBase = shippingCompanyRepository.Get(shippingCompany.Id);
                     for (var counter = 0; counter < files.Count; counter++)
                     {
                         var extension = Path.GetExtension(Request.Form.Files[0].FileName);
@@ -122,34 +118,24 @@ namespace petixcoAPI.Controllers
                     shippingCompanyBase.Name = shippingCompany.Name;
                     shippingCompanyBase.UpdateApplicationUserId = id;
                     shippingCompanyBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(shippingCompanyBase);
+                    shippingCompanyRepository.Update(shippingCompanyBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
                     }
-                    var lstDimensions = ShippingCompanyStateRepository.Where(w => w.ShippingCompanyId == shippingCompanyBase.Id).ToList();
-                    //lstDimensions.ForEach(x =>
-                    //{
-                    //    ShippingCompanyStateRepository.Delete(x);
-                    //});
-                    //shippingCompany.ShippingCompanyStates.ForEach(s =>
-                    //{
-                    //    s.ShippingCompanyId = shippingCompany.Id;
-                    //    ShippingCompanyStateRepository.Insert(s);
-                    //});
 
-                    var toDelete = lstDimensions.Except(shippingCompany.ShippingCompanyStates, new EqualityComparer()).ToList();
-                    var toInsert = shippingCompany.ShippingCompanyStates.Except(lstDimensions, new EqualityComparer()).ToList();
+                    var toDelete = shippingCompanyBase.ShippingCompanyStates.Except(shippingCompany.ShippingCompanyStates, new EqualityComparer()).ToList();
+                    var toInsert = shippingCompany.ShippingCompanyStates.Except(shippingCompanyBase.ShippingCompanyStates, new EqualityComparer()).ToList();
                     toDelete.ForEach(x =>
                     {
                         x.ShippingCompany = null;
-                        ShippingCompanyStateRepository.Delete(x);
+                        shippingCompanyStateRepository.Delete(x.Id);
                     });
                     toInsert.ForEach(x =>
                     {
                         x.ShippingCompanyId = shippingCompany.Id;
                         x.Id = 0;
-                        ShippingCompanyStateRepository.Insert(x);
+                        shippingCompanyStateRepository.Insert(x);
 
                     });
 
@@ -178,7 +164,7 @@ namespace petixcoAPI.Controllers
                     shippingCompany.ApplicationUserId = id;
                     shippingCompany.CreateDate = DateTime.Now;
                     shippingCompany.Active = true;
-                    genericRepository.Insert(shippingCompany);
+                    shippingCompanyRepository.Insert(shippingCompany);
 
                 }
                 return new OkResult();
@@ -213,18 +199,7 @@ namespace petixcoAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                Expression<Func<ShippingCompanyState, bool>> p1;
-                var predicate = PredicateBuilder.New<ShippingCompanyState>();
-                p1 = p => p.ShippingCompanyId == id;
-                predicate = predicate.And(p1);
-                var cepsBase = ShippingCompanyStateRepository.Where(predicate).ToList();
-                cepsBase.ForEach(x =>
-                {
-                    ShippingCompanyStateRepository.Delete(x);
-                });
-
-                genericRepository.Delete(entityBase);
+                shippingCompanyRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -240,7 +215,7 @@ namespace petixcoAPI.Controllers
         {
             try
             {
-                ShippingCompanyRepository.Active(shippingCompany.Id);
+                shippingCompanyRepository.Active(shippingCompany.Id);
                 return new OkResult();
             }
             catch (Exception ex)

@@ -18,18 +18,15 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class ConstructionController : ControllerBase
     {
-        private IRepository<Construction> genericRepository;
-        private IConstructionRepository<Construction> constructionRepository;
+        private IConstructionRepository constructionRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public ConstructionController(
-            IRepository<Construction> genericRepository,
                             IWebHostEnvironment environment,
             IConfiguration Configuration,
-             IConstructionRepository<Construction> constructionRepository)
+             IConstructionRepository constructionRepository)
         {
-            this.genericRepository = genericRepository;
             this.constructionRepository = constructionRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
@@ -53,7 +50,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(constructionRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -74,7 +71,7 @@ namespace surfaliancaAPI.Controllers
 
                 if (construction.Id > decimal.Zero)
                 {
-                    var entityBase = genericRepository.Get(construction.Id);
+                    var entityBase = constructionRepository.Get(construction.Id);
                     entityBase.Name = construction.Name;
                     if (construction.Value.HasValue)
                     {
@@ -84,7 +81,7 @@ namespace surfaliancaAPI.Controllers
                     entityBase.UpdateApplicationUserId = id;
                     entityBase.UpdateDate = DateTime.Now;
                     entityBase.UrlMovie = construction.UrlMovie;
-                    genericRepository.Update(entityBase);
+                    constructionRepository.Update(entityBase);
 
                 }
                 else
@@ -92,7 +89,7 @@ namespace surfaliancaAPI.Controllers
                     construction.Active = true;
                     construction.ApplicationUserId = id;
                     construction.CreateDate = DateTime.Now;
-                    genericRepository.Insert(construction);
+                    constructionRepository.Insert(construction);
                 }
                 return new OkResult();
             }
@@ -142,7 +139,7 @@ namespace surfaliancaAPI.Controllers
         [AllowAnonymous]
         public IActionResult GetAll()
         {
-            return new JsonResult(genericRepository.GetAll().ToList());
+            return new JsonResult(constructionRepository.GetAll().ToList());
         }
 
         [HttpPost()]

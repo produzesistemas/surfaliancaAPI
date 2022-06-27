@@ -1,71 +1,84 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using UnitOfWork;
 
 
 namespace Repositorys
 {
-    public class BlogRepository<T> : IBlogRepository<Blog> where T : BaseEntity
+    public class BlogRepository : IBlogRepository, IDisposable
     {
-        private DbSet<Blog> entities;
-        private DbSet<IdentityUser> users; 
-        private DbSet<TypeBlog> types;
+        private readonly ApplicationDbContext _context;
+        private bool disposed = false;
 
         public BlogRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Blog>();
-            users = context.Set<IdentityUser>();
-            types = context.Set<TypeBlog>();
+            _context = context;
         }
 
         public Blog Get(int id)
         {
-            return entities.Select(x => new Blog
-            {
-                Id = x.Id,
-                Description = x.Description,
-                TypeBlogId = x.TypeBlogId,
-                Details = x.Details,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                ImageName = x.ImageName,
-                ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
-                UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).FirstOrDefault(x => x.Id == id);
+            return _context.Blog
+                .Single(x => x.Id == id);
         }
 
-        public IQueryable<Blog> Where(Func<Blog, bool> expression)
+        public IQueryable<Blog> Where(Expression<Func<Blog, bool>> expression)
         {
-            return entities.Select(x => new Blog
-            {
-                Id = x.Id,
-                Description = x.Description,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-                TypeBlog = types.FirstOrDefault(q => q.Id == x.TypeBlogId),
-            }).Where(expression).AsQueryable();
+            return _context.Blog.Where(expression).Include(x => x.TypeBlog)
+                 .AsQueryable();
         }
 
         public IQueryable<Blog> GetAll()
         {
-            return entities.Select(x => new Blog
+            return _context.Blog.AsQueryable();
+        }
+
+        public void Delete(int id)
+        {
+            var entity = _context.Blog.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void Update(Blog entity)
+        {
+            var entityBase = _context.Blog.Single(x => x.Id == entity.Id);
+
+            entityBase.Description = entity.Description;
+            entityBase.Details = entity.Details;
+            entityBase.TypeBlogId = entity.TypeBlogId;
+            entityBase.ImageName = entity.ImageName;
+            entityBase.UpdateDate = DateTime.Now;
+
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Insert(Blog entity)
+        {
+            _context.Blog.Add(entity);
+            _context.SaveChanges();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
             {
-                Id = x.Id,
-                Description = x.Description,
-                TypeBlogId = x.TypeBlogId,
-                Details = x.Details,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                ImageName = x.ImageName,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-                TypeBlog = types.FirstOrDefault(q => q.Id == x.TypeBlogId),
-            }).AsQueryable();
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

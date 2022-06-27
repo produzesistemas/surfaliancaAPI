@@ -20,10 +20,10 @@ namespace surfaliancaAPI.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private IConfiguration configuration;
-        private IRepository<Store> storeRepository;
+        private IStoreRepository storeRepository;
         public AccountController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IRepository<Store> storeRepository,
+            IStoreRepository storeRepository,
             IConfiguration Configuration)
         {
             this.userManager = userManager;

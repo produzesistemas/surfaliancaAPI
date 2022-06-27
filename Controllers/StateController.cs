@@ -1,16 +1,6 @@
-﻿using LinqKit;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Models;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Claims;
 using UnitOfWork;
 
 namespace surfaliancaAPI.Controllers
@@ -19,10 +9,10 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class StateController : ControllerBase
     {
-        private IRepository<State> genericRepository;
+        private IStateRepository genericRepository;
 
         public StateController(
-            IRepository<State> genericRepository
+            IStateRepository genericRepository
     )
         {
             this.genericRepository = genericRepository;

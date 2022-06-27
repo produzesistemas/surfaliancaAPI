@@ -21,20 +21,17 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Bottom> genericRepository;
-        private IBottomRepository<Bottom> bottomRepository;
+        private IBottomRepository bottomRepository;
         private readonly UserManager<IdentityUser> userManager;
 
         public BottomController(UserManager<IdentityUser> userManager,
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Bottom> genericRepository,
-            IBottomRepository<Bottom> bottomRepository
+            IBottomRepository bottomRepository
             )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.bottomRepository = bottomRepository;
             this.userManager = userManager;
         }
@@ -57,7 +54,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(bottomRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -81,7 +78,7 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 if (bottom.Id > decimal.Zero)
                 {
-                    var bottomBase = genericRepository.Get(bottom.Id);
+                    var bottomBase = bottomRepository.Get(bottom.Id);
                     bottomBase.Name = bottom.Name;
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
@@ -97,7 +94,7 @@ namespace surfaliancaAPI.Controllers
                     }
                     bottomBase.UpdateApplicationUserId = id;
                     bottomBase.UpdateDate = DateTime.Now;
-                    genericRepository.Update(bottomBase);
+                    bottomRepository.Update(bottomBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
@@ -117,7 +114,7 @@ namespace surfaliancaAPI.Controllers
                         bottom.ImageName = fileName;
                         bottom.ApplicationUserId = id;
                         bottom.CreateDate = DateTime.Now;
-                        genericRepository.Insert(bottom);
+                        bottomRepository.Insert(bottom);
                     }
                 }
                 return new OkResult();
@@ -134,8 +131,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                bottomRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)

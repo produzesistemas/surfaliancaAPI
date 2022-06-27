@@ -1,48 +1,100 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorys
 {
-    public class FinSystemRepository<T> : IFinSystemRepository<FinSystem> where T : BaseEntity
+    public class FinSystemRepository : IFinSystemRepository, IDisposable
     {
-        private DbSet<FinSystem> entities;
-        private DbSet<IdentityUser> users;
+        private bool disposed = false;
+        private readonly ApplicationDbContext _context;
 
         public FinSystemRepository(ApplicationDbContext context)
         {
-            entities = context.Set<FinSystem>();
-            users = context.Set<IdentityUser>();
+            _context = context;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<FinSystem> GetAll()
+        {
+            return _context.FinSystem.AsQueryable();
         }
 
         public FinSystem Get(int id)
         {
-            return entities.Select(x => new FinSystem
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Details = x.Details,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
-                UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).FirstOrDefault(x => x.Id == id);
+            return _context.FinSystem.Single(b => b.Id == id);
         }
 
-        public IQueryable<FinSystem> Where(Func<FinSystem, bool> expression)
+        public IQueryable<FinSystem> Where(Expression<Func<FinSystem, bool>> expression)
         {
-            return entities.Select(x => new FinSystem
+            return _context.FinSystem.Where(expression).AsQueryable();
+        }
+
+        public void Active(int id)
+        {
+            var entity = _context.FinSystem.Single(x => x.Id == id);
+            if (entity.Active)
             {
-                Id = x.Id,
-                Name = x.Name,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).Where(expression).AsQueryable();
+                entity.Active = false;
+            }
+            else
+            {
+                entity.Active = true;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            if (_context.OrderProductOrdered.Any(c => c.FinSystemId == id))
+            {
+                throw new Exception("A FinSystem não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
+            };
+
+            var entity = _context.FinSystem.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+            _context.Dispose();
+        }
+
+        public void Update(FinSystem entity)
+        {
+            var entityBase = _context.FinSystem.Single(x => x.Id == entity.Id);
+
+            entityBase.Name = entity.Name;
+            entityBase.Details = entity.Details;
+            entityBase.ImageName = entity.ImageName;
+            entityBase.UpdateDate = DateTime.Now;
+
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Insert(FinSystem entity)
+        {
+            _context.FinSystem.Add(entity);
+            _context.SaveChanges();
         }
     }
 }

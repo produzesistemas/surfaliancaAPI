@@ -1,20 +1,17 @@
-﻿using System;
-using Models;
+﻿using Models;
+using System;
 using System.Linq;
 using UnitOfWork;
-using Microsoft.EntityFrameworkCore;
 
 namespace Repositorys
 {
-    public class StoreRepository : IStoreRepository, IDisposable
+    public class TeamImageRepository : ITeamImageRepository, IDisposable
     {
-        private readonly ApplicationDbContext _context;
         private bool disposed = false;
-
-        public StoreRepository(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        public TeamImageRepository(ApplicationDbContext context)
         {
             _context = context;
-
         }
 
         protected virtual void Dispose(bool disposing)
@@ -35,20 +32,16 @@ namespace Repositorys
             GC.SuppressFinalize(this);
         }
 
-        public Store Get()
+        public void Delete(int id)
         {
-            return _context.Store.FirstOrDefault();
+            var entity = _context.TeamImage.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
         }
 
-        public void Update(Store entity)
+        public void Insert(TeamImage entity)
         {
-
-            var entityBase = _context.Store.Single(x => x.Id == entity.Id);
-
-            entityBase.Name = entity.Name;
-            entityBase.UpdateDate = DateTime.Now;
-
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.TeamImage.Add(entity);
             _context.SaveChanges();
         }
     }

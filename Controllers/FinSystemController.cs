@@ -19,22 +19,18 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class FinSystemController : ControllerBase
     {
-        private IRepository<FinSystem> genericRepository;
-        private IFinSystemRepository<FinSystem> finSystemRepository;
+        private IFinSystemRepository finSystemRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
         public FinSystemController(
                        IWebHostEnvironment environment,
            IConfiguration Configuration,
-            IRepository<FinSystem> genericRepository,
-             IFinSystemRepository<FinSystem> finSystemRepository
+             IFinSystemRepository finSystemRepository
 )
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.finSystemRepository = finSystemRepository;
-
         }
 
         [HttpPost()]
@@ -55,7 +51,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(finSystemRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -94,13 +90,13 @@ namespace surfaliancaAPI.Controllers
                             finSystem.ApplicationUserId = id;
                             finSystem.CreateDate = DateTime.Now;
                             finSystem.Active = true;
-                            genericRepository.Insert(finSystem);
+                            finSystemRepository.Insert(finSystem);
                             return new OkResult();
                         }
                     }
                     else
                     {
-                        var finSystemBase = genericRepository.Get(finSystem.Id);
+                        var finSystemBase = finSystemRepository.Get(finSystem.Id);
                         if (Request.Form.Files.Count() > decimal.Zero)
                         {
                             for (var counter = 0; counter < files.Count; counter++)
@@ -119,7 +115,7 @@ namespace surfaliancaAPI.Controllers
                         finSystemBase.Name = finSystem.Name;
                         finSystemBase.UpdateApplicationUserId = id;
                         finSystemBase.UpdateDate = DateTime.Now;
-                        genericRepository.Update(finSystemBase);
+                        finSystemRepository.Update(finSystemBase);
                         if (System.IO.File.Exists(fileDelete))
                         {
                             System.IO.File.Delete(fileDelete);
@@ -143,8 +139,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                finSystemRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -177,7 +172,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(genericRepository.GetAll().ToList());
+                return new JsonResult(finSystemRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {
@@ -193,16 +188,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entity = genericRepository.Get(finSystem.Id);
-                if (entity.Active)
-                {
-                    entity.Active = false;
-                }
-                else
-                {
-                    entity.Active = true;
-                }
-                genericRepository.Update(entity);
+                finSystemRepository.Active(finSystem.Id);
                 return new OkResult();
             }
             catch (Exception ex)

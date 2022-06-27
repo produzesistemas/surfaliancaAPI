@@ -22,24 +22,18 @@ namespace surfaliancaAPI.Controllers
     {
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
-        private IRepository<Team> genericRepository;
-        private IRepository<TeamImage> teamImageRepository;
-        private ITeamRepository<Team> teamRepository;
-        private IStoreRepository<Store> storeRepository;
+        private ITeamImageRepository teamImageRepository;
+        private ITeamRepository teamRepository;
         public TeamController(UserManager<IdentityUser> userManager,
             IWebHostEnvironment environment,
             IConfiguration Configuration,
-            IRepository<Team> genericRepository,
-            IStoreRepository<Store> storeRepository,
-            ITeamRepository<Team> teamRepository,
-            IRepository<TeamImage> teamImageRepository)
+            ITeamImageRepository teamImageRepository,
+            ITeamRepository teamRepository)
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
-            this.genericRepository = genericRepository;
             this.teamRepository = teamRepository;
             this.teamImageRepository = teamImageRepository;
-            this.storeRepository = storeRepository;
         }
 
         [HttpPost()]
@@ -63,7 +57,7 @@ namespace surfaliancaAPI.Controllers
                         {
                             team.ApplicationUserId = id;
                             team.CreateDate = DateTime.Now;
-                            genericRepository.Insert(team);
+                            teamRepository.Insert(team);
                             var filesUpload = Request.Form.Files;
 
                             for (var counter = 0; counter < files.Count; counter++)
@@ -80,16 +74,16 @@ namespace surfaliancaAPI.Controllers
                         }
                     } else 
                     {
-                        var teamBase = genericRepository.Get(team.Id);
-                        var lstteamImageBase = teamImageRepository.Where(w => w.TeamId == team.Id).ToList();
+                        var teamBase = teamRepository.Get(team.Id);
+                        //var lstteamImageBase = teamImageRepository.Where(w => w.TeamId == team.Id).ToList();
                         teamBase.Description = team.Description;
                         teamBase.Name = team.Name;
                         teamBase.UpdateApplicationUserId = id;
                         teamBase.UpdateDate = DateTime.Now;
-                        genericRepository.Update(teamBase);
-                        lstteamImageBase.ForEach(x =>
+                        teamRepository.Update(teamBase);
+                        teamBase.teamImages.ForEach(x =>
                         {
-                            teamImageRepository.Delete(x);
+                            teamImageRepository.Delete(x.Id);
                         });
                         for (var counter = 0; counter < files.Count; counter++)
                         {
@@ -126,14 +120,7 @@ namespace surfaliancaAPI.Controllers
             {
                 return BadRequest("Identificação do usuário não encontrada.");
             }
-                Expression<Func<Team, bool>> p2;
-                var predicate = PredicateBuilder.New<Team>();
-                if (filter.Name != null)
-                {
-                    p2 = p => p.Name.Contains(filter.Name);
-                    predicate = predicate.And(p2);
-                }
-                return new JsonResult(genericRepository.Where(predicate).ToList());
+                return new JsonResult(teamRepository.GetAll().ToList());
 
         }
 
@@ -143,13 +130,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var teamBase = teamRepository.Get(id);
-                teamBase.teamImages.ForEach(image =>
-                {
-                    var imageDelete = teamImageRepository.Get(image.Id);
-                    teamImageRepository.Delete(imageDelete);
-                });
-                genericRepository.Delete(teamBase);
+                teamRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -196,13 +177,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var teams = genericRepository.GetAll().ToList();
-                teams.ForEach(team => {
-                    team.teamImages = teamImageRepository.Where(x => x.TeamId == team.Id).ToList();
-
-                });
-
-                return new JsonResult(teams);
+                return new JsonResult(teamRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {

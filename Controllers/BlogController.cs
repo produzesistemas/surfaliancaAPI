@@ -18,22 +18,16 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private IRepository<Blog> genericRepository;
-        private IRepository<TypeBlog> typeBlogRepository;
-        private IBlogRepository<Blog> blogRepository;
+        private IBlogRepository blogRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public BlogController(
-            IRepository<Blog> genericRepository,
-             IRepository<TypeBlog> typeBlogRepository,
                             IWebHostEnvironment environment,
             IConfiguration Configuration,
-             IBlogRepository<Blog> blogRepository)
+             IBlogRepository blogRepository)
         {
-            this.genericRepository = genericRepository;
             this.blogRepository = blogRepository;
-            this.typeBlogRepository = typeBlogRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
         }
@@ -56,7 +50,7 @@ namespace surfaliancaAPI.Controllers
                 p2 = p => p.Description.Contains(filter.Name);
                 predicate = predicate.And(p2);
             }
-            return new JsonResult(genericRepository.Where(predicate).ToList());
+            return new JsonResult(blogRepository.Where(predicate).ToList());
         }
 
         [HttpPost()]
@@ -80,7 +74,7 @@ namespace surfaliancaAPI.Controllers
 
                 if (blog.Id > decimal.Zero)
                 {
-                    var entityBase = genericRepository.Get(blog.Id);
+                    var entityBase = blogRepository.Get(blog.Id);
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);
@@ -97,7 +91,7 @@ namespace surfaliancaAPI.Controllers
                     entityBase.UpdateDate = DateTime.Now;
                     entityBase.Description = blog.Description;
                     entityBase.Details = blog.Details;
-                    genericRepository.Update(entityBase);
+                    blogRepository.Update(entityBase);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
@@ -117,7 +111,7 @@ namespace surfaliancaAPI.Controllers
                         blog.ImageName = fileName;
                         blog.ApplicationUserId = id;
                         blog.CreateDate = DateTime.Now;
-                        genericRepository.Insert(blog);
+                        blogRepository.Insert(blog);
                     }
                 }
                 return new OkResult();
@@ -134,8 +128,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                var entityBase = genericRepository.Get(id);
-                genericRepository.Delete(entityBase);
+                blogRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -167,7 +160,7 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                return new JsonResult(typeBlogRepository.GetAll().ToList());
+                return new JsonResult(blogRepository.GetAll().ToList());
             }
             catch (Exception ex)
             {

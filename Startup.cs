@@ -32,21 +32,32 @@ namespace surfaliancaAPI
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("surfalianca")));
             services.AddIdentity<IdentityUser, IdentityRole>()
                          .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddScoped(typeof(IStoreRepository<>), typeof(StoreRepository<>));
-            services.AddScoped(typeof(ITeamRepository<>), typeof(TeamRepository<>));
-            services.AddScoped(typeof(IFinSystemRepository<>), typeof(FinSystemRepository<>));
-            services.AddScoped(typeof(IConstructionRepository<>), typeof(ConstructionRepository<>));
-            services.AddScoped(typeof(ILaminationRepository<>), typeof(LaminationRepository<>));
-            services.AddScoped(typeof(ITailRepository<>), typeof(TailRepository<>));
-            services.AddScoped(typeof(IBottomRepository<>), typeof(BottomRepository<>));
-            services.AddScoped(typeof(IBoardModelRepository<>), typeof(BoardModelRepository<>));
-            services.AddScoped(typeof(IProductRepository<>), typeof(ProductRepository<>));
-            services.AddScoped(typeof(IPaintRepository<>), typeof(PaintRepository<>));
-            services.AddScoped(typeof(IOrderRepository<>), typeof(OrderRepository<>));
-            services.AddScoped(typeof(IBlogRepository<>), typeof(BlogRepository<>));
-            services.AddScoped(typeof(ICupomRepository<>), typeof(CupomRepository<>));
-            services.AddScoped(typeof(IStringerRepository<>), typeof(StringerRepository<>));
-            services.AddScoped(typeof(IShippingCompanyRepository<>), typeof(ShippingCompanyRepository<>));
+            services.AddScoped(typeof(IStoreRepository), typeof(StoreRepository));
+            services.AddScoped(typeof(ITeamRepository), typeof(TeamRepository));
+            services.AddScoped(typeof(ITeamImageRepository), typeof(TeamImageRepository));
+            services.AddScoped(typeof(IFinSystemRepository), typeof(FinSystemRepository));
+            services.AddScoped(typeof(IConstructionRepository), typeof(ConstructionRepository));
+            services.AddScoped(typeof(ILaminationRepository), typeof(LaminationRepository));
+            services.AddScoped(typeof(ITailRepository), typeof(TailRepository));
+            services.AddScoped(typeof(IBottomRepository), typeof(BottomRepository));
+            services.AddScoped(typeof(IBoardModelRepository), typeof(BoardModelRepository));
+            services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+            services.AddScoped(typeof(IPaintRepository), typeof(PaintRepository));
+            services.AddScoped(typeof(IOrderRepository), typeof(OrderRepository));
+            services.AddScoped(typeof(IBlogRepository), typeof(BlogRepository));
+            services.AddScoped(typeof(ICupomRepository), typeof(CupomRepository));
+            services.AddScoped(typeof(IStateRepository), typeof(StateRepository));
+            services.AddScoped(typeof(IStringerRepository), typeof(StringerRepository));
+            services.AddScoped(typeof(IShippingCompanyRepository), typeof(ShippingCompanyRepository));
+            services.AddScoped(typeof(IShippingCompanyStateRepository), typeof(ShippingCompanyStateRepository));
+            services.AddScoped(typeof(IBoardModelDimensionsRepository), typeof(BoardModelDimensionsRepository));
+
+            services.AddScoped(typeof(IOrderEmailRepository), typeof(OrderEmailRepository));
+            services.AddScoped(typeof(IOrderTrackingRepository), typeof(OrderTrackingRepository));
+
+            services.AddScoped(typeof(IProductStatusRepository), typeof(ProductStatusRepository));
+            services.AddScoped(typeof(IProductTypeRepository), typeof(ProductTypeRepository));
+
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

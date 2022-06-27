@@ -2,24 +2,42 @@
 using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using UnitOfWork;
 
 namespace Repositorys
 {
-    public class ShippingCompanyRepository<T> : IShippingCompanyRepository<ShippingCompany> where T : BaseEntity
+    public class ShippingCompanyRepository : IShippingCompanyRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
+        private bool disposed = false;
 
         public ShippingCompanyRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public ShippingCompany Get(int id)
+        protected virtual void Dispose(bool disposing)
         {
-            var shipping =  _context.ShippingCompany.Include(x => x.ShippingCompanyStates).Single(x => x.Id == id);
-            //_context.Dispose();
-            return shipping;
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<ShippingCompany> GetAll()
+        {
+            return _context.ShippingCompany.AsQueryable();
         }
 
         public void Active(int id)
@@ -35,23 +53,47 @@ namespace Repositorys
             }
             _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
-            _context.Dispose();
         }
 
         public void Delete(int id)
         {
-            //if ((_context.ShippingCompanyState.Any(c => c.ShippingCompanyId == id)) ||
-            //    (_context.Paint.Any(c => c.BoardModelId == id)))
+            //if (_context.OrderProduct.Any(c => c.ProductId == id))
             //{
-            //    throw new Exception("A transportadora não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
+            //    throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
             //};
-
-            var dimensions = _context.ShippingCompanyState.Where(c => c.ShippingCompanyId == id);
-            _context.RemoveRange(dimensions);
             var entity = _context.ShippingCompany.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
             _context.Dispose();
+        }
+
+        public ShippingCompany Get(int id)
+        {
+            return _context.ShippingCompany.Single(b => b.Id == id);
+        }
+
+        public void Update(ShippingCompany entity)
+        {
+
+            var entityBase = _context.ShippingCompany.Single(x => x.Id == entity.Id);
+
+            entityBase.Name = entity.Name;
+            entityBase.ImageName = entity.ImageName;
+            entityBase.UpdateDate = DateTime.Now;
+
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public IQueryable<ShippingCompany> Where(Expression<Func<ShippingCompany, bool>> expression)
+        {
+            return _context.ShippingCompany.Where(expression).AsQueryable();
+        }
+
+        public void Insert(ShippingCompany entity)
+        {
+            _context.ShippingCompany.Add(entity);
+            _context.SaveChanges();
         }
     }
 }

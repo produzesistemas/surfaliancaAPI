@@ -1,59 +1,62 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using UnitOfWork;
 
 
 namespace Repositorys
 {
-    public class ConstructionRepository<T> : IConstructionRepository<Construction> where T : BaseEntity
+    public class ConstructionRepository : IConstructionRepository, IDisposable
     {
-        private DbSet<Construction> entities;
-        private DbSet<IdentityUser> users;
         private readonly ApplicationDbContext _context;
+        private bool disposed = false;
         public ConstructionRepository(ApplicationDbContext context)
         {
             _context = context;
-            entities = context.Set<Construction>();
-            users = context.Set<IdentityUser>();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<Construction> GetAll()
+        {
+            var lst = new List<Construction>();
+
+            using (var db = _context)
+            {
+                lst = db.Construction.ToList();
+            }
+
+            return lst.AsQueryable();
         }
 
         public Construction Get(int id)
         {
-            return entities.Select(x => new Construction
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Value = x.Value,
-                Details = x.Details,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                UrlMovie = x.UrlMovie,
-                ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
-                UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).FirstOrDefault(x => x.Id == id);
+            return _context.Construction
+    .Single(x => x.Id == id);
         }
 
-        public IQueryable<Construction> Where(Func<Construction, bool> expression)
+        public IQueryable<Construction> Where(Expression<Func<Construction, bool>> expression)
         {
-            return entities.Select(x => new Construction
-            {
-                Id = x.Id,
-                Name = x.Name,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).Where(expression).AsQueryable();
-        }
-
-        public void Delete(int id)
-        {
-            var entity = _context.Construction.Single(x => x.Id == id);
-            _context.Remove(entity);
-            _context.SaveChanges();
+            return _context.Construction.Where(expression).AsQueryable();
         }
 
         public void Active(int id)
@@ -68,6 +71,37 @@ namespace Repositorys
                 entity.Active = true;
             }
             _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            if (_context.OrderProductOrdered.Any(c => c.ConstructionId == id))
+            {
+                throw new Exception("A tecnologia / construção não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
+            };
+
+            var entity = _context.Construction.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+            _context.Dispose();
+        }
+
+        public void Update(Construction entity)
+        {
+            var entityBase = _context.Construction.Single(x => x.Id == entity.Id);
+            entityBase.Name = entity.Name;
+            entityBase.UrlMovie = entity.UrlMovie;
+            entityBase.Details = entity.Details;
+            entityBase.Value = entity.Value;
+            entityBase.UpdateDate = DateTime.Now;
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Insert(Construction entity)
+        {
+            _context.Construction.Add(entity);
             _context.SaveChanges();
         }
     }

@@ -21,6 +21,8 @@ namespace Models
         public int? PaintId { get; set; }
         public int? BottomId { get; set; }
         public int? FinishingId { get; set; }
+        public int? FinSystemId { get; set; }
+        public int? StingerId { get; set; }
 
         //[NotMapped]
         //public Finishing Finishing { get; set; }

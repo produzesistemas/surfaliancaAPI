@@ -1,46 +1,42 @@
-﻿
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Linq;
 using UnitOfWork;
+using System;
+using System.Linq.Expressions;
 
 namespace Repositorys
 {
-    public class LaminationRepository<T> : ILaminationRepository<Lamination> where T : BaseEntity
+    public class LaminationRepository : ILaminationRepository, IDisposable
     {
-        private DbSet<Lamination> entities;
-        private DbSet<IdentityUser> users;
         private readonly ApplicationDbContext _context;
-
+        private bool disposed = false;
         public LaminationRepository(ApplicationDbContext context)
         {
-            entities = context.Set<Lamination>();
-            users = context.Set<IdentityUser>();
             _context = context;
         }
 
-        public Lamination Get(int id)
+        protected virtual void Dispose(bool disposing)
         {
-            return entities.Select(x => new Lamination
+            if (!this.disposed)
             {
-                Id = x.Id,
-                Name = x.Name,
-                Details = x.Details,
-                CreateDate = x.CreateDate,
-                UpdateDate = x.UpdateDate,
-                ApplicationUserId = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).Id,
-                UpdateApplicationUserId = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).Id,
-                CriadoPor = users.FirstOrDefault(q => q.Id == x.ApplicationUserId).UserName,
-                AlteradoPor = users.FirstOrDefault(q => q.Id == x.UpdateApplicationUserId).UserName,
-            }).FirstOrDefault(x => x.Id == id);
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+            }
+            this.disposed = true;
         }
 
-        public void Delete(int id)
+        public void Dispose()
         {
-            var entity = _context.Lamination.Single(x => x.Id == id);
-            _context.Remove(entity);
-            _context.SaveChanges();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public IQueryable<Lamination> GetAll()
+        {
+            return _context.Lamination.AsQueryable();
         }
 
         public void Active(int id)
@@ -55,6 +51,42 @@ namespace Repositorys
                 entity.Active = true;
             }
             _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            if (_context.OrderProductOrdered.Any(c => c.LaminationId == id))
+            {
+                throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
+            };
+
+            var entity = _context.Lamination.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+            _context.Dispose();
+        }
+
+        public Lamination Get(int id)
+        {
+            return _context.Lamination.Single(b => b.Id == id);
+        }
+
+        public void Update(Lamination entity)
+        {
+            entity.Name = entity.Name;
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public IQueryable<Lamination> Where(Expression<Func<Lamination, bool>> expression)
+        {
+            return _context.Lamination.Where(expression).AsQueryable();
+        }
+
+        public void Insert(Lamination entity)
+        {
+            _context.Lamination.Add(entity);
             _context.SaveChanges();
         }
     }

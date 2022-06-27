@@ -19,6 +19,8 @@ namespace Models
         public int? LaminationId { get; set; }
         public int? TailId { get; set; }
         public int? PaintId { get; set; }
+        public int? BottomId { get; set; }
+        public int? FinishingId { get; set; }
 
         //[NotMapped]
         //public Finishing Finishing { get; set; }
@@ -34,8 +36,6 @@ namespace Models
         public Construction Construction { get; set; }
         [NotMapped]
         public Bottom Bottom { get; set; }
-        [NotMapped]
-        public BoardType BoardType { get; set; }
         [NotMapped]
         public BoardModel BoardModel { get; set; }
 

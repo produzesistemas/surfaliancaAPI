@@ -14,15 +14,15 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class CupomController : ControllerBase
     {
-        private ICupomRepository<Cupom> cupomRepository;
-        private IRepository<Cupom> genericRepository;
+        private ICupomRepository<Coupon> cupomRepository;
+        private IRepository<Coupon> genericRepository;
         private IRepository<Order> pedidoRepository;
         private readonly UserManager<IdentityUser> userManager;
 
         public CupomController(UserManager<IdentityUser> userManager,
-            IRepository<Cupom> genericRepository,
+            IRepository<Coupon> genericRepository,
             IRepository<Order> pedidoRepository,
-            ICupomRepository<Cupom> cupomRepository)
+            ICupomRepository<Coupon> cupomRepository)
         {
             this.cupomRepository = cupomRepository;
             this.userManager = userManager;
@@ -43,8 +43,8 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                Expression<Func<Cupom, bool>> p1;
-                var predicate = PredicateBuilder.New<Cupom>();
+                Expression<Func<Coupon, bool>> p1;
+                var predicate = PredicateBuilder.New<Coupon>();
                 if (filter.Name != null)
                 {
                     p1 = p => p.Codigo == filter.Name;
@@ -73,8 +73,8 @@ namespace surfaliancaAPI.Controllers
                 {
                     return BadRequest("Identificação do usuário não encontrada.");
                 }
-                Expression<Func<Cupom, bool>> p1;
-                var predicate = PredicateBuilder.New<Cupom>();
+                Expression<Func<Coupon, bool>> p1;
+                var predicate = PredicateBuilder.New<Coupon>();
                 p1 = p => p.Codigo == filter.Name;
                 predicate = predicate.And(p1);
                 var cupom = cupomRepository.Where(predicate).FirstOrDefault();
@@ -124,7 +124,7 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save(Cupom cupom)
+        public IActionResult Save(Coupon cupom)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("active")]
         [Authorize()]
-        public IActionResult Active(Cupom cupom)
+        public IActionResult Active(Coupon cupom)
         {
             try
             {

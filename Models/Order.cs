@@ -16,13 +16,15 @@ namespace Models
         public string District { get; set; }
         public string Complement { get; set; }
         public string Reference { get; set; }
-        public string State { get; set; }
-        public decimal TaxValue { get; set; }
+
+        public string TrackingCode { get; set; }
+        public decimal? TaxValue { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string ApplicationUserId { get; set; }
         public int? PaymentConditionId { get; set; }
+        public decimal? DiscountPix { get; set; }
 
-        public int? CupomId { get; set; }
+        public int? CouponId { get; set; }
 
         //public int Installments { get; set; }
         //public int CapturedAmount { get; set; }
@@ -42,7 +44,7 @@ namespace Models
         [NotMapped]
         public virtual PaymentCondition PaymentCondition { get; set; }
         [NotMapped]
-        public virtual Cupom Cupom { get; set; }
+        public virtual Coupon Coupon { get; set; }
         public Order()
         {
             OrderTracking = new List<OrderTracking>();

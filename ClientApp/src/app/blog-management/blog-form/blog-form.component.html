@@ -1,0 +1,86 @@
+<div class="container">
+    <div class="py-5">
+        <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <form [formGroup]="formAdd">
+                        <div class="form-group col-md-12">
+                            <h5 class="card-title text-center">Cadastro de Blog</h5>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>Tipo de blog:</label>
+                            <select class="form-control" formControlName="typeBlogId">
+                                <option [ngValue]="blogType" *ngFor="let blogType of blogsType">
+                                    {{blogType.name}}</option>
+                            </select>
+                            <div *ngIf="submitted && q.typeBlogId.errors">
+                                <p *ngIf="q.typeBlogId.errors.required" class="text-danger small">* Seleção de
+                                    Tipo de prancha é obrigatória</p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-md-12">
+                            <label class="text-white">Descrição:</label>
+                            <input type="text" maxlength="255" class="form-control" id="name" formControlName="name"
+                                placeholder="Informe a descrição" />
+                            <div *ngIf="submitted && q.name.errors">
+                                <p *ngIf="q.description.errors.required" class="text-danger small">Informe a descrição</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="text-white">Detalhes:</label>
+                            <angular-editor [config]="configEditor" formControlName="details"></angular-editor>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>Foto:</label>
+                            <div class="input-group mb-3">
+                                <div class="form-group col-md-12">
+                                    <img *ngIf="img" class="img-thumbnail" src={{img}} width="200px">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="py-3">
+                                        <input type="file" #fileUpload name="fileToUpload" id="file" #file
+                                            (change)="onFileChange($event)" accept=".jpg, .png, .gif, .tiff, .jfif" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <div *ngIf="blog.id > 0" class="py-2">
+                            <div class="form-group col-md-12">
+                                <label>Criado por: {{ blog.criadoPor }}</label>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Em: {{ blog.createDate | date }}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="blog.alteradoPor">
+                            <div class="form-group col-md-12">
+                                <label>Última alteração por: {{ blog.alteradoPor }}</label>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Em: {{ blog.updateDate | date }}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12 py-1">
+                            <button type="button" class="btn btn-rounded btn-primary" (click)="onSave()">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button type="button" class="btn btn-rounded btn-danger ml-2" (click)="onCancel()">
+                                <i class="fas fa-arrow-circle-left"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

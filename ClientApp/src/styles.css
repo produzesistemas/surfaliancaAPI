@@ -1,16 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+.black-background {background-color:#000;}
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.carousel-control-next-icon{
+    background-image: url('../src/assets/right-arrow.png')
+  }
+
+  .carousel-control-prev-icon{
+    background-image: url('../src/assets/left-arrow.png')
+ }
+
+ .navbar-header {
+  float: left;
+  padding: 3px; /*opcional*/
+  text-align: center;
+  width: 100%;
 }
 
-code {
-  color: #e01a76;
+.navbar-brand {
+  position: absolute;
+  float: none;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.img-card {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.img-board {
+  width: 229px;
+  height: 569px;
+  object-fit: cover;
+}
+
+.img-board-card {
+  width: 229px;
+  height: 400px;
+  object-fit: contain;
 }

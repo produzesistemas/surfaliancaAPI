@@ -20,9 +20,7 @@ namespace Models
         {
             modelBuilder.Entity<BoardModel>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelDimensions);
-            modelBuilder.Entity<BoardType>().HasKey(c => c.Id);
-            modelBuilder.Entity<Cupom>().HasKey(c => c.Id);
-
+            modelBuilder.Entity<Coupon>().HasKey(c => c.Id);
             modelBuilder.Entity<Bottom>().HasKey(c => c.Id);
 
             modelBuilder.Entity<Construction>().HasKey(c => c.Id);
@@ -40,9 +38,6 @@ namespace Models
            
             modelBuilder.Entity<Paint>().HasKey(c => c.Id);
             modelBuilder.Entity<Stringer>().HasKey(c => c.Id);
-            modelBuilder.Entity<Color>().HasKey(c => c.Id);
-            modelBuilder.Entity<BorderColor>().HasKey(c => c.Id);
-
             modelBuilder.Entity<Order>().HasKey(c => c.Id);
             modelBuilder.Entity<OrderProduct>().HasKey(c => c.Id);
             modelBuilder.Entity<OrderProductOrdered>().HasKey(c => c.Id);
@@ -72,7 +67,7 @@ namespace Models
             modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
             modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
-            modelBuilder.Entity<Cupom>().HasMany(c => c.Orders).WithOne(b => b.Cupom).HasForeignKey(c => c.CupomId);
+            modelBuilder.Entity<Coupon>().HasMany(c => c.Orders).WithOne(b => b.Coupon).HasForeignKey(c => c.CouponId);
 
             modelBuilder.Entity<ShippingCompany>().HasKey(c => c.Id);
             modelBuilder.Entity<ShippingCompanyState>().HasKey(c => c.Id);
@@ -85,7 +80,7 @@ namespace Models
         }
 
         public DbSet<ProductType> ProductType { get; set; }
-        public DbSet<Cupom> Cupom { get; set; }
+        public DbSet<Coupon> Coupon { get; set; }
         public DbSet<TypeEmail> TypeEmail { get; set; }
         public DbSet<StatusPaymentOrder> StatusPaymentOrder { get; set; }
         public DbSet<StatusOrder> StatusOrder { get; set; }
@@ -95,7 +90,6 @@ namespace Models
         public DbSet<FinSystem> FinSystem { get; set; }
         public DbSet<Team> Team { get; set; }
         public DbSet<TeamImage> TeamImage { get; set; }
-        public DbSet<BoardType> BoardType { get; set; }
         public DbSet<Construction> Construction { get; set; }
         public DbSet<ShippingCompany> ShippingCompany { get; set; }
         public DbSet<ShippingCompanyState> ShippingCompanyState { get; set; }
@@ -111,11 +105,11 @@ namespace Models
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderEmail> OrderEmail { get; set; }
         public DbSet<OrderTracking> OrderTracking { get; set; }
+        public DbSet<OrderEvaluation> OrderEvaluation { get; set; }
         public DbSet<OrderProduct> OrderProduct { get; set; }
         public DbSet<OrderProductOrdered> OrderProductOrdered { get; set; }
         public DbSet<PaymentCondition> PaymentCondition { get; set; }
         public DbSet<Finishing> Finishing { get; set; }
-        public DbSet<Logo> Logo { get; set; }
         public DbSet<Blog> Blog { get; set; }
         public DbSet<TypeBlog> TypeBlog { get; set; }
 

@@ -1,0 +1,607 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button
+    class="navbar-toggler collapsed float-left"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a href="index"
+    ><img
+      class="img-fluid"
+      src="../../../assets/logo_header.png"
+      width="70px"
+      height="37px"
+  /></a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="team-list">Equipe</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="blog-list">Blog</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          aria-current="page"
+          href="politica-privacidade"
+          ><small>Política de privacidade</small></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="contato"
+          ><small>Contato</small></a
+        >
+      </li>
+    </ul>
+  </div>
+  <form class="form-inline">
+    <button type="button" class="btn btn-dark" (click)="openShoppingCart()">
+      <div><i class="fa fa-shopping-cart"></i>{{ getQuantityItems() }}</div>
+    </button>
+  </form>
+</nav>
+
+<div class="container-xl py-5">
+  <h2 class="text-center text-white">Meu carrinho</h2>
+  <div class="row d-flex justify-content-center">
+    <div class="col-lg-8">
+      <table class="table table-hover">
+        <tr *ngFor="let item of shoppingCart">
+          <div class="card">
+            <td>
+              <div class="row" *ngIf="item.typeSaleId == 1">
+                <div class="col-auto">
+                  <img
+                    class="img-fluid"
+                    src="{{ getImage(item) }}"
+                    alt="Produto"
+                    width="100px"
+                  />
+                </div>
+                <div class="col">
+                  <div>{{ item.name }}</div>
+                  <div>
+                    Dimensões : {{ item.boardModelDimension.description }}
+                  </div>
+                  <div *ngIf="item.contruction">
+                    Construção : {{ item.construction.name }}
+                  </div>
+                  <div *ngIf="item.finSystem">
+                    Sistema de quilhas : {{ item.finSystem.name }}
+                  </div>
+                  <div *ngIf="item.lamination">
+                    Laminação : {{ item.lamination.name }}
+                  </div>
+                  <div *ngIf="item.level">Nivel : {{ item.level.name }}</div>
+                  <div *ngIf="item.stringer">
+                    Longarina : {{ item.stringer.name }}
+                  </div>
+                  <div *ngIf="item.tail">Rabeta : {{ item.tail.name }}</div>
+                  <div>Valor : {{ item.value | currency: "R$" }}</div>
+                  <div>Quantidade: {{ item.quantity }}</div>
+                  <div>Subtotal: {{ getSubtotal(item) | currency: "R$" }}</div>
+
+                  <button
+                    type="button"
+                    class="btn btn-light"
+                    (click)="deleteItemCart(item)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Basic example"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-light"
+                      (click)="incrementItemCart(item)"
+                    >
+                      <i class="fa fa-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-light">
+                      {{ item.quantity }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-light"
+                      (click)="decrementItemCart(item)"
+                    >
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="item.typeSaleId == 2">
+                <div class="col-auto">
+                  <img
+                    class="img-fluid"
+                    src="{{ getImage(item) }}"
+                    alt="Produto"
+                    width="100px"
+                  />
+                </div>
+                <div class="col">
+                  <div>{{ item.name }}</div>
+                  <div>Valor : {{ item.value | currency: "R$" }}</div>
+                  <div>Quantidade: {{ item.quantity }}</div>
+                  <div>Subtotal: {{ getSubtotal(item) | currency: "R$" }}</div>
+                  <button
+                    type="button"
+                    class="btn btn-light"
+                    (click)="deleteItemCart(item)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <div
+                    class="btn-group"
+                    role="group"
+                    aria-label="Basic example"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-light"
+                      (click)="incrementItemCart(item)"
+                    >
+                      <i class="fa fa-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-light">
+                      {{ item.quantity }}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-light"
+                      (click)="decrementItemCart(item)"
+                    >
+                      <i class="fa fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </div>
+        </tr>
+      </table>
+
+      <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-6 col-md-12 col-sm-12 py-3">
+                <div class="card">
+                    <h5 class="card-header">Opções de entrega</h5>
+                    <div class="card-body">
+
+                        <form [formGroup]="formFreight">
+                            <div class="form-group col-lg-8">
+                                <label>Informe o CEP para cálculo:</label>
+                                <div class="input-group">
+                                    <input formControlName="cep" type="text" class="form-control"
+                                        placeholder="Informe o cep....." aria-label="Informe o cep"
+                                        aria-describedby="button-addon2" mask="00000-000" (focus)="clearField()">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                            (click)="getShippingDeadline()"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <div *ngIf="submittedFreight && ff.cep.errors">
+                                    <p *ngIf="ff.cep.errors.required" class="text-danger small">* Informe o CEP para o
+                                        cálculo do frete.
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form [formGroup]="formOptionsDelivery">
+                            <div class="form-group col-lg-12">
+
+                                <div *ngIf="checkPostOffices()">
+                                    <div class="form-group col">
+                                        <label>Tipo de entrega:</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" (change)="getShippingDeadlineByCode($event)" name="tipo" id="promocaoYes"
+                                                    value="04510" formControlName="type">
+                                                <label class="form-check-label" for="promocaoYes">PAC</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" (change)="getShippingDeadlineByCode($event)" name="tipo" id="promocaoNo"
+                                                    value="04014" formControlName="type">
+                                                <label class="form-check-label" for="promocaoNo">SEDEX</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label>Data prevista de entrega:</label>
+                                <p><strong>{{getDeliveryForecast() | date:'EEEE'}} {{getDeliveryForecast() | date}}</strong>
+                                </p>
+                            </div>
+                            <div *ngIf="submittedOptionsDelivery && fd.deliveryDate.errors">
+                                <p *ngIf="fd.deliveryDate.errors.required" class="text-danger small">* Calcule a previsão de
+                                    entrega</p>
+                            </div>
+
+
+
+                            <div class="form-group col-lg-12">
+                                <label>Valor do Frete:</label>
+                                <p><strong>{{getFreightValue() | currency:'R$'}}</strong></p>
+                            </div>
+                            <div *ngIf="submittedOptionsDelivery && fd.freightValue.errors">
+                                <p *ngIf="fd.freightValue.errors.required" class="text-danger small">* Calcule o valor do
+                                    frete</p>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="py-2">
+        <div class="card">
+          <div class="card-header form-inline">
+            <h6>Endereço de Entrega</h6>
+            <a
+              class="ml-2"
+              tabindex="-1"
+              role="button"
+              aria-disabled="true"
+              title="Editar"
+              (click)="openModalAddress()"
+            >
+              Alterar
+              <i class="fa fa-edit text-primary"></i>
+            </a>
+          </div>
+          <div class="card-body">
+            <div>{{ address.logradouro }}</div>
+            <div>{{ address.bairro }}</div>
+            <div>{{ address.cep }}</div>
+            <div>{{ address.uf }}</div>
+            <div>{{ address.localidade }}</div>
+            <div>{{ address.complemento }}</div>
+            <div>{{ address.referencia }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="py-2">
+        <div class="card">
+          <div class="card-header">
+            <h6>Cupom de desconto</h6>
+            <div class="card-body">
+              <div class="row">
+                <form [formGroup]="formCoupon">
+                  <div class="col">
+                    <label>Informe o código do cupom:</label>
+                    <div class="input-group">
+                      <input
+                        formControlName="coupon"
+                        type="text"
+                        class="form-control"
+                        placeholder="Informe o código do cupom....."
+                        aria-label="Informe o código do cupom"
+                        aria-describedby="button-addon2"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-secondary"
+                          type="button"
+                          id="button-addon2"
+                          (click)="searchCoupon()"
+                        >
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngIf="submittedCoupon && fc.coupon.errors">
+                      <p
+                        *ngIf="fc.coupon.errors.required"
+                        class="text-danger small"
+                      >
+                        * Informe o código do cupom para efetuar a busca.
+                      </p>
+                    </div>
+                  </div>
+                  <div *ngIf="erroCoupon">
+                    <p class="text-danger small">* {{ erroMessage }}</p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="py-2">
+        <div class="card">
+          <h5 class="card-header">Resumo do carrinho</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h6 class="card-title">Quantidade de itens no carrinho:</h6>
+                {{ getQuantityItems() }}
+              </div>
+              <div class="col">
+                <h6 class="card-title">Valor mínimo para compra:</h6>
+                {{ getValueMinimum() | currency: "R$" }}
+              </div>
+              <div class="col">
+                <h6 class="card-title">Valor total carrinho:</h6>
+                {{ getTotalItems() | currency: "R$" }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <form [formGroup]="form">
+                  <h6 class="card-title">Valor total pedido:</h6>
+                  {{ getTotalSale() | currency: "R$" }}
+                  <div *ngIf="submitted && form.controls.valueMinimum.errors">
+                    <p class="text-left text-danger small">
+                      * Valor minimo para compra é de
+                      {{ store.valueMinimum | currency: "R$" }}
+                    </p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center py-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary ml-2 mr-2 text-uppercase"
+        (click)="onContinueBuy()"
+      >
+        <i class="fas fa-arrow-circle-left"></i>
+        Continuar comprando
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary ml-2 mr-2 text-uppercase"
+        (click)="clearCart()"
+      >
+        <i class="fa fa-trash"></i> Limpar carrinho
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary ml-2 mr-2 text-uppercase ml-2"
+        (click)="finishCart()"
+      >
+        <i class="fa fa-check"></i> Finalizar pedido
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #modalLogin>
+  <div
+    class="inmodal"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Login</h3>
+      <button type="button" class="close" (click)="closeModalLogin()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body text-center">
+                <i class="fa fa-user-circle fa-5x"></i>
+                <h5 class="card-title">Login</h5>
+              </div>
+              <div class="card-body text-center">
+                <button
+                  type="button"
+                  class="btn btn-lg btn-danger btn-block"
+                  (click)="signInWithGoogle()"
+                >
+                  <i class="fab fa-google"></i>
+                  Login com Google
+                </button>
+
+                <button
+                  type="button"
+                  (click)="facebookSignin()"
+                  class="btn btn-lg btn-primary btn-block"
+                >
+                  <i class="fab fa-facebook"></i> Login com Facebook
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-rounded btn-default text-uppercase"
+        (click)="closeModalLogin()"
+      >
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalAddress>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Endereço de entrega</h3>
+      <button type="button" class="close" (click)="closeModalAddress()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col">
+          <form [formGroup]="formPostalCode">
+            <div class="form-group">
+              <div class="input-group mb-3">
+                <input
+                  type="text"
+                  formControlName="postalCode"
+                  placeholder="Informe o CEP..."
+                  mask="00000-000"
+                  class="form-control"
+                  maxlength="9"
+                />
+
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                    id="button-addon2"
+                    (click)="onSearchLocation()"
+                  >
+                    <i class="fas fa-search-location"></i>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isSubmittedPostalCode && fp.postalCode.errors">
+                <p
+                  *ngIf="fp.postalCode.errors.required"
+                  class="text-danger small"
+                >
+                  * Informe o CEP para efetuar a busca do endereço
+                </p>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="formAddress">
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="description"
+                placeholder="Informe o endereço..."
+                class="form-control fix-rounded-right"
+                required
+                autofocus
+                maxlength="256"
+              />
+            </div>
+            <div *ngIf="isSubmittedAddress && f.description.errors">
+              <p
+                *ngIf="f.description.errors.required"
+                class="text-danger small"
+              >
+                * Informe o endereço de entrega
+              </p>
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="district"
+                placeholder="Informe o bairro..."
+                class="form-control"
+                maxlength="256"
+              />
+            </div>
+            <div *ngIf="isSubmittedAddress && f.district.errors">
+              <p *ngIf="f.district.errors.required" class="text-danger small">
+                * Informe o bairro
+              </p>
+            </div>
+
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="complement"
+                placeholder="Informe o complemento..."
+                class="form-control"
+                maxlength="256"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="reference"
+                placeholder="Informe o ponto de referência..."
+                class="form-control"
+                maxlength="256"
+              />
+            </div>
+
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="city"
+                placeholder="Informe a cidade..."
+                class="form-control"
+                maxlength="256"
+              />
+            </div>
+            <div *ngIf="isSubmittedAddress && f.city.errors">
+              <p *ngIf="f.city.errors.required" class="text-danger small">
+                * Informe a cidade
+              </p>
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                maxlength="2"
+                formControlName="state"
+                placeholder="Informe o estado..."
+                class="form-control"
+              />
+            </div>
+            <div *ngIf="isSubmittedAddress && f.state.errors">
+              <p *ngIf="f.state.errors.required" class="text-danger small">
+                * Informe o estado
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-rounded btn-outline-primary text-uppercase"
+        (click)="onConfirmAddress()"
+      >
+        <i class="fa fa-check"></i> Confirmar
+      </button>
+      <button
+        type="button"
+        class="btn btn-rounded btn-outline-danger text-uppercase ml-2"
+        (click)="closeModalAddress()"
+      >
+        <i class="fa fa-times"></i> Fechar
+      </button>
+    </div>
+  </div>
+</ng-template>

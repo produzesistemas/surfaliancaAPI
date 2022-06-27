@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="py-5">
+      <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
+        <div class="card text-white bg-dark">
+          <div class="card-body">
+            <h5 class="card-title text-center">Cadastro de Fundos</h5>
+            <div class="form-group col-md-12">
+              <label>Imagem:</label>
+              <div class="row">
+                <div class="col-md-12">
+                  <img *ngIf="logo" class="img-thumbnail" src={{logo}}>
+                </div>
+              </div>
+              <div class="py-3">
+                <label id="labelFileImport" class="btn btn-primary" for="file">
+                  <i class="fa fa-upload"></i>
+                </label>
+                <input type="file" name="fileToUpload" id="file" #file style="display: none;"
+                  (change)="onFileChange($event)" accept=".jpg, .png, .gif, .tiff" required />
+              </div>
+            </div>
+            <form [formGroup]='formAdd'>
+              <div class="form-group col-md-12">
+                <label>Nome:</label>
+                <input type="text" formControlName="name" placeholder="Informe o nome..." class="form-control">
+                <div *ngIf="submitted && f.name.errors">
+                  <p *ngIf="f.name.errors.required" class="text-danger small">* Informe o nome</p>
+                </div>
+              </div>
+
+
+              <div *ngIf="bottom.id > 0" class="py-2">
+                <div class="form-group col-md-12">
+                    <label>Criado por: {{ bottom.criadoPor }}</label>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Em: {{ bottom.createDate | date }}</label>
+                </div>
+            </div>
+            <div *ngIf="bottom.alteradoPor">
+                <div class="form-group col-md-12">
+                    <label>Última alteração por: {{ bottom.alteradoPor }}</label>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Em: {{ bottom.updateDate | date }}</label>
+                </div>
+            </div>
+  
+            </form>
+            <div class="form-group col-md-12">
+              <button type="button" class="btn btn-rounded btn-primary" (click)="onSave()">
+                <i class="fa fa-save"></i>
+              </button>
+              <button type="button" class="btn btn-rounded btn-danger ml-2" (click)="onCancel()">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+  
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>

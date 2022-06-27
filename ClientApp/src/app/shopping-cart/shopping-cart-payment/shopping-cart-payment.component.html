@@ -1,0 +1,252 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <button class="navbar-toggler collapsed float-left" type="button" data-toggle="collapse"
+        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a href="index"><img class="img-fluid" src="../../../assets/logo_header.png" width="70px" height="37px"></a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" role="button" href="team-list">Equipe</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" role="button" href="blog-list">Blog</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="politica-privacidade"><small>Política de
+                        privacidade</small></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="contato"><small>Contato</small></a>
+            </li>
+        </ul>
+    </div>
+    <!-- <form class="form-inline">
+        <button type="button" class="btn btn-dark" (click)="openShoppingCart()">
+            <div>
+                <i class="fa fa-shopping-cart"></i>{{ getQuantityItems() }}
+            </div>
+        </button>
+    </form> -->
+
+
+
+
+
+
+
+
+
+</nav>
+<div class="text-center alert alert-success"><i class="fas fa-shield-alt"></i> Ambiente Seguro</div>
+<div class="container-xl py-3">
+  <h3 class="text-center">Pagamento do pedido nº {{ order.id }}</h3>
+  <div class="row py-3 d-flex justify-content-center">
+      <div class="col">
+          <div class="alert alert-success" role="alert">
+              O Pedido de número {{ order.id }} foi enviado com sucesso.
+          </div>
+          <div class="alert alert-warning" role="alert">
+              Efetue o pagamento para que o pedido seja processado.
+          </div>
+      </div>
+  </div>
+
+  <div class="row py-3 d-flex justify-content-center" *ngIf="order.orderProduct.length > 0">
+      <div class="col">
+          <div class="card">
+              <h5 class="card-header">Produtos do pedido</h5>
+              <div class="card-body">
+                  <div class="row">
+                      <table class="table">
+                          <tr *ngFor="let item of order.orderProduct">
+                              <div class="card">
+                                  <td>
+                                      <div class="row">
+                                          <div class="col-auto">
+                                              <img class="img-fluid" src={{getImage(item.product.imageName)}}
+                                                  alt="Produto" width="100px">
+                                          </div>
+                                          <div class="col">
+                                              <span>{{ item.product.name }}</span>
+                                              <div>Valor Unitário: {{ item.productValue | currency:'R$'}}</div>
+                                              <div> Quantidade: {{ item.qtd }}</div>
+                                              <div> Subtotal: {{ getSubtotalProducts(item) | currency:'R$' }}
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                              </div>
+                          </tr>
+                      </table>
+
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="py-3">
+    <div class="card">
+        <h5 class="card-header">Encomendas no pedido</h5>
+        <div class="card-body">
+            <div class="row">
+                <table class="table table-hover">
+                    <tr *ngFor="let item of order.orderProductOrdered">
+                        <div class="card">
+                            <td>
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <img class="img-fluid" src={{getImageBoardModel(item)}} alt="Produto" width="100px">
+                                    </div>
+                                    <div class="col">
+                                        <div>Valor da encomenda: {{ item.value | currency:'R$'}}</div>
+                                        <div> Quantidade: {{ item.qtd }}</div>
+                                        <div> Subtotal: {{ getSubtotalOrdered(item) | currency:'R$' }}</div>
+                                        <div> Modelo: {{ item.boardModel.name}}</div>
+                                        <div> Reforço na Rabeta: {{ item.tail.name }}</div>
+                                        <div> Laminação: {{ item.lamination.name }}</div>
+                                        <div> Construção: {{ item.construction.name }}</div>
+                                        <div>Pintura: </div>
+                                        <img class="img-thumbnail" src={{getImagePaint(item)}} width="100px">                                                </div>
+                                </div>
+                            </td>
+                        </div>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div class="row py-3 d-flex justify-content-center">
+      <div class="col">
+          <div class="card">
+              <h5 class="card-header">Detalhes do pedido</h5>
+              <div class="card-body">
+                  <div class="row">
+                      <div class="col">
+                          <h6 class="card-title">Pedido enviado em : </h6>
+                          <span> {{
+                              getDataAcompanhamento(order.id) | date:'dd/MM/yyyy'}} ás {{
+                              getDataAcompanhamento(order.id) | date:'h:mm'}}</span>
+                      </div>
+                      <div class="col">
+                          <h6 class="card-title">Valor do frete: </h6>
+                          {{ order.taxValue| currency:'R$'}}
+                      </div>
+                      <div class="col" >
+                          <h6 class="card-title">Cupom aplicado: </h6>
+                          <span *ngIf="order.coupon"> {{ order.coupon.codigo }} - {{ order.coupon.descricao }} </span>
+                      </div>
+                  </div>
+                  <div class="row py-3">
+                      <div class="col">
+                          <h6 class="card-title">Valor em Produtos: </h6>
+                          {{getTotalProducts() | currency:'R$'}}
+                      </div>
+                      <div class="col">
+                        <h6 class="card-title">Valor em Encomendas: </h6>
+                        {{getTotalOrdered() | currency:'R$'}}
+                    </div>
+                      <div class="col">
+                          <h6 class="card-title">Valor total do pedido: </h6>
+                          {{getTotalSale() | currency:'R$'}}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- <div class="row py-3 d-flex justify-content-center">
+      <div class="col-lg-6 col-md-12">
+          <div class="card">
+              <h5 class="card-header">Dados do Cartão de Crédito</h5>
+              <div class="card-body">
+                  <form [formGroup]='formCard' class="form-signin">
+                      <div class="form-group col">
+                          <label>Selecione a bandeira:</label>
+                          <select class="form-control" formControlName="brand">
+                              <option [ngValue]="brand.value" *ngFor="let brand of lstBrand">
+                                  {{ brand.value }}</option>
+                          </select>
+                          <div *ngIf="submitted && fcard.brand.errors">
+                              <p *ngIf="fcard.brand.errors.required" class="text-danger small">* Seleção da
+                                  bandeira é obrigatória</p>
+                          </div>
+                      </div>
+                      <div class="form-group col">
+                          <label>Número do cartão:</label>
+                          <input type="text" formControlName="cardNumber" placeholder="Informe o número do cartão ..."
+                              class="form-control" mask="0000.0000.0000.0000">
+                          <div *ngIf="submitted && fcard.cardNumber.errors">
+                              <p *ngIf="fcard.cardNumber.errors.required" class="text-danger small">* Número do cartão
+                                  é
+                                  obrigatório</p>
+                          </div>
+                      </div>
+
+                      <div class="form-group col">
+                          <label>Data da expiração:</label>
+                          <input type="text" formControlName="expirationDate"
+                              placeholder="Informe a data de expiração ..." class="form-control" required>
+                          <div *ngIf="submitted && fcard.expirationDate.errors">
+                              <p *ngIf="fcard.expirationDate.errors.required" class="text-danger small">* Data de
+                                  expiração é obrigatória</p>
+                          </div>
+                      </div>
+
+                      <div class="form-group col">
+                          <label>Nome do titular:</label>
+                          <input type="text" formControlName="holder" placeholder="Informe o nome do titular ..."
+                              class="form-control" required>
+                          <div *ngIf="submitted && fcard.holder.errors">
+                              <p *ngIf="fcard.holder.errors.required" class="text-danger small">*
+                                  Nome do titular é obrigatório</p>
+                          </div>
+                      </div>
+
+                      <div class="form-group col">
+                          <label>Código de segurança:</label>
+                          <input type="text" formControlName="securityCode"
+                              placeholder="Informe o código de segurança ..." class="form-control" required>
+                          <div *ngIf="submitted && fcard.securityCode.errors">
+                              <p *ngIf="fcard.securityCode.errors.required" class="text-danger small">* Código de
+                                  segurança é obrigatório</p>
+                          </div>
+                      </div>
+                      <div class="form-group col">
+                          <label>Selecione o parcelamento:</label>
+                          <select class="form-control" formControlName="quantity">
+                              <option [ngValue]="quantity.value" *ngFor="let quantity of lst">
+                                  {{ quantity.label }}</option>
+                          </select>
+                          <div *ngIf="submitted && fcard.quantity.errors">
+                              <p *ngIf="fcard.quantity.errors.required" class="text-danger small">* Seleção da
+                                  quantidade de parcelas é obrigatória</p>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div> -->
+
+  <div class="row py-3 d-flex justify-content-center">
+      <button type="button" class="btn btn-outline-secondary text-uppercase py-2 ml-2 mr-2 mb-2" (click)="onCancel()">
+          <i class="fa fa-times"></i> Cancelar
+      </button>
+      <!-- <button type="button" class="btn btn-outline-secondary py-2 ml-2 mr-2 mb-2 text-uppercase"
+          (click)="onConfirm()">
+          <i class="fa fa-check"></i> Confirmar pagamento
+      </button> -->
+  </div>
+
+</div>

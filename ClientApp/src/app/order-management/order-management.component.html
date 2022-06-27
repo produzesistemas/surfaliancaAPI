@@ -1,0 +1,637 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button
+    class="navbar-toggler collapsed float-left"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a href="index"
+    ><img
+      class="img-fluid"
+      src="../../../assets/logo_header.png"
+      width="70px"
+      height="37px"
+  /></a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="team-list">Equipe</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="blog-list">Blog</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          aria-current="page"
+          href="politica-privacidade"
+          ><small>Política de privacidade</small></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="contato"
+          ><small>Contato</small></a
+        >
+      </li>
+    </ul>
+  </div>
+  <form class="form-inline">
+    <button type="button" class="btn btn-dark" (click)="openShoppingCart()">
+      <div><i class="fa fa-shopping-cart"></i>{{ getQuantityItems() }}</div>
+    </button>
+  </form>
+</nav>
+
+<!-- <div class="container-fluid py-5">
+  <div class="text-center py-3">
+      <h2 class="text-white">Selecione o Modelo</h2>
+</div>
+      <div class="card-group py-3">
+        <div *ngFor='let model of lst'>
+          <div class="card bg-dark ml-2 mb-2 text-center" role="button" (click)="onSelectedModel(model)">
+            <div class="card-body">
+              <div class="form-group col-md-12">
+                <img class="img-responsive" src={{getImage(model.imageName)}} alt="Board model" width="200px">
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="text-white">{{ model.name }}</div>
+              <div class="py-2">
+                <h5 class="text-muted font-weight-bold">{{ model.value | currency:'R$'}}</h5>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+</div> -->
+
+<form [formGroup]="form">
+  <div class="container-sm py-3">
+    <div class="card text-white bg-dark">
+      <div class="card-body">
+        <h5 class="card-title text-center py-3">Encomenda on-line</h5>
+
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="text-center">
+              <img src="{{ getImage() }}" alt="Board model" width="300px" />
+            </div>
+
+            <div class="row py-4" *ngIf="boardModel.id > 0">
+              <div class="form-group col-sm text-center">
+                <h5>Valor inicial do modelo:</h5>
+                <h6 class="ml-2">{{ boardModel.value | currency: "R$" }}</h6>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="boardModel.id > 0">
+              <div class="form-group col-sm text-center">
+                <h5>Valor final da encomenda:</h5>
+                <h6 class="ml-2">
+                  {{ getValueFinal() | currency: "R$" }}
+                  <a class="text-white col-sm" (click)="openModal()">
+                    <i class="far fa-question-circle"></i
+                  ></a>
+                </h6>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="boardModel.id > 0">
+              <div class="form-group col-sm text-center">
+                <h5>Dias para produção:</h5>
+                <h6 class="ml-2">{{ boardModel.daysProduction }}</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <label>Marca:</label>
+            <select
+              class="form-control"
+              formControlName="logo"
+              (change)="onChangeMarca()"
+            >
+              <option [value]="logo.id" *ngFor="let logo of logos">
+                {{ logo.name }}
+              </option>
+            </select>
+            <div *ngIf="submitted && f.logo.errors">
+              <p *ngIf="f.logo.errors.required" class="text-danger small">
+                * Seleção de Marca é obrigatória
+              </p>
+            </div>
+
+            <div class="py-2" *ngIf="boardModels.length > 0">
+              <label>Modelo:</label>
+              <select
+                class="form-control"
+                formControlName="boardModel"
+                (change)="onChangeModel()"
+              >
+                <option
+                  [ngValue]="boardModel"
+                  *ngFor="let boardModel of boardModels"
+                >
+                  {{ boardModel.name }}
+                </option>
+              </select>
+              <div *ngIf="submitted && f.boardModel.errors">
+                <p
+                  *ngIf="f.boardModel.errors.required"
+                  class="text-danger small"
+                >
+                  * Seleção de Modelo é obrigatória
+                </p>
+              </div>
+            </div>
+
+            <div class="py-2" *ngIf="boardModelDimensions.length > 0">
+              <label>Dimensões:</label>
+              <select
+                class="form-control"
+                formControlName="boardModelDimension"
+                (change)="onChangeDimension()"
+              >
+                <option [ngValue]=""></option>
+                <option
+                  [ngValue]="boardModelDimension"
+                  *ngFor="let boardModelDimension of boardModelDimensions"
+                >
+                  {{ boardModelDimension.description }}
+                </option>
+              </select>
+            </div>
+
+            <div class="py-2" *ngIf="onCheckDimension()">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="otherDimensions"
+                placeholder="Se desejar digite outras dimensões"
+                maxlength="50"
+              />
+
+            </div>
+
+            <div class="py-2" *ngIf="boardModel.id > 0">
+              <label>Selecione o seu nível:</label>
+              <select class="form-control" formControlName="level">
+                <option [ngValue]="level" *ngFor="let level of levels">
+                  {{ level.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="py-2" *ngIf="boardModel.id > 0 && constructions.length > 0">
+              <label> Tecnologia/Construção:</label>
+              <select
+                class="form-control"
+                formControlName="construction"
+                (change)="onChangeConstruction()"
+              >
+                <option
+                  [ngValue]="construction"
+                  *ngFor="let construction of constructions"
+                >
+                  {{ construction.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="py-2" *ngIf="boardModel.id > 0 && laminations.length > 0">
+              <label> Laminação:</label>
+              <select class="form-control" formControlName="lamination" (change)="onChangeLamination()"
+              >
+                <option
+                  [ngValue]="lamination"
+                  *ngFor="let lamination of laminations"
+                >
+                  {{ lamination.name }}
+                </option>
+              </select>
+            </div>
+
+
+            <div class="py-2" *ngIf="boardModel.id > 0 && tails.length > 0">
+              <label> Reforço da rabeta:</label>
+              <!-- <select
+                class="form-control"
+                formControlName="tail"
+                (change)="onChangeTail()"
+              >
+                <option [ngValue]="tail" *ngFor="let tail of tails">
+                  {{ tail.name }}
+                </option>
+              </select> -->
+              <select
+                class="form-control"
+                formControlName="tail"
+              >
+                <option [ngValue]="tail" *ngFor="let tail of tails">
+                  {{ tail.name }}
+                </option>
+              </select>
+
+            </div>
+            <!-- <div class="text-center py-2" *ngIf="imgTail">
+              <img src="{{ getImageTail() }}" alt="Tail" width="100px" />
+            </div> -->
+
+
+            <div class="py-2" *ngIf="boardModel.id > 0 && finSystems.length > 0">
+              <label> Sistema de quilhas:</label>
+              <select class="form-control" formControlName="finSystem" (change)="onChangeFinSystem()"
+              >
+                <option
+                  [ngValue]="finSystem"
+                  *ngFor="let finSystem of finSystems"
+                >
+                  {{ finSystem.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="text-center py-2" *ngIf="imgFinSystem">
+              <img src="{{ getImageFinSystem() }}" alt="FinSystem" width="100px" />
+            </div>
+
+            <div class="py-2" *ngIf="boardModel.id > 0 && stringers.length > 0">
+              <label> Longarina:</label>
+              <select class="form-control" formControlName="stringer" (change)="onChangeStringer()"
+              >
+                <option
+                  [ngValue]="stringer"
+                  *ngFor="let stringer of stringers"
+                >
+                  {{ stringer.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="text-center py-2" *ngIf="imgStringer">
+              <img src="{{ getImageStringer() }}" alt="Stringer" width="100px" />
+            </div>
+
+
+            <div class="py-2" *ngIf="boardModel.id > 0">
+              <label class="mr-2"> Pinturas:</label>
+
+              <button
+                class="btn btn-rounded btn-light text-uppercase btn-lg"
+                (click)="openModalPaint()"
+              >
+                <i class="fas fa-palette"></i>
+              </button>
+
+            </div>
+          </div>
+        </div>
+        <hr class="btn-light" />
+        <h5 class="col" *ngIf="boardModel.id > 0">Detalhes do modelo</h5>
+
+        <section class="container" *ngIf="boardModel.urlMovie">
+          <div class="py-2">
+            <iframe
+              class="embed-responsive-item"
+              [src]="boardModel.urlMovie | safe"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+
+        <div class="col-sm-12">
+          <div
+            class="p-l-0 p-r-0 text-white py-2"
+            [innerHTML]="boardModel.description"
+          ></div>
+        </div>
+        <div *ngIf="construction.id > 0">
+          <hr class="btn-light" />
+          <h5 class="col">Detalhes da Tecnologia / Construção</h5>
+          <h6 class="col py-3">{{ construction.name }}</h6>
+
+          <div class="col-sm-12">
+            <div
+              class="p-l-0 p-r-0 text-white py-2"
+              [innerHTML]="construction.details"
+            ></div>
+
+          </div>
+          <section class="container" *ngIf="construction.urlMovie">
+            <div class="py-2">
+              <iframe
+                class="embed-responsive-item"
+                [src]="construction.urlMovie | safe"
+                frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </section>
+
+        </div>
+
+        <div *ngIf="lamination.id > 0">
+          <hr class="btn-light" />
+          <h5 class="col">Detalhes da laminação</h5>
+          <h6 class="col py-3">{{ lamination.name }}</h6>
+
+          <div class="col-sm-12">
+            <div
+              class="p-l-0 p-r-0 text-white py-2"
+              [innerHTML]="lamination.details"
+            ></div>
+
+          </div>
+        </div>
+
+        <div class="row py-3 d-flex justify-content-center" *ngIf="boardModel.id > 0">
+          <button type="button" class="btn btn-rounded btn-outline-primary text-uppercase"
+              (click)="onConfirm()">
+              <i class="fa fa-check"></i> Confirmar
+          </button>
+          <button type="button" class="btn btn-rounded btn-outline-danger text-uppercase ml-2"
+              (click)="onCancel()">
+              <i class="fas fa-arrow-circle-left"></i> Voltar
+          </button>
+      </div>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #modalPaint>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Pinturas</h3>
+      <button type="button" class="close" (click)="closeModalPaint()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row d-flex justify-content-center">
+        <div *ngFor="let item of paints">
+          <div class="col text-center py-3" role="button">
+            <div class="py-2">
+              {{ item.name }}
+            </div>
+
+            <img
+              (click)="onSelect(item)"
+              class="img-fluid"
+              src="{{ getImagePaint(item.imageName) }}"
+              alt="Produto"
+              width="300px"
+              height="200px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalHelp>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Valor final da encomenda</h3>
+      <button type="button" class="close" (click)="closeModal()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div>
+        O valor final da encomenda é composto pela soma do valor inicial do
+        modelo + seleção da construção + seleção da cor do fundo + seleção da
+        pintura do fundo + seleção da borda do fundo + seleção da cor da frente
+        + seleção da pintura da frente + seleção da borda da frente.
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- <div class="text-center">
+                  <img class="img-thumbnail" src={{getImage(boardModel.imageName)}} alt="Board model" width="200px">
+              </div>
+
+              <div class="row py-4">
+                  <div class="form-group col-sm text-center">
+                      <h5>Valor inicial do modelo: </h5>
+                      <h6 class="text-muted ml-2">{{ boardModel.value | currency:'R$'}}</h6>
+                  </div>
+
+                  <div class="form-group col-sm text-center">
+                      <h5>Valor final da encomenda: </h5>
+                      <h6 class="text-muted ml-2">{{ getValueFinal() | currency:'R$'}}
+                          <a class="text-white col-sm" (click)="openModal()">
+                              <i class="far fa-question-circle"></i></a>
+
+                      </h6>
+
+                  </div>
+
+              </div>
+              <div class="row">
+
+                  <div class="form-group col-sm text-center">
+                      <h5>Modelo: </h5>
+                      <h6 class="text-muted ml-2">{{ boardModel.name }}</h6>
+                  </div>
+                  <div class="form-group col-sm text-center">
+                      <h5>Produção em média de :
+                      </h5>
+                      <h6 class="text-muted">{{ boardModel.daysProduction }} dias</h6>
+                  </div>
+
+
+              </div>
+
+              <div class="row text-center">
+
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Dimensão:</label>
+                      <select class="form-control" formControlName="dimension">
+                          <option [ngValue]="dimension" *ngFor="let dimension of boardModel.boardModelDimensions">
+                              {{dimension.description}} </option>
+                      </select>
+                      <div *ngIf="submitted && f.dimension.errors">
+                          <p *ngIf="f.dimension.errors.required" class="text-danger small">Campo obrigatório</p>
+                      </div>
+
+                  </div>
+
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Construção:</label>
+                      <select class="form-control" formControlName="construction" (change)="onChangeConstruction()">
+                          <option [ngValue]="construction" *ngFor="let construction of lstConstruction">
+                              {{construction.name}} + {{ construction.value | currency:'R$' }}</option>
+                      </select>
+                      <div *ngIf="submitted && f.construction.errors">
+                          <p *ngIf="f.construction.errors.required" class="text-danger small">Campo obrigatório</p>
+
+                      </div>
+
+                  </div>
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Logomarcas:</label>
+                      <select class="form-control" formControlName="logo" (change)="onChangeLogo()">
+                          <option [ngValue]="logo" *ngFor="let logo of lstLogo">
+                              {{logo.name}}</option>
+                      </select>
+                      <div class="py-2">
+                          <img *ngIf="imgLogo" class="img-thumbnail img-card" src={{imgLogo}}>
+                      </div>
+
+                  </div>
+
+              </div>
+
+                  <h5 class="card-title text-center py-3">Fundo da prancha</h5>
+
+              <div class="row text-center">
+
+
+                      <div class="form-group col-lg-4 text-center">
+                          <label>Cor do fundo:</label>
+                          <select class="form-control" formControlName="colorBottom" (change)="onChangeColorBottom()">
+                              <option [ngValue]="color" *ngFor="let color of lstColor">
+                                  {{color.name}} + {{ color.value | currency:'R$' }}</option>
+                          </select>
+                          <div class="py-2">
+                              <img *ngIf="imgColor" class="img-thumbnail img-card" src={{imgColor}} >
+                          </div>
+                      </div>
+
+                      <div class="form-group col-lg-4 text-center">
+                          <label>Pintura do fundo:</label>
+                          <select class="form-control" formControlName="paintBottom" (change)="onChangePaintBottom()">
+                              <option [ngValue]="paint" *ngFor="let paint of lstPaint">
+                                  {{paint.name}} + {{ paint.value | currency:'R$' }}</option>
+                          </select>
+                          <div class="py-2">
+                              <img *ngIf="imgPaint" class="img-thumbnail img-card" src={{imgPaint}}>
+                          </div>
+                      </div>
+
+                      <div class="form-group col-lg-4 text-center">
+                          <label>Borda do fundo:</label>
+                          <select class="form-control" formControlName="borderColorBottom"
+                              (change)="onChangeBorderColorBottom()">
+                              <option [ngValue]="bordercolor" *ngFor="let bordercolor of lstBorderColor">
+                                  {{bordercolor.name}} + {{ bordercolor.value | currency:'R$' }}</option>
+                          </select>
+                          <div class="py-2">
+                              <img *ngIf="imgBorderColor" class="img-thumbnail img-card" src={{imgBorderColor}} >
+                          </div>
+                      </div>
+
+
+              </div>
+
+              <h5 class="card-title text-center py-3">Frente da prancha</h5>
+
+              <div class="row text-center">
+
+
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Cor da frente:</label>
+                      <select class="form-control" formControlName="colorFront" (change)="onChangeColorFront()">
+                          <option [ngValue]="color" *ngFor="let color of lstColor">
+                              {{color.name}} + {{ color.value | currency:'R$' }}</option>
+                      </select>
+                      <div class="py-2">
+                          <img *ngIf="imgColorFront" class="img-thumbnail img-card" src={{imgColorFront}}>
+                      </div>
+                  </div>
+
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Pintura da frente:</label>
+                      <select class="form-control" formControlName="paintFront" (change)="onChangePaintFront()">
+                          <option [ngValue]="paint" *ngFor="let paint of lstPaint">
+                              {{paint.name}} + {{ paint.value | currency:'R$' }}</option>
+                      </select>
+                      <div class="py-2">
+                          <img *ngIf="imgPaintFront" class="img-thumbnail img-card" src={{imgPaintFront}}>
+                      </div>
+                  </div>
+
+                  <div class="form-group col-lg-4 text-center">
+                      <label>Borda da frente:</label>
+                      <select class="form-control" formControlName="borderColorFront"
+                          (change)="onChangeBorderColorFront()">
+                          <option [ngValue]="bordercolor" *ngFor="let bordercolor of lstBorderColor">
+                              {{bordercolor.name}} + {{ bordercolor.value | currency:'R$' }}</option>
+                      </select>
+                      <div class="py-2">
+                          <img *ngIf="imgBorderColorFront" class="img-thumbnail img-card" src={{imgBorderColorFront}}
+                             >
+                      </div>
+                  </div>
+
+
+              </div>
+
+
+              <div class="row py-3 d-flex justify-content-center">
+                  <button type="button" class="btn btn-rounded btn-outline-primary text-uppercase"
+                      (click)="onConfirm()">
+                      <i class="fa fa-check"></i> Confirmar
+                  </button>
+                  <button type="button" class="btn btn-rounded btn-outline-danger text-uppercase ml-2"
+                      (click)="onCancel()">
+                      <i class="fas fa-arrow-circle-left"></i> Trocar modelo
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div> -->
+
+<ng-template #modalOrder>
+  <div class="inmodal bg-dark" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-header">
+          <h3 class="modal-title text-white">Encomenda adicionada ao carrinho</h3>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-md-12 col-lg-12 text-white">
+                  Deseja ir para o carrinho ou continuar comprando?
+              </div>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+          <button type="button" class="btn btn-rounded btn-primary" (click)="onConfirmOrder()">
+              <i class="fa fa-check"></i> Ir para o carrinho
+          </button>
+
+          <button type="button" class="btn btn-rounded btn-danger" (click)="onKeepBuying()">
+              <i class="fas fa-arrow-circle-left"></i> Continuar comprando
+          </button>
+      </div>
+
+  </div>
+</ng-template>

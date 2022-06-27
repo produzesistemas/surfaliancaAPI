@@ -1,0 +1,255 @@
+<div class="container-xl py-5 text-white">
+  <h3>Detalhes do pedido nº {{ order.id }}</h3>
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      Status do Pedido: {{ getStatusOrder(order) }}
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      Status do Pagamento: {{ getStatusAtual(order) }}
+    </div>
+  </div>
+  <!-- <div class="row" *ngIf="pedido.formaPagamento">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      Forma de Pagamento: {{ order.formaPagamento.descricao }}
+    </div>
+  </div> -->
+  <hr />
+  <h6>Endereço de entrega</h6>
+  {{ order.address }}, {{ order.city }}, {{ order.state }},
+  {{ order.postalCode }}
+  <span *ngIf="order.reference">{{ order.reference }} </span>
+  <hr />
+  <h6>Acompanhamento do Pedido</h6>
+  <div class="row" *ngFor="let orderTracking of order.orderTracking">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div>
+        <i class="fa fa-check text-success"></i>
+        {{ orderTracking.statusOrder.description }} /
+        {{ orderTracking.statusPaymentOrder.description }} em
+        {{ orderTracking.dateTracking | date: "dd/MM/yyyy" }} ás
+        {{ orderTracking.dateTracking | date: "h:mm" }}
+      </div>
+    </div>
+  </div>
+  <hr />
+  <h6>Produtos</h6>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-hover">
+        <tr *ngFor="let orderProduct of order.orderProduct">
+          <div class="card bg-secondary text-white">
+            <td>
+              <div class="row">
+                <div class="col-auto">
+                  <img
+                    class="img-thumbnail"
+                    src="{{ getImageProduct(orderProduct.product.imageName) }}"
+                    alt="Produto"
+                    width="100px"
+                  />
+                </div>
+                <div class="col">
+                  <div>{{ orderProduct.product.name }}</div>
+                  <div>
+                    Valor unitário:
+                    {{ orderProduct.productValue | currency: "R$" }}
+                  </div>
+                  <div>Quantidade: {{ orderProduct.qtd }}</div>
+                  <div>
+                    Subtotal: {{ getSubtotal(orderProduct) | currency: "R$" }}
+                  </div>
+                  <button
+                    type="button"
+                    *ngIf="checkEvaluation(order)"
+                    class="btn btn-outline-secondary text-uppercase mr-2 ml-2 mb-2"
+                    (click)="displayModal(modal, orderProduct)"
+                  >
+                    <i class="fas fa-thumbs-up"></i> Avaliar
+                  </button>
+                </div>
+              </div>
+            </td>
+          </div>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="py-3">
+    <h6>Encomenda</h6>
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-hover">
+          <tr *ngFor="let item of order.orderProductOrdered">
+            <div class="card bg-secondary text-white">
+              <td>
+                <div class="row">
+                  <div class="col-auto">
+                    <img
+                      class="img-fluid"
+                      src="{{ getImageBoardModel(item) }}"
+                      alt="Produto"
+                      width="100px"
+                    />
+                  </div>
+                  <div class="col">
+                    <div>
+                      Valor da encomenda: {{ item.value | currency: "R$" }}
+                    </div>
+                    <div>Quantidade: {{ item.qtd }}</div>
+                    <div>
+                      Subtotal: {{ getSubtotalOrdered(item) | currency: "R$" }}
+                    </div>
+                    <div>Modelo: {{ item.boardModel.name }}</div>
+                    <div>Reforço na Rabeta: {{ item.tail.name }}</div>
+                    <div>Laminação: {{ item.lamination.name }}</div>
+                    <div>Construção: {{ item.construction.name }}</div>
+                    <div>Pintura:</div>
+                    <img
+                      class="img-thumbnail"
+                      src="{{ getImagePaint(item) }}"
+                      width="100px"
+                    />
+                  </div>
+                </div>
+              </td>
+            </div>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h6 *ngIf="order.coupon">
+    Cupom aplicado: {{ order.coupon.codigo }} - {{ order.coupon.descricao }}
+  </h6>
+  <h6>Valor total dos produtos: {{ getTotalProducts() | currency: "R$" }}</h6>
+  <h6>Valor total da encomenda: {{getTotalOrdered() | currency:'R$'}} </h6>
+  <h6>Valor do Frete: {{ order.taxValue | currency: "R$" }}</h6>
+  <h6>Valor total do pedido: {{ getTotalSale() | currency: "R$" }}</h6>
+
+  <div class="row py-3 d-flex justify-content-center">
+    <button
+      type="button"
+      class="btn btn-rounded btn-outline-secondary text-uppercase mr-3"
+      (click)="onBack()"
+    >
+      <i class="fa fa-times"></i> Voltar
+    </button>
+    <button
+      *ngIf="checkCancel(order)"
+      type="button"
+      class="btn btn-rounded btn-outline-secondary text-uppercase"
+      (click)="onCancel()"
+    >
+      <i class="fa fa-times"></i> Cancelar Pedido
+    </button>
+  </div>
+
+  <h6 *ngIf="payment">Dados do pagamento</h6>
+  <div class="row" *ngIf="payment">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      Identificação: {{ order.paymentId }}
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      Valor do Pagamento: {{ payment.Payment.Amount | currency: "R$" }}
+    </div>
+  </div>
+</div>
+
+<ng-template #modal>
+  <div
+    class="inmodal"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Avaliação do produto</h3>
+      <button type="button" class="close" (click)="close()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 col-lg-12">
+          <form [formGroup]="formevaluation">
+            <div class="form-group">
+              <label>Comentário:</label>
+              <input
+                type="text"
+                formControlName="comentario"
+                placeholder="Digite seu comentário..."
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <a
+                class="ml-2"
+                tabindex="-1"
+                role="button"
+                aria-disabled="true"
+                title="1"
+                (click)="productEvaluate(1, order)"
+              >
+                <i class="far fa-star text-warning"></i>
+              </a>
+              <a
+                class="ml-2"
+                tabindex="-1"
+                role="button"
+                aria-disabled="true"
+                title="2"
+                (click)="productEvaluate(2, order)"
+              >
+                <i class="far fa-star text-warning"></i>
+              </a>
+              <a
+                class="ml-2"
+                tabindex="-1"
+                role="button"
+                aria-disabled="true"
+                title="3"
+                (click)="productEvaluate(3, order)"
+              >
+                <i class="far fa-star text-warning"></i>
+              </a>
+              <a
+                class="ml-2"
+                tabindex="-1"
+                role="button"
+                aria-disabled="true"
+                title="4"
+                (click)="productEvaluate(4, order)"
+              >
+                <i class="far fa-star text-warning"></i>
+              </a>
+              <a
+                class="ml-2"
+                tabindex="-1"
+                role="button"
+                aria-disabled="true"
+                title="5"
+                (click)="productEvaluate(5, order)"
+              >
+                <i class="far fa-star text-warning"></i>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-rounded btn-outline-secondary text-uppercase"
+        (click)="close()"
+      >
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -6,7 +6,7 @@ using UnitOfWork;
 
 namespace Repositorys
 {
-    public class CupomRepository<T> : ICupomRepository<Cupom> where T : BaseEntity
+    public class CupomRepository<T> : ICupomRepository<Coupon> where T : BaseEntity
     {
         private readonly ApplicationDbContext _context;
 
@@ -15,17 +15,17 @@ namespace Repositorys
             _context = context;
         }
 
-        public Cupom Get(int id)
+        public Coupon Get(int id)
         {
             return _context.Cupom.Single(x => x.Id == id);
         }
 
-        public IQueryable<Cupom> Where(Expression<Func<Cupom, bool>> expression)
+        public IQueryable<Coupon> Where(Expression<Func<Coupon, bool>> expression)
         {
             return _context.Cupom.Where(expression).AsQueryable();
         }
 
-        public IQueryable<Cupom> GetAll()
+        public IQueryable<Coupon> GetAll()
         {
             return _context.Cupom.AsQueryable();
         }

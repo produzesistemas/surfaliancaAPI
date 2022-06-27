@@ -1,0 +1,20 @@
+<div class="inmodal" id="modalConfirmar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ title }}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <i class="icon icon-2x icon-modal-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      {{ message }}
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-rounded text-uppercase" (click)="accept()">
+        {{ btnOkText }}
+      </button>
+  
+      <button type="button" class="btn btn-danger btn-rounded text-uppercase" (click)="decline()">
+        {{ btnCancelText }}
+      </button>
+    </div>
+  </div>

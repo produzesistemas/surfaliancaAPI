@@ -1,0 +1,123 @@
+<form [formGroup]="form">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <div class="card card-signin my-5">
+            <div class="card-body">
+          <h5>Cupons</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <label>Filtrar por código</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" class="form-control" formControlName="descricao"
+                  placeholder="Informe o código para efetuar a busca..." aria-describedby="button-addon4">
+                  <div class="input-group-append" id="button-addon4">
+                    <button type="button" class="btn btn-rounded btn-outline-secondary text-uppercase" name="btnSearch"
+                    (click)="onSubmit()">
+                    <i class="fa fa-search"></i>
+                  </button>
+                    <button class="btn btn-rounded btn-outline-secondary text-uppercase" (click)="onNew()">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>
+                        Código
+                      </th>
+                      <th>
+                        Descricao
+                      </th>
+                      <th>
+                        Valor
+                      </th>
+                      <th>
+                        Valor mínimo
+                      </th>
+                      <th>
+                        Ativo
+                      </th>
+                      <th>
+                        Ações
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor='let item of lst | slice: (page-1) * pageSize : page * pageSize'>
+                      <td>{{ item.codigo }}</td>
+                      <td>{{ item.descricao }}</td>
+                      <td>{{ item.valor | currency:'R$'}}</td>
+                      <td>{{ item.valorMinimo | currency:'R$'}}</td>
+                      <td>{{ item.ativo ? 'Sim' : 'Não'}}</td>
+                      <td>
+                        <div class="d-flex actions">
+                          <a class="ml-2" tabindex="-1" role="button" aria-disabled="true" title="Editar"
+                            (click)="edit(item)">
+                            <i class="fa fa-edit text-primary"></i>
+                          </a>
+    
+                          <a class="ml-2" tabindex="-1" role="button" aria-disabled="true" title="Excluir"
+                            (click)="deleteById(modalDelete,item)">
+                            <i class="fa fa-trash text-primary"></i>
+                          </a>
+                          <a class="ml-2" tabindex="-1" role="button" aria-disabled="true" title="Ativar"
+                          (click)="onActive(item)">
+                          <i class="fa fa-check text-primary"></i>
+                        </a>
+                        </div>
+                      </td>
+    
+                    </tr>
+                  </tbody>
+                </table>
+    
+                <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="lst.length"></ngb-pagination>
+    
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+    </form>
+    
+    <ng-template #modalDelete>
+      <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+          <h3 class="modal-title">Excluir</h3>
+          <button type="button" class="close" (click)="closeDelete()">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+    
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              Confirma a exclusão?
+            </div>
+          </div>
+        </div>
+    
+        <div class="modal-footer">
+          <button type="button" class="btn btn-rounded btn-outline-dark text-uppercase" (click)="confirmDelete()">
+            <i class="fa fa-check"></i> Confirmar
+          </button>
+    
+          <button type="button" class="btn btn-rounded btn-outline-dark text-uppercase" (click)="closeDelete()">
+            <i class="fa fa-times"></i> Cancelar
+          </button>
+        </div>
+    
+      </div>
+    </ng-template>

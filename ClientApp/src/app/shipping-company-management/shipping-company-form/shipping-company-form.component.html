@@ -1,0 +1,101 @@
+<div class="container">
+  <div class="py-5">
+      <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
+          <div class="card text-white bg-dark">
+              <div class="card-body">
+                  <form [formGroup]="formAdd">
+                      <div class="form-group col-md-12">
+                          <h5 class="card-title text-center">Cadastro de transportadoras</h5>
+                      </div>
+                      <div class="form-group col-md-12">
+                          <label class="text-white">Nome:</label>
+                          <input type="text" maxlength="255" class="form-control" id="name" formControlName="name"
+                              placeholder="Informe o Nome" />
+                          <div *ngIf="submitted && q.name.errors">
+                              <p *ngIf="q.name.errors.required" class="text-danger small">Informe o Nome</p>
+                          </div>
+                      </div>
+
+                        <div class="form-group col-md-12">
+                          <img *ngIf="img" class="img-thumbnail" src={{img}} width="200px">
+                      </div>
+                      <div class="form-group col-md-12">
+                          <div class="py-3">
+                              <input type="file" #fileUpload name="fileToUpload" id="file" #file
+                                  (change)="onFileChange($event)" accept=".jpg, .png, .gif, .tiff, .jfif" required />
+                          </div>
+                      </div>
+
+
+                      <div *ngIf="shippingCompany.id > 0" class="py-2">
+                          <div class="form-group col-md-12">
+                              <label>Criado por: {{ shippingCompany.criadoPor }}</label>
+                          </div>
+                          <div class="form-group col-md-12">
+                              <label>Em: {{ shippingCompany.createDate | date }}</label>
+                          </div>
+                      </div>
+                      <div *ngIf="shippingCompany.alteradoPor">
+                          <div class="form-group col-md-12">
+                              <label>Última alteração por: {{ shippingCompany.alteradoPor }}</label>
+                          </div>
+                          <div class="form-group col-md-12">
+                              <label>Em: {{ shippingCompany.updateDate | date }}</label>
+                          </div>
+                      </div>
+
+                  </form>
+
+                  <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                      <div class="table-responsive">
+                        <table class="table table-striped table-sm text-white">
+                          <thead>
+                            <tr>
+                              <th>
+                                <input #selectAll type="checkbox" id="selectAll" (change)="toggleAll()"
+                                  *ngIf="lstStates.length > 0" />
+                              </th>
+                              <th class="text-center">
+                                Estado
+                              </th>
+                              <th class="text-center">
+                                Taxa de entrega
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor='let item of lstStates'>
+                              <td>
+                                <input type="checkbox" [(ngModel)]="item.isSelected"/>
+                              </td>
+                              <td>{{ item.description }}</td>
+                              <td>
+                                <input currencyMask max="99999999"
+                                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                                maxlength="18" type="text" [(ngModel)]="item.taxValue" placeholder="Informe a taxa..."
+                                class="form-control">
+                              </td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+
+                      </div>
+                    </div>
+                    <div class="form-group col-md-12 py-1">
+                      <button type="button" class="btn btn-rounded btn-primary" (click)="onSave()">
+                          <i class="fa fa-save"></i>
+                      </button>
+                      <button type="button" class="btn btn-rounded btn-danger ml-2" (click)="onCancel()">
+                          <i class="fas fa-arrow-circle-left"></i>
+                      </button>
+                  </div>
+
+                  </div>
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

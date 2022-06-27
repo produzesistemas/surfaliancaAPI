@@ -1,0 +1,630 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button
+    class="navbar-toggler collapsed float-left"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a href="index"
+    ><img
+      class="img-fluid"
+      src="../../../assets/logo_header.png"
+      width="70px"
+      height="37px"
+  /></a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="team-list">Equipe</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="blog-list">Blog</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" role="button" href="order">Encomendar</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          aria-current="page"
+          href="politica-privacidade"
+          ><small>Política de privacidade</small></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="contato"
+          ><small>Contato</small></a
+        >
+      </li>
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <i class="fa fa-user"></i>
+        </a>
+        <div
+          class="dropdown-menu dropdown-menu-right"
+          aria-labelledby="navbarDropdown"
+        >
+          <div class="text-center">
+            <label class="py-2 mb-2 ml-2 mr-2" *ngIf="currentUser"
+              >{{ currentUser.userName }}
+            </label>
+          </div>
+          <a class="dropdown-item" (click)="clientArea()" *ngIf="currentUser"
+            >Minha conta</a
+          >
+          <a class="dropdown-item" (click)="logout()" *ngIf="currentUser"
+            >Sair</a
+          >
+          <a class="dropdown-item" (click)="onLogin()" *ngIf="!currentUser"
+            >Faça seu login</a
+          >
+        </div>
+      </li>
+    </ul>
+  </div>
+  <form class="form-inline">
+    <button type="button" class="btn btn-dark" (click)="openShoppingCart()">
+      <div><i class="fa fa-shopping-cart"></i>{{ getQuantityItems() }}</div>
+    </button>
+  </form>
+</nav>
+
+<div class="text-center">
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="../../../assets/bg1.jpg" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src=".../../../assets/bg2.jpg" class="d-block w-100" alt="..." />
+      </div>
+      <div class="carousel-item">
+        <img src=".../../../assets/bg3.jpg" class="d-block w-100" alt="..." />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid text-white bg-secondary" *ngIf="store">
+  <div class="row text-center">
+    <div class="col-lg-4 py-3">
+        <p><i class="fas fa-credit-card fa-2x"></i></p>
+
+      <small>Parcele em até {{ store.numberInstallmentsCard }}x sem juros</small>
+    </div>
+
+    <div class="col-lg-4 py-3">
+        <p><i class="fas fa-truck fa-2x"></i></p>
+        <small>Frete grátis para compras acima de :{{ store.freteGratis | currency:'R$' }}</small>
+    </div>
+
+    <div class="col-lg-4 py-3">
+      <p><i class="fas fa-money-bill fa-2x"></i></p>
+      <small>Desconto de {{ store.descontoPix }}% no pagamento via Pix</small>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" *ngIf="!isFilter">
+  <div class="text-center text-white py-3">
+    <h5>Acessórios</h5>
+  </div>
+  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+    <div *ngFor="let product of lstAcessorios">
+      <div class="col text-center" role="button" (click)="onDetail(product)">
+        <img
+          class="img-responsive img-card"
+          src="{{ getImageProduct(product.imageName) }}"
+          alt="Image"
+        />
+        <div class="text-white text-center py-2">{{ product.name }}</div>
+        <div *ngIf="!product.isPromotion" class="py-2">
+          <span class="text-muted font-weight-bold">{{
+            product.value | currency: "R$"
+          }}</span>
+        </div>
+        <div *ngIf="product.isPromotion">
+          <div class="text-muted font-weight-bold">
+            <small
+              ><del>{{ product.value | currency: "R$" }}</del></small
+            >
+          </div>
+          <span class="text-muted font-weight-bold">{{
+            product.valuePromotion | currency: "R$"
+          }}</span>
+        </div>
+        <div>
+          <p class="text-white">
+            <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid bg-secondary" *ngIf="!isFilter">
+  <div class="text-center text-white py-3">
+    <h5>Pranchas de surf</h5>
+  </div>
+  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+    <div *ngFor="let product of lstBoards">
+      <div class="col text-center" role="button" (click)="onDetail(product)">
+        <img
+          class="img-responsive img-board-card"
+          src="{{ getImageProduct(product.imageName) }}"
+          alt="Image"
+        />
+        <div class="text-white text-center py-2">{{ product.name }}</div>
+        <span class="badge bg-success text-white"> Pronta entrega </span>
+
+        <div *ngIf="!product.isPromotion" class="py-2">
+          <span class="font-weight-bold">{{
+            product.value | currency: "R$"
+          }}</span>
+        </div>
+        <div *ngIf="product.isPromotion" class="py-2">
+          <div class="font-weight-bold">
+            <small
+              ><del>{{ product.value | currency: "R$" }}</del></small
+            >
+          </div>
+          <span class="font-weight-bold">{{
+            product.valuePromotion | currency: "R$"
+          }}</span>
+        </div>
+        <div>
+          <p class="text-white">
+            <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" *ngIf="!isFilter">
+  <div class="text-center text-white py-3">
+    <h5>Modelos</h5>
+  </div>
+  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+    <div *ngFor="let model of lstBoardModels">
+      <div
+        class="col text-center"
+        role="button"
+        (click)="openModalBoardModel(model)"
+      >
+        <img
+          class="img-responsive img-board-card"
+          src="{{ getImageBoardModel(model.imageName) }}"
+          alt="Board model"
+        />
+        <div class="text-white">{{ model.name }}</div>
+        <div class="py-2">
+          <span class="text-muted">A partir de: </span>
+          <span class="text-muted font-weight-bold">{{
+            model.value | currency: "R$"
+          }}</span>
+        </div>
+        <div class="text-muted">
+          <p>
+            <small>Produção em {{ model.daysProduction }} dias</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid bg-secondary" *ngIf="!isFilter">
+  <div class="text-center text-white py-3">
+    <h5>Blogs</h5>
+  </div>
+  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+    <div *ngFor="let blog of lstBlogs">
+      <div class="col text-center py-3" role="button" (click)="openModal(blog)">
+        <img
+          class="img-fluid"
+          src="{{ getImageBlog(blog.imageName) }}"
+          alt="Image"
+          width="300px"
+        />
+        <div class="py-2">
+          <label>Em: {{ blog.createDate | date }}</label>
+        </div>
+
+        <div>
+          <label>{{ blog.typeBlog.name }}</label>
+        </div>
+
+        <b>
+          <div class="col p-l-0 p-r-0 py-3 text-break" >{{ blog.description }}</div>
+        </b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid bg-secondary" *ngIf="isFilter">
+  <div class="text-center text-white py-3">
+  </div>
+  <div class="card-group py-3" *ngIf="store !== undefined">
+    <div *ngFor="let product of lstProducts">
+      <div class="card bg-dark ml-2 mb-2 text-center" role="button" (click)="onDetail(product)">
+        <div class="card-body text-center">
+          <img class="img-fluid" src={{getImageProduct(product.imageName)}} alt="Image" width="200px">
+        </div>
+        <div class="card-footer">
+          <div class="text-white">{{ product.name }}</div>
+          <div *ngIf="!product.isPromotion" class="py-2">
+            <h5 class="text-muted font-weight-bold">{{ product.value | currency:'R$'}}</h5>
+          </div>
+          <div *ngIf="product.isPromotion" class="py-2">
+            <h5 class="text-muted font-weight-bold">
+              <p>De: <del>{{ product.value | currency:'R$'}}</del></p>
+            </h5>
+          </div>
+          <div *ngIf="product.isPromotion" class="py-2">
+            <h5 class="text-muted font-weight-bold">Por:{{ product.valuePromotion | currency:'R$'}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<footer class="bd-footer text-muted bg-dark">
+  <div class="container-fluid p-3 p-md-5">
+    <ul class="bd-footer-links">
+      <li>
+        <a class="text-white" (click)="openModalWhoWeAre()" role="button">
+          Quem somos
+        </a>
+      </li>
+      <li>
+        <a class="text-white" (click)="openModalExchangePolicy()" role="button">
+          Política de troca
+        </a>
+      </li>
+      <li>
+        <a class="text-white" (click)="openModalDeliveryPolicy()" role="button">
+          Política de entrega
+        </a>
+      </li>
+      <li><a class="text-white" href="login-adm"> Área administrativa </a></li>
+    </ul>
+    <div class="h4 text-center text-white">
+      <h6>Contato</h6>
+      <h6>(71) 988037623 / (82) 981880424</h6>
+      <h6>shardsonaraujo@yahoo.com.br</h6>
+      <h6>
+        Avenida Amarílio Tiago dos Santos , 1907, loja 01 , Lauro de Freitas,
+        BA, Brazil, 42700-000
+      </h6>
+    </div>
+    <div class="form-inline">
+      <a
+        href="https://www.facebook.com/shardson"
+        class="nav-link text-white"
+        target="_blank"
+      >
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a
+        href="https://www.instagram.com/alianca_surfboards/"
+        class="nav-link text-white"
+        target="_blank"
+      >
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+
+    <h6 class="text-white">Formas de pagamento</h6>
+    <div class="form-inline">
+      <img src="../../assets/mcard.png" />
+      <img src="../../assets/visa.png" />
+      <img src="../../assets/valecard.png" />
+      <img src="../../assets/ticket.png" />
+      <img src="../../assets/sodexo.png" />
+      <img src="../../assets/vr.png" />
+      <img src="../../assets/alelo.png" />
+      <img src="../../assets/american.png" />
+      <img src="../../assets/diners.png" />
+    </div>
+
+    <div class="form-inline py-3">
+      <label>Desenvolvido por: </label>
+      <a
+        href="https://www.produzesistemas.com.br"
+        class="nav-link text-white"
+        target="_blank"
+      >
+        <img src="../../assets/logo_white_produze.png" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<ng-template #modalBoardModel>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Detalhes do modelo</h3>
+      <button type="button" class="close" (click)="closeModal()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="container-sm py-3">
+        <div class="row d-flex justify-content-center">
+          <ngb-carousel *ngIf="boardModel">
+            <ng-template ngbSlide>
+              <img
+                src="{{ getImageBoardModel(boardModel.imageName) }}"
+                alt="Modelos"
+                class="d-block w-100"
+              />
+            </ng-template>
+            <ng-template ngbSlide *ngIf="boardModel.imageName1">
+              <img
+                src="{{ getImageBoardModel(boardModel.imageName1) }}"
+                alt="Modelos"
+                class="d-block w-100"
+              />
+            </ng-template>
+            <ng-template ngbSlide *ngIf="boardModel.imageName2">
+              <img
+                src="{{ getImageBoardModel(boardModel.imageName2) }}"
+                alt="Modelos"
+                class="d-block w-100"
+              />
+            </ng-template>
+            <ng-template ngbSlide *ngIf="boardModel.imageName3">
+              <img
+                src="{{ getImageBoardModel(boardModel.imageName3) }}"
+                alt="Modelos"
+                class="d-block w-100"
+              />
+            </ng-template>
+          </ngb-carousel>
+        </div>
+      </div>
+
+      <div class="col-8">
+        <h5>Modelo: {{ boardModel.name }}</h5>
+        <h5>Valor inicial: {{ boardModel.value | currency: "R$" }}</h5>
+        <h5>Dias para produção: {{ boardModel.daysProduction }}</h5>
+      </div>
+
+      <section class="container" *ngIf="boardModel.urlMovie">
+        <div class="py-5">
+          <iframe
+            class="embed-responsive-item"
+            [src]="boardModel.urlMovie | safe"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          ></iframe>
+        </div>
+      </section>
+      <div class="col-sm-12">
+        <div
+          class="p-l-0 p-r-0 text-white py-3 text-break"
+          [innerHTML]="boardModel.description"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalWhoWeAre>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Quem Somos</h3>
+      <button type="button" class="close" (click)="closeModalWhoWeAre()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-4">
+          <img
+            class="img-thumbnail"
+            src="{{ getImageWhoWeAre(store.imageStore) }}"
+            alt="Store"
+            width="500px"
+          />
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
+          {{ store.description }}
+        </label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalDeliveryPolicy>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Política de entrega</h3>
+      <button type="button" class="close" (click)="closeModalDeliveryPolicy()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
+          {{ store.deliveryPolicy }}
+        </label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalExchangePolicy>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Política de troca</h3>
+      <button type="button" class="close" (click)="closeModalExchangePolicy()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
+          {{ store.exchangePolicy }}
+        </label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modal>
+  <div
+    class="inmodal bg-dark text-white"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Blog</h3>
+      <button type="button" class="close" (click)="closeModal()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="blog.id > 0">
+        <div class="form-group">
+          <label>Em: {{ blog.createDate | date }}</label>
+        </div>
+      </div>
+
+      <div>
+        <label>{{ blog.typeBlog.name }}</label>
+      </div>
+
+      <div>
+        {{ blog.description }}
+      </div>
+
+      <img src="{{ getImageBlog(blog.imageName) }}" alt="Blog" width="200px" />
+      <div class="row">
+        <div
+          class="col-sm-12 p-l-0 p-r-0 text-white py-3"
+          [innerHTML]="blog.details"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalLogin>
+  <div
+    class="inmodal"
+    id="modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+  >
+    <div class="modal-header">
+      <h3 class="modal-title">Login</h3>
+      <button type="button" class="close" (click)="closeModalLogin()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body text-center">
+                <i class="fa fa-user-circle fa-5x"></i>
+                <h5 class="card-title">Login</h5>
+              </div>
+              <div class="card-body text-center">
+                <button
+                  type="button"
+                  class="btn btn-lg btn-danger btn-block"
+                  (click)="signInWithGoogle()"
+                >
+                  <i class="fab fa-google"></i>
+                  Login com Google
+                </button>
+
+                <button
+                  type="button"
+                  (click)="facebookSignin()"
+                  class="btn btn-lg btn-primary btn-block"
+                >
+                  <i class="fab fa-facebook"></i> Login com Facebook
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-rounded btn-default text-uppercase"
+        (click)="closeModalLogin()"
+      >
+        <i class="fa fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</ng-template>

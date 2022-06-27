@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h6 class="card-title text-center">Login Adm</h6>
+          <form [formGroup]='form' class="form-signin">
+            <div class="form-group">
+              <input type="text" formControlName="email" placeholder="Informe o email..." class="form-control">
+            </div>
+            <div *ngIf="submitted && f.email.errors">
+              <p *ngIf="f.email.errors.required" class="text-danger small">* Informe o email</p>
+            </div>
+            <div class="form-group">
+                <input type="password" formControlName="secret" placeholder="Informe a senha..." class="form-control">
+              </div>
+              <div *ngIf="submitted && f.secret.errors">
+                <p *ngIf="f.secret.errors.required" class="text-danger small">* Informe a senha</p>
+              </div>
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" (click)="onLogin()">
+              <i class="fas fa-user-lock"></i>
+              Login</button>
+          </form>
+          <!-- <a (click)="openModal(modalRegister)">Criar usuário</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #modalRegister>
+    <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-header">
+        <h3 class="modal-title">Register Adm </h3>
+        <button type="button" class="close" (click)="close()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <form [formGroup]='formRegister' class="form-signin">
+            <div class="form-group">
+              <input type="text" formControlName="email" placeholder="Informe o email..." class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="password" formControlName="secret" placeholder="Informe a senha..." class="form-control">
+              </div>
+          </form>
+      </div>
+  
+      <div class="modal-footer">
+        <button class="btn btn-lg btn-primary btn-block text-uppercase" (click)="onRegister()">
+            <i class="fas fa-user-lock"></i>
+            Registrar</button>
+        <button type="button" class="btn btn-rounded btn-default text-uppercase" (click)="close()">
+          <i class="fa fa-times"></i> Fechar
+        </button>
+      </div>
+  
+    </div>
+  </ng-template>

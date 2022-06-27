@@ -9,7 +9,6 @@ namespace Models
         public string Name { get; set; }
         public decimal? Value { get; set; }
         public string ImageName { get; set; }
-        public int BoardModelId { get; set; }
         public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }

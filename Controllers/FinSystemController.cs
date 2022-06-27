@@ -21,24 +21,20 @@ namespace surfaliancaAPI.Controllers
     {
         private IRepository<FinSystem> genericRepository;
         private IFinSystemRepository<FinSystem> finSystemRepository;
-        private IRepository<FinColor> finColorRepository;
-        private IRepository<FinSystemColor> finSystemColorRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
         public FinSystemController(
                        IWebHostEnvironment environment,
            IConfiguration Configuration,
             IRepository<FinSystem> genericRepository,
-             IFinSystemRepository<FinSystem> finSystemRepository,
-            IRepository<FinSystemColor> finSystemColorRepository,
-            IRepository<FinColor> finColorRepository)
+             IFinSystemRepository<FinSystem> finSystemRepository
+)
         {
             _hostEnvironment = environment;
             _configuration = Configuration;
             this.genericRepository = genericRepository;
             this.finSystemRepository = finSystemRepository;
-            this.finColorRepository = finColorRepository;
-            this.finSystemColorRepository = finSystemColorRepository;
+
         }
 
         [HttpPost()]
@@ -172,23 +168,6 @@ namespace surfaliancaAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Arquivo não encontrado!" + ex.Message);
-            }
-        }
-
-        class EqualityComparer : IEqualityComparer<FinSystemColor>
-        {
-            public bool Equals(FinSystemColor x, FinSystemColor y)
-            {
-                if (object.ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.FinSystemId == y.FinSystemId && x.FinColorId == y.FinColorId && x.Id == y.Id;
-            }
-
-            public int GetHashCode(FinSystemColor obj)
-            {
-                return obj.Id.GetHashCode();
             }
         }
 

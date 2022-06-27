@@ -32,7 +32,6 @@ namespace surfaliancaAPI
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("surfalianca")));
             services.AddIdentity<IdentityUser, IdentityRole>()
                          .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IStoreRepository<>), typeof(StoreRepository<>));
             services.AddScoped(typeof(ITeamRepository<>), typeof(TeamRepository<>));
             services.AddScoped(typeof(IFinSystemRepository<>), typeof(FinSystemRepository<>));
@@ -43,10 +42,7 @@ namespace surfaliancaAPI
             services.AddScoped(typeof(IBoardModelRepository<>), typeof(BoardModelRepository<>));
             services.AddScoped(typeof(IProductRepository<>), typeof(ProductRepository<>));
             services.AddScoped(typeof(IPaintRepository<>), typeof(PaintRepository<>));
-            services.AddScoped(typeof(IColorRepository<>), typeof(ColorRepository<>));
-            services.AddScoped(typeof(IBorderColorRepository<>), typeof(BorderColorRepository<>));
             services.AddScoped(typeof(IOrderRepository<>), typeof(OrderRepository<>));
-            services.AddScoped(typeof(ILogoRepository<>), typeof(LogoRepository<>));
             services.AddScoped(typeof(IBlogRepository<>), typeof(BlogRepository<>));
             services.AddScoped(typeof(ICupomRepository<>), typeof(CupomRepository<>));
             services.AddScoped(typeof(IStringerRepository<>), typeof(StringerRepository<>));

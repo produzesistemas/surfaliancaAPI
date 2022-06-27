@@ -11,15 +11,11 @@ namespace Repositorys
     {
         private DbSet<FinSystem> entities;
         private DbSet<IdentityUser> users;
-        private DbSet<FinSystemColor> finSystemColors;
-        private DbSet<FinColor> finColors;
 
         public FinSystemRepository(ApplicationDbContext context)
         {
             entities = context.Set<FinSystem>();
             users = context.Set<IdentityUser>();
-            finSystemColors = context.Set<FinSystemColor>();
-            finColors = context.Set<FinColor>();
         }
 
         public FinSystem Get(int id)

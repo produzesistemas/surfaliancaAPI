@@ -1,12 +1,18 @@
 ﻿using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace UnitOfWork
 {
-    public interface IFinSystemRepository<T> where T : BaseEntity
+    public interface IFinSystemRepository : IDisposable
     {
-        T Get(int id);
-        IQueryable<T> Where(Func<T, bool> expression);
+        IQueryable<FinSystem> GetAll();
+        BoardModel Get(int id);
+        IQueryable<FinSystem> Where(Expression<Func<FinSystem, bool>> expression);
+        void Active(int id);
+        void Delete(int id);
+        void Update(FinSystem entity);
+        void Insert(FinSystem entity);
     }
 }

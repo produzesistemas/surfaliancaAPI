@@ -1,14 +1,18 @@
 ﻿using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace UnitOfWork
 {
-    public interface IBlogRepository<T> where T : BaseEntity
+    public interface IBlogRepository : IDisposable
     {
-        T Get(int id);
-        IQueryable<T> Where(Func<T, bool> expression);
+        Blog Get(int id);
+        IQueryable<Blog> Where(Expression<Func<Blog, bool>> expression);
+        void Delete(int id);
+        void Update(Blog entity);
+        void Insert(Blog entity);
 
-        IQueryable<T> GetAll();
+        IQueryable<Blog> GetAll();
     }
 }

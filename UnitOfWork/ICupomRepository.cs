@@ -5,10 +5,14 @@ using System.Linq.Expressions;
 
 namespace UnitOfWork
 {
-    public interface ICupomRepository<T> where T : BaseEntity
+    public interface ICupomRepository : IDisposable
     {
-        IQueryable<T> GetAll();
-        T Get(int id);
-        IQueryable<T> Where(Expression<Func<T, bool>> expression);
+        IQueryable<Coupon> GetAll();
+        BoardModel Get(int id);
+        IQueryable<Coupon> Where(Expression<Func<Coupon, bool>> expression);
+        void Active(int id);
+        void Delete(int id);
+        void Update(Coupon entity);
+        void Insert(Coupon entity);
     }
 }

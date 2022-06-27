@@ -1,14 +1,18 @@
 ﻿using Models;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace UnitOfWork
 {
-    public interface IConstructionRepository<T> where T : BaseEntity
-    {
-        T Get(int id);
-        IQueryable<T> Where(Func<T, bool> expression);
+    public interface IConstructionRepository : IDisposable
+    { 
+        IQueryable<Construction> GetAll();
+        Construction Get(int id);
+        IQueryable<Construction> Where(Expression<Func<Construction, bool>> expression);
         void Active(int id);
         void Delete(int id);
+        void Update(Construction entity);
+        void Insert(Construction entity);
     }
 }

@@ -1,22 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <button
-    class="navbar-toggler collapsed float-left"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
+  <button class="navbar-toggler collapsed float-left" type="button" data-toggle="collapse"
+    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+    aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a href="index"
-    ><img
-      class="img-fluid"
-      src="../../../assets/logo_header.png"
-      width="70px"
-      height="37px"
-  /></a>
+  <a href="index"><img class="img-fluid" src="../../../assets/logo_header.png" width="70px" height="37px" /></a>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
@@ -32,48 +20,25 @@
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a
-          class="nav-link active"
-          aria-current="page"
-          href="politica-privacidade"
-          ><small>Política de privacidade</small></a
-        >
+        <a class="nav-link active" aria-current="page" href="politica-privacidade"><small>Política de
+            privacidade</small></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="contato"
-          ><small>Contato</small></a
-        >
+        <a class="nav-link active" aria-current="page" href="contato"><small>Contato</small></a>
       </li>
       <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-user"></i>
         </a>
-        <div
-          class="dropdown-menu dropdown-menu-right"
-          aria-labelledby="navbarDropdown"
-        >
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
           <div class="text-center">
-            <label class="py-2 mb-2 ml-2 mr-2" *ngIf="currentUser"
-              >{{ currentUser.userName }}
+            <label class="py-2 mb-2 ml-2 mr-2" *ngIf="currentUser">{{ currentUser.userName }}
             </label>
           </div>
-          <a class="dropdown-item" (click)="clientArea()" *ngIf="currentUser"
-            >Minha conta</a
-          >
-          <a class="dropdown-item" (click)="logout()" *ngIf="currentUser"
-            >Sair</a
-          >
-          <a class="dropdown-item" (click)="onLogin()" *ngIf="!currentUser"
-            >Faça seu login</a
-          >
+          <a class="dropdown-item" (click)="clientArea()" *ngIf="currentUser">Minha conta</a>
+          <a class="dropdown-item" (click)="logout()" *ngIf="currentUser">Sair</a>
+          <a class="dropdown-item" (click)="onLogin()" *ngIf="!currentUser">Faça seu login</a>
         </div>
       </li>
     </ul>
@@ -109,14 +74,14 @@
 <div class="container-fluid text-white bg-secondary" *ngIf="store">
   <div class="row text-center">
     <div class="col-lg-4 py-3">
-        <p><i class="fas fa-credit-card fa-2x"></i></p>
+      <p><i class="fas fa-credit-card fa-2x"></i></p>
 
       <small>Parcele em até {{ store.numberInstallmentsCard }}x sem juros</small>
     </div>
 
     <div class="col-lg-4 py-3">
-        <p><i class="fas fa-truck fa-2x"></i></p>
-        <small>Frete grátis para compras acima de :{{ store.freteGratis | currency:'R$' }}</small>
+      <p><i class="fas fa-truck fa-2x"></i></p>
+      <small>Frete grátis para compras acima de :{{ store.freteGratis | currency:'R$' }}</small>
     </div>
 
     <div class="col-lg-4 py-3">
@@ -126,146 +91,129 @@
   </div>
 </div>
 
-<div class="container-fluid" *ngIf="!isFilter">
-  <div class="text-center text-white py-3">
-    <h5>Acessórios</h5>
-  </div>
-  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
-    <div *ngFor="let product of lstAcessorios">
-      <div class="col text-center" role="button" (click)="onDetail(product)">
-        <img
-          class="img-responsive img-card"
-          src="{{ getImageProduct(product.imageName) }}"
-          alt="Image"
-        />
-        <div class="text-white text-center py-2">{{ product.name }}</div>
-        <div *ngIf="!product.isPromotion" class="py-2">
-          <span class="text-muted font-weight-bold">{{
-            product.value | currency: "R$"
-          }}</span>
-        </div>
-        <div *ngIf="product.isPromotion">
-          <div class="text-muted font-weight-bold">
-            <small
-              ><del>{{ product.value | currency: "R$" }}</del></small
-            >
+<div *ngIf="lstAcessorios.length > 0">
+  <div class="container-fluid" *ngIf="!isFilter">
+    <div class="text-center text-white py-3">
+      <h5>Acessórios</h5>
+    </div>
+    <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+      <div *ngFor="let product of lstAcessorios">
+        <div class="col text-center" role="button" (click)="onDetail(product)">
+          <img class="img-responsive img-card" src="{{ getImageProduct(product.imageName) }}" alt="Image" />
+          <div class="text-white text-center py-2">{{ product.name }}</div>
+          <div *ngIf="!product.isPromotion" class="py-2">
+            <span class="text-muted font-weight-bold">{{
+              product.value | currency: "R$"
+              }}</span>
           </div>
-          <span class="text-muted font-weight-bold">{{
-            product.valuePromotion | currency: "R$"
-          }}</span>
-        </div>
-        <div>
-          <p class="text-white">
-            <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid bg-secondary" *ngIf="!isFilter">
-  <div class="text-center text-white py-3">
-    <h5>Pranchas de surf</h5>
-  </div>
-  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
-    <div *ngFor="let product of lstBoards">
-      <div class="col text-center" role="button" (click)="onDetail(product)">
-        <img
-          class="img-responsive img-board-card"
-          src="{{ getImageProduct(product.imageName) }}"
-          alt="Image"
-        />
-        <div class="text-white text-center py-2">{{ product.name }}</div>
-        <span class="badge bg-success text-white"> Pronta entrega </span>
-
-        <div *ngIf="!product.isPromotion" class="py-2">
-          <span class="font-weight-bold">{{
-            product.value | currency: "R$"
-          }}</span>
-        </div>
-        <div *ngIf="product.isPromotion" class="py-2">
-          <div class="font-weight-bold">
-            <small
-              ><del>{{ product.value | currency: "R$" }}</del></small
-            >
+          <div *ngIf="product.isPromotion">
+            <div class="text-muted font-weight-bold">
+              <small><del>{{ product.value | currency: "R$" }}</del></small>
+            </div>
+            <span class="text-muted font-weight-bold">{{
+              product.valuePromotion | currency: "R$"
+              }}</span>
           </div>
-          <span class="font-weight-bold">{{
-            product.valuePromotion | currency: "R$"
-          }}</span>
-        </div>
-        <div>
-          <p class="text-white">
-            <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
-          </p>
+          <div>
+            <p class="text-white">
+              <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid" *ngIf="!isFilter">
-  <div class="text-center text-white py-3">
-    <h5>Modelos</h5>
-  </div>
-  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
-    <div *ngFor="let model of lstBoardModels">
-      <div
-        class="col text-center"
-        role="button"
-        (click)="openModalBoardModel(model)"
-      >
-        <img
-          class="img-responsive img-board-card"
-          src="{{ getImageBoardModel(model.imageName) }}"
-          alt="Board model"
-        />
-        <div class="text-white">{{ model.name }}</div>
-        <div class="py-2">
-          <span class="text-muted">A partir de: </span>
-          <span class="text-muted font-weight-bold">{{
-            model.value | currency: "R$"
-          }}</span>
-        </div>
-        <div class="text-muted">
-          <p>
-            <small>Produção em {{ model.daysProduction }} dias</small>
-          </p>
+<div *ngIf="lstBoards.length > 0">
+  <div class="container-fluid bg-secondary" *ngIf="!isFilter">
+    <div class="text-center text-white py-3">
+      <h5>Pranchas de surf</h5>
+    </div>
+    <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+      <div *ngFor="let product of lstBoards">
+        <div class="col text-center" role="button" (click)="onDetail(product)">
+          <img class="img-responsive img-board-card" src="{{ getImageProduct(product.imageName) }}" alt="Image" />
+          <div class="text-white text-center py-2">{{ product.name }}</div>
+          <span class="badge bg-success text-white"> Pronta entrega </span>
+
+          <div *ngIf="!product.isPromotion" class="py-2">
+            <span class="font-weight-bold">{{
+              product.value | currency: "R$"
+              }}</span>
+          </div>
+          <div *ngIf="product.isPromotion" class="py-2">
+            <div class="font-weight-bold">
+              <small><del>{{ product.value | currency: "R$" }}</del></small>
+            </div>
+            <span class="font-weight-bold">{{
+              product.valuePromotion | currency: "R$"
+              }}</span>
+          </div>
+          <div>
+            <p class="text-white">
+              <small>Parcele em até {{ store.numberInstallmentsCard }}x</small>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container-fluid bg-secondary" *ngIf="!isFilter">
-  <div class="text-center text-white py-3">
-    <h5>Blogs</h5>
-  </div>
-  <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
-    <div *ngFor="let blog of lstBlogs">
-      <div class="col text-center py-3" role="button" (click)="openModal(blog)">
-        <img
-          class="img-fluid"
-          src="{{ getImageBlog(blog.imageName) }}"
-          alt="Image"
-          width="300px"
-        />
-        <div class="py-2">
-          <label>Em: {{ blog.createDate | date }}</label>
+<div *ngIf="lstBoardModels.length > 0">
+  <div class="container-fluid" *ngIf="!isFilter">
+    <div class="text-center text-white py-3">
+      <h5>Modelos</h5>
+    </div>
+    <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+      <div *ngFor="let model of lstBoardModels">
+        <div class="col text-center" role="button" (click)="openModalBoardModel(model)">
+          <img class="img-responsive img-board-card" src="{{ getImageBoardModel(model.imageName) }}"
+            alt="Board model" />
+          <div class="text-white">{{ model.name }}</div>
+          <div class="py-2">
+            <span class="text-muted">A partir de: </span>
+            <span class="text-muted font-weight-bold">{{
+              model.value | currency: "R$"
+              }}</span>
+          </div>
+          <div class="text-muted">
+            <p>
+              <small>Produção em {{ model.daysProduction }} dias</small>
+            </p>
+          </div>
         </div>
-
-        <div>
-          <label>{{ blog.typeBlog.name }}</label>
-        </div>
-
-        <b>
-          <div class="col p-l-0 p-r-0 py-3 text-break" >{{ blog.description }}</div>
-        </b>
       </div>
     </div>
   </div>
 </div>
 
+<div *ngIf="lstBlogs.length > 0">
+  <div class="container-fluid bg-secondary" *ngIf="!isFilter">
+    <div class="text-center text-white py-3">
+      <h5>Blogs</h5>
+    </div>
+    <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
+      <div *ngFor="let blog of lstBlogs">
+        <div class="col text-center py-3" role="button" (click)="openModal(blog)">
+          <img class="img-fluid" src="{{ getImageBlog(blog.imageName) }}" alt="Image" width="300px" />
+          <div class="py-2">
+            <label>Em: {{ blog.createDate | date }}</label>
+          </div>
+
+          <div>
+            <label>{{ blog.typeBlog.name }}</label>
+          </div>
+
+          <b>
+            <div class="col p-l-0 p-r-0 py-3 text-break">{{ blog.description }}</div>
+          </b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- <div class="container-fluid bg-secondary" *ngIf="isFilter">
   <div class="text-center text-white py-3">
   </div>
@@ -324,18 +272,10 @@
       </h6>
     </div>
     <div class="form-inline">
-      <a
-        href="https://www.facebook.com/shardson"
-        class="nav-link text-white"
-        target="_blank"
-      >
+      <a href="https://www.facebook.com/shardson" class="nav-link text-white" target="_blank">
         <i class="fab fa-facebook-f"></i>
       </a>
-      <a
-        href="https://www.instagram.com/alianca_surfboards/"
-        class="nav-link text-white"
-        target="_blank"
-      >
+      <a href="https://www.instagram.com/alianca_surfboards/" class="nav-link text-white" target="_blank">
         <i class="fab fa-instagram"></i>
       </a>
     </div>
@@ -355,11 +295,7 @@
 
     <div class="form-inline py-3">
       <label>Desenvolvido por: </label>
-      <a
-        href="https://www.produzesistemas.com.br"
-        class="nav-link text-white"
-        target="_blank"
-      >
+      <a href="https://www.produzesistemas.com.br" class="nav-link text-white" target="_blank">
         <img src="../../assets/logo_white_produze.png" />
       </a>
     </div>
@@ -367,13 +303,7 @@
 </footer>
 
 <ng-template #modalBoardModel>
-  <div
-    class="inmodal bg-dark text-white"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Detalhes do modelo</h3>
       <button type="button" class="close" (click)="closeModal()">
@@ -386,32 +316,16 @@
         <div class="row d-flex justify-content-center">
           <ngb-carousel *ngIf="boardModel">
             <ng-template ngbSlide>
-              <img
-                src="{{ getImageBoardModel(boardModel.imageName) }}"
-                alt="Modelos"
-                class="d-block w-100"
-              />
+              <img src="{{ getImageBoardModel(boardModel.imageName) }}" alt="Modelos" class="d-block w-100" />
             </ng-template>
             <ng-template ngbSlide *ngIf="boardModel.imageName1">
-              <img
-                src="{{ getImageBoardModel(boardModel.imageName1) }}"
-                alt="Modelos"
-                class="d-block w-100"
-              />
+              <img src="{{ getImageBoardModel(boardModel.imageName1) }}" alt="Modelos" class="d-block w-100" />
             </ng-template>
             <ng-template ngbSlide *ngIf="boardModel.imageName2">
-              <img
-                src="{{ getImageBoardModel(boardModel.imageName2) }}"
-                alt="Modelos"
-                class="d-block w-100"
-              />
+              <img src="{{ getImageBoardModel(boardModel.imageName2) }}" alt="Modelos" class="d-block w-100" />
             </ng-template>
             <ng-template ngbSlide *ngIf="boardModel.imageName3">
-              <img
-                src="{{ getImageBoardModel(boardModel.imageName3) }}"
-                alt="Modelos"
-                class="d-block w-100"
-              />
+              <img src="{{ getImageBoardModel(boardModel.imageName3) }}" alt="Modelos" class="d-block w-100" />
             </ng-template>
           </ngb-carousel>
         </div>
@@ -425,32 +339,19 @@
 
       <section class="container" *ngIf="boardModel.urlMovie">
         <div class="py-5">
-          <iframe
-            class="embed-responsive-item"
-            [src]="boardModel.urlMovie | safe"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          ></iframe>
+          <iframe class="embed-responsive-item" [src]="boardModel.urlMovie | safe" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
       </section>
       <div class="col-sm-12">
-        <div
-          class="p-l-0 p-r-0 text-white py-3 text-break"
-          [innerHTML]="boardModel.description"
-        ></div>
+        <div class="p-l-0 p-r-0 text-white py-3 text-break" [innerHTML]="boardModel.description"></div>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #modalWhoWeAre>
-  <div
-    class="inmodal bg-dark text-white"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Quem Somos</h3>
       <button type="button" class="close" (click)="closeModalWhoWeAre()">
@@ -461,12 +362,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-4">
-          <img
-            class="img-thumbnail"
-            src="{{ getImageWhoWeAre(store.imageStore) }}"
-            alt="Store"
-            width="500px"
-          />
+          <img class="img-thumbnail" src="{{ getImageWhoWeAre(store.imageStore) }}" alt="Store" width="500px" />
         </div>
       </div>
       <hr />
@@ -480,13 +376,7 @@
 </ng-template>
 
 <ng-template #modalDeliveryPolicy>
-  <div
-    class="inmodal bg-dark text-white"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Política de entrega</h3>
       <button type="button" class="close" (click)="closeModalDeliveryPolicy()">
@@ -505,13 +395,7 @@
 </ng-template>
 
 <ng-template #modalExchangePolicy>
-  <div
-    class="inmodal bg-dark text-white"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Política de troca</h3>
       <button type="button" class="close" (click)="closeModalExchangePolicy()">
@@ -530,13 +414,7 @@
 </ng-template>
 
 <ng-template #modal>
-  <div
-    class="inmodal bg-dark text-white"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Blog</h3>
       <button type="button" class="close" (click)="closeModal()">
@@ -560,23 +438,14 @@
 
       <img src="{{ getImageBlog(blog.imageName) }}" alt="Blog" width="200px" />
       <div class="row">
-        <div
-          class="col-sm-12 p-l-0 p-r-0 text-white py-3"
-          [innerHTML]="blog.details"
-        ></div>
+        <div class="col-sm-12 p-l-0 p-r-0 text-white py-3" [innerHTML]="blog.details"></div>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #modalLogin>
-  <div
-    class="inmodal"
-    id="modal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true"
-  >
+  <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Login</h3>
       <button type="button" class="close" (click)="closeModalLogin()">
@@ -594,20 +463,12 @@
                 <h5 class="card-title">Login</h5>
               </div>
               <div class="card-body text-center">
-                <button
-                  type="button"
-                  class="btn btn-lg btn-danger btn-block"
-                  (click)="signInWithGoogle()"
-                >
+                <button type="button" class="btn btn-lg btn-danger btn-block" (click)="signInWithGoogle()">
                   <i class="fab fa-google"></i>
                   Login com Google
                 </button>
 
-                <button
-                  type="button"
-                  (click)="facebookSignin()"
-                  class="btn btn-lg btn-primary btn-block"
-                >
+                <button type="button" (click)="facebookSignin()" class="btn btn-lg btn-primary btn-block">
                   <i class="fab fa-facebook"></i> Login com Facebook
                 </button>
               </div>
@@ -618,11 +479,7 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-rounded btn-default text-uppercase"
-        (click)="closeModalLogin()"
-      >
+      <button type="button" class="btn btn-rounded btn-default text-uppercase" (click)="closeModalLogin()">
         <i class="fa fa-times"></i> Cancelar
       </button>
     </div>

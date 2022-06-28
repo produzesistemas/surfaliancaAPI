@@ -21,8 +21,6 @@ namespace Models
         public string ExchangePolicy { get; set; }
         public string DeliveryPolicy { get; set; }
         public decimal? ValueMinimum { get; set; }
-        public string ApplicationUserId { get; set; }
-
         public int? NumberInstallmentsCard { get; set; }
 
         public string UpdateApplicationUserId { get; set; }

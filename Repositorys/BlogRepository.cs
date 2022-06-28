@@ -33,7 +33,7 @@ namespace Repositorys
 
         public IQueryable<Blog> GetAll()
         {
-            return _context.Blog.AsQueryable();
+            return _context.Blog.Include(x => x.TypeBlog).AsQueryable();
         }
 
         public void Delete(int id)

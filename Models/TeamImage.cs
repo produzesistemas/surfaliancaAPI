@@ -1,7 +1,4 @@
-﻿
-
-using Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
@@ -11,5 +8,10 @@ namespace Models
     {
         public string ImageName { get; set; }
         public int TeamId { get; set; }
+
+        [NotMapped]
+        public Team Team { get; set; }
+
+
     }
 }

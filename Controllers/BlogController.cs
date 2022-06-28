@@ -19,15 +19,18 @@ namespace surfaliancaAPI.Controllers
     public class BlogController : ControllerBase
     {
         private IBlogRepository blogRepository;
+        private ITypeBlogRepository typeBlogRepository;
         private IWebHostEnvironment _hostEnvironment;
         private IConfiguration _configuration;
 
         public BlogController(
                             IWebHostEnvironment environment,
+                            ITypeBlogRepository typeBlogRepository,
             IConfiguration Configuration,
              IBlogRepository blogRepository)
         {
             this.blogRepository = blogRepository;
+            this.typeBlogRepository = typeBlogRepository;
             _hostEnvironment = environment;
             _configuration = Configuration;
         }
@@ -155,12 +158,13 @@ namespace surfaliancaAPI.Controllers
 
 
         [HttpGet()]
-        [Route("getAll")]
-        public IActionResult GetAll()
+        [Route("getAllTypeBlog")]
+        [Authorize()]
+        public IActionResult GetAllTypeBlog()
         {
             try
             {
-                return new JsonResult(blogRepository.GetAll().ToList());
+                return new JsonResult(typeBlogRepository.GetAll());
             }
             catch (Exception ex)
             {

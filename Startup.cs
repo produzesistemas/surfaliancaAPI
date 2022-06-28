@@ -57,6 +57,7 @@ namespace surfaliancaAPI
 
             services.AddScoped(typeof(IProductStatusRepository), typeof(ProductStatusRepository));
             services.AddScoped(typeof(IProductTypeRepository), typeof(ProductTypeRepository));
+            services.AddScoped(typeof(ITypeBlogRepository), typeof(TypeBlogRepository));
 
 
             services.AddControllersWithViews();

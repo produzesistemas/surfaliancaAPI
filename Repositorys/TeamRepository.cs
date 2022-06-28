@@ -66,7 +66,7 @@ namespace Repositorys
 
         public IQueryable<Team> GetAll()
         {
-            return _context.Team.AsQueryable();
+            return _context.Team.Include(x => x.teamImages).AsQueryable();
         }
 
     }

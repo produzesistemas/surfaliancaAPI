@@ -13,6 +13,7 @@ namespace Models
         public string Description { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
+        public bool Active { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string ApplicationUserId { get; set; }
 

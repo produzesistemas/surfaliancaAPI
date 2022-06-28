@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-.black-background {background-color:#000;}
+.black-background {background-color:#D8D8BF;}
 
 .carousel-control-next-icon{
     background-image: url('../src/assets/right-arrow.png')
@@ -36,5 +36,11 @@
 .img-board-card {
   width: 229px;
   height: 400px;
+  object-fit: contain;
+}
+
+.img-medium {
+  width: 500px;
+  height: 250px;
   object-fit: contain;
 }

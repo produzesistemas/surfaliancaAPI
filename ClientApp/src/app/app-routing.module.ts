@@ -8,7 +8,6 @@ import { ShoppingCartModule } from './shopping-cart/shopping-cart-module';
 import { TeamListManagementModule } from './team-list-management/team-list-management.module';
 import { AuthGuardClient } from './_guards';
 import { AuthGuardMaster } from './_guards/auth.guard.master';
-import { BlogListManagementModule } from './blog-list-management/blog-list-management.module';
 import { PoliticaPrivacidadeModule } from './politicaprivacidade-management/politicaprivacidade-management.module';
 import { ContatoManagementModule } from './contato-management/contato-management.module';
 
@@ -18,7 +17,6 @@ const routes: Routes = [
     { path: 'order', loadChildren: () => OrderManagementModule },
     { path: 'shoppingcart', loadChildren: () => ShoppingCartModule },
     { path: 'team-list', loadChildren: () => TeamListManagementModule },
-    { path: 'blog-list', loadChildren: () => BlogListManagementModule },
     { path: 'politica-privacidade', loadChildren: () => PoliticaPrivacidadeModule },
     { path: 'contato', loadChildren: () => ContatoManagementModule },
 

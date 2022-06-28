@@ -57,6 +57,7 @@ namespace surfaliancaAPI.Controllers
                         {
                             team.ApplicationUserId = id;
                             team.CreateDate = DateTime.Now;
+                            team.Active = true;
                             teamRepository.Insert(team);
                             var filesUpload = Request.Form.Files;
 

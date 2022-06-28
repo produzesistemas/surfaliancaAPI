@@ -18,12 +18,27 @@ namespace Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<BoardModel>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelDimensions);
             modelBuilder.Entity<Coupon>().HasKey(c => c.Id);
             modelBuilder.Entity<Bottom>().HasKey(c => c.Id);
+            modelBuilder.Entity<Blog>().HasKey(c => c.Id);
+            modelBuilder.Entity<TypeBlog>().HasKey(c => c.Id);
+            modelBuilder.Entity<Blog>().HasOne(c => c.TypeBlog);
+            modelBuilder.Entity<TypeBlog>().HasMany(c => c.Blogs).WithOne(b => b.TypeBlog).HasForeignKey(c => c.TypeBlogId);
+
+            modelBuilder.Entity<Team>().HasKey(c => c.Id);
+            modelBuilder.Entity<TeamImage>().HasKey(c => c.Id);
+            modelBuilder.Entity<TeamImage>().HasOne(c => c.Team);
+            modelBuilder.Entity<Team>().HasMany(c => c.teamImages).WithOne(b => b.Team).HasForeignKey(c => c.TeamId);
+
+
 
             modelBuilder.Entity<Construction>().HasKey(c => c.Id);
+
+
+
             //modelBuilder.Entity<Construction>().HasMany(c => c.BoardModelConstructions)
             //    .WithOne(b => b.Construction)
             //    .HasForeignKey(c => c.ConstructionId);

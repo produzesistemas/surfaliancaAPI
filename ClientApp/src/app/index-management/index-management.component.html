@@ -11,9 +11,9 @@
       <li class="nav-item">
         <a class="nav-link" role="button" href="team-list">Equipe</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" role="button" href="blog-list">Blog</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-link" role="button" href="order">Encomendar</a>
       </li>
@@ -197,7 +197,7 @@
     <div class="row d-flex justify-content-center" *ngIf="store !== undefined">
       <div *ngFor="let blog of lstBlogs">
         <div class="col text-center py-3" role="button" (click)="openModal(blog)">
-          <img class="img-fluid" src="{{ getImageBlog(blog.imageName) }}" alt="Image" width="300px" />
+          <img class="img-responsive img-card" src="{{ getImageBlog(blog.imageName) }}" alt="Image"/>
           <div class="py-2">
             <label>Em: {{ blog.createDate | date }}</label>
           </div>
@@ -264,11 +264,10 @@
     </ul>
     <div class="h4 text-center text-white">
       <h6>Contato</h6>
-      <h6>(71) 988037623 / (82) 981880424</h6>
-      <h6>shardsonaraujo@yahoo.com.br</h6>
+      <h6>(99) 999999999 / (99) 99999999</h6>
+      <h6>produzesistemas@gmail.com</h6>
       <h6>
-        Avenida Amarílio Tiago dos Santos , 1907, loja 01 , Lauro de Freitas,
-        BA, Brazil, 42700-000
+        Rua da Imperatriz, 80, Sala 201, 40415-180, Salvador - Bahia - Brasil
       </h6>
     </div>
     <div class="form-inline">
@@ -282,15 +281,12 @@
 
     <h6 class="text-white">Formas de pagamento</h6>
     <div class="form-inline">
-      <img src="../../assets/mcard.png" />
-      <img src="../../assets/visa.png" />
-      <img src="../../assets/valecard.png" />
-      <img src="../../assets/ticket.png" />
-      <img src="../../assets/sodexo.png" />
-      <img src="../../assets/vr.png" />
-      <img src="../../assets/alelo.png" />
-      <img src="../../assets/american.png" />
-      <img src="../../assets/diners.png" />
+      <img src="../../assets/mcard.png" width="62" height="42" class="mr-2">
+      <img src="../../assets/visa.png" width="62" height="42" class="mr-2">
+      <img src="../../assets/elo.png" width="62" height="42" class="mr-2">
+      <img src="../../assets/hipercard.png" width="62" height="42" class="mr-2">
+      <img src="../../assets/diners.png" width="62" height="42" class="mr-2">
+      <img src="../../assets/logo-home-rede-pix.png">
     </div>
 
     <div class="form-inline py-3">
@@ -414,7 +410,7 @@
 </ng-template>
 
 <ng-template #modal>
-  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Blog</h3>
       <button type="button" class="close" (click)="closeModal()">
@@ -436,9 +432,12 @@
         {{ blog.description }}
       </div>
 
-      <img src="{{ getImageBlog(blog.imageName) }}" alt="Blog" width="200px" />
-      <div class="row">
-        <div class="col-sm-12 p-l-0 p-r-0 text-white py-3" [innerHTML]="blog.details"></div>
+      <img class="img-responsive img-medium" src="{{ getImageBlog(blog.imageName) }}" alt="Blog" />
+      <!-- <div class="row">
+        <div class="col-sm-12 p-l-0 p-r-0 py-3" [innerHTML]="blog.details"></div>
+      </div> -->
+      <div class="container-fluid">
+        <div [innerHTML]="blog.details"></div>
       </div>
     </div>
   </div>

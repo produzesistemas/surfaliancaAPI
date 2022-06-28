@@ -10,7 +10,7 @@ export class TypeBlogService extends GenericHttpService<TypeBlog> {
     }
 
     getAll() {
-        return this.http.get<TypeBlog[]>(`${this.getUrlApi()}Blog/getAll`);
+        return this.http.get<TypeBlog[]>(`${this.getUrlApi()}Blog/getAllTypeBlog`);
     }
     
 }

@@ -81,7 +81,7 @@ namespace Repositorys
             entityBase.ImageName = entity.ImageName;
             entityBase.UpdateDate = DateTime.Now;
 
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

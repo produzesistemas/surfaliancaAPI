@@ -10,7 +10,6 @@ export class Paint {
     alteradoPor: string;
     createDate: Date;
     updateDate: Date;
-    boardModelId: number;
 
     public constructor(init?: Partial<Paint>) {
         Object.assign(this, init);

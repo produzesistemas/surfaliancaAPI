@@ -22,12 +22,6 @@ const routes: Routes = [
 				data: { expectedRole: ['Master'], breadcrumb: 'Produtos' }
 			},
 			{
-				path: 'board-type',
-				loadChildren: () => import('../../board-type-management/board-type-management.module').then(m => m.BoardTypeManagementModule),
-                canActivate: [AuthGuardMaster],
-				data: { expectedRole: ['Master'], breadcrumb: 'Tipos de Prancha' }
-			},
-			{
 				path: 'construction',
 				loadChildren: () => import('../../construction-management/construction-management.module').then(m => m.ConstructionManagementModule),
                 canActivate: [AuthGuardMaster],
@@ -76,28 +70,10 @@ const routes: Routes = [
 				data: { expectedRole: ['Master'], breadcrumb: 'Pinturas' }
 			},
 			{
-				path: 'color',
-				loadChildren: () => import('../../color-management/color-management.module').then(m => m.ColorManagementModule),
-                canActivate: [AuthGuardMaster],
-				data: { expectedRole: ['Master'], breadcrumb: 'Pinturas' }
-			},
-			{
-				path: 'border-color',
-				loadChildren: () => import('../../border-color-management/border-color-management.module').then(m => m.BorderColorManagementModule),
-                canActivate: [AuthGuardMaster],
-				data: { expectedRole: ['Master'], breadcrumb: 'Pinturas da borda' }
-			},
-			{
 				path: 'store',
 				loadChildren: () => import('../../store-management/store-management.module').then(m => m.StoreManagementModule),
                 canActivate: [AuthGuardMaster],
 				data: { expectedRole: ['Master'], breadcrumb: 'Loja' }
-			},
-			{
-				path: 'logo',
-				loadChildren: () => import('../../logo-management/logo-management.module').then(m => m.LogoManagementModule),
-                canActivate: [AuthGuardMaster],
-				data: { expectedRole: ['Master'], breadcrumb: 'Logomarcas' }
 			},
 			{
 				path: 'blog',

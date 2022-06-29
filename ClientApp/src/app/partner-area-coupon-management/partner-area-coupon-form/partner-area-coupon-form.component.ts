@@ -37,16 +37,16 @@ export class PartnerAreaCouponFormComponent implements OnInit {
     });
 
     this.form = this.formBuilder.group({
-      codigo: ['', Validators.required],
-      descricao: ['', Validators.required],
-      quantidade: ['', Validators.required],
-      tipo: ['', Validators.required],
-      geral: ['true', Validators.required],
-      valor: ['', Validators.required],
-      valorMinimo: ['', Validators.required],
-      dataInicial: ['', Validators.required],
-      dataFinal: ['', Validators.required],
-      cliente: ['']
+      code: ['', Validators.required],
+      description: ['', Validators.required],
+      quantity: ['', Validators.required],
+      type: ['', Validators.required],
+      general: ['true', Validators.required],
+      value: ['', Validators.required],
+      valueMinimum: ['', Validators.required],
+      initialDate: ['', Validators.required],
+      finalDate: ['', Validators.required],
+      client: ['']
     });
 
     // this.loadCategorias();
@@ -77,25 +77,25 @@ export class PartnerAreaCouponFormComponent implements OnInit {
   get f() { return this.form.controls; }
 
   loadObject(item) {
-    this.form.controls.descricao.setValue(item.descricao);
-    this.form.controls.codigo.setValue(item.codigo);
-    this.form.controls.valor.setValue(item.valor);
-    this.form.controls.quantidade.setValue(item.quantidade);
-    this.form.controls.tipo.setValue(item.tipo.toString());
-    this.form.controls.geral.setValue(item.geral.toString());
-    if (!item.geral) {
-      let cliente = this.lstClientes.find(x => x.id === item.clienteId);
-      this.form.controls.cliente.setValue(cliente.id);
+    this.form.controls.description.setValue(item.description);
+    this.form.controls.code.setValue(item.code);
+    this.form.controls.value.setValue(item.value);
+    this.form.controls.quantity.setValue(item.quantity);
+    this.form.controls.type.setValue(item.type.toString());
+    this.form.controls.general.setValue(item.general.toString());
+    if (!item.general) {
+      let cliente = this.lstClientes.find(x => x.id === item.clientId);
+      this.form.controls.client.setValue(cliente.id);
       this.isGeral = true;
-      this.form.controls.cliente.setValidators([Validators.required]);
+      this.form.controls.client.setValidators([Validators.required]);
     }
-    this.form.controls.valorMinimo.setValue(item.valorMinimo);
+    this.form.controls.valueMinimum.setValue(item.valueMinimum);
     let dt = new Date(item.initialDate);
     let ngbDate = new NgbDate(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
-    this.form.controls.dataInicial.setValue(ngbDate);
+    this.form.controls.initialDate.setValue(ngbDate);
     dt = new Date(item.finalDate);
     ngbDate = new NgbDate(dt.getFullYear(), dt.getMonth() + 1, dt.getDate());
-    this.form.controls.dataFinal.setValue(ngbDate);
+    this.form.controls.finalDate.setValue(ngbDate);
   }
 
   onCancel() {
@@ -107,22 +107,22 @@ export class PartnerAreaCouponFormComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.coupon.codigo = this.form.controls.codigo.value;
-    this.coupon.descricao = this.form.controls.descricao.value;
-    this.coupon.initialDate = new Date(this.form.controls.dataInicial.value.year,
-      this.form.controls.dataInicial.value.month - 1,
-      this.form.controls.dataInicial.value.day, 0, 0, 0, 0);
-    this.coupon.finalDate = new Date(this.form.controls.dataFinal.value.year,
-      this.form.controls.dataFinal.value.month - 1,
-      this.form.controls.dataFinal.value.day, 0, 0, 0, 0);
-    this.coupon.quantidade = Number(this.form.controls.quantidade.value);
-    this.coupon.tipo = this.form.controls.tipo.value === 'false' ? false : true;
-    this.coupon.value = this.form.controls.valor.value;
-    this.coupon.valorMinimo = this.form.controls.valorMinimo.value;
-    this.coupon.geral = this.form.controls.geral.value === 'false' ? false : true;
+    this.coupon.code = this.form.controls.code.value;
+    this.coupon.description = this.form.controls.description.value;
+    this.coupon.initialDate = new Date(this.form.controls.initialDate.value.year,
+      this.form.controls.initialDate.value.month - 1,
+      this.form.controls.initialDate.value.day, 0, 0, 0, 0);
+    this.coupon.finalDate = new Date(this.form.controls.finalDate.value.year,
+      this.form.controls.finalDate.value.month - 1,
+      this.form.controls.finalDate.value.day, 0, 0, 0, 0);
+    this.coupon.quantity = Number(this.form.controls.quantity.value);
+    this.coupon.type = this.form.controls.type.value === 'false' ? false : true;
+    this.coupon.value = this.form.controls.value.value;
+    this.coupon.valueMinimum = this.form.controls.valueMinimum.value;
+    this.coupon.general = this.form.controls.general.value === 'false' ? false : true;
 
-    if (!this.coupon.geral) {
-      this.coupon.clienteId = this.form.controls.cliente.value;
+    if (!this.coupon.general) {
+      this.coupon.clientId = this.form.controls.client.value;
     }
 
     this.couponService.save(this.coupon).subscribe(result => {
@@ -137,12 +137,12 @@ export class PartnerAreaCouponFormComponent implements OnInit {
     if (evt.target.checked) {
       if (evt.target.id === 'geralYes') {
         this.isGeral = false;
-        this.form.controls.cliente.clearValidators();
-        this.form.controls.cliente.updateValueAndValidity();
+        this.form.controls.client.clearValidators();
+        this.form.controls.client.updateValueAndValidity();
       }
       if (evt.target.id === 'geralNo') {
         this.isGeral = true;
-        this.form.controls.cliente.setValidators([Validators.required]);
+        this.form.controls.client.setValidators([Validators.required]);
       }
     }
   }

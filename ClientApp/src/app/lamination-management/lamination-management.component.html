@@ -39,6 +39,9 @@
                         Descricao
                       </th>
                       <th>
+                        Valor
+                      </th>
+                      <th>
                         Ativo
                       </th>
                       <th>
@@ -50,6 +53,7 @@
                     <tr *ngFor='let item of lst | slice: (page-1) * pageSize : page * pageSize'>
                       <td>{{ item.id }}</td>
                       <td>{{ item.name }}</td>
+                      <td>{{ item.value | currency:'R$'}}</td>
                       <td>{{ item.active ? 'Sim' : 'Não'}}</td>
                       <td>
                         <div class="d-flex actions">

@@ -2,6 +2,7 @@ export class Lamination {
     name: string;
     details: string;
     id: number;
+    value: number;
     criadoPor: string;
     alteradoPor: string;
     createDate: Date;

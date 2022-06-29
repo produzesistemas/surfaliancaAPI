@@ -93,7 +93,7 @@ namespace Repositorys
             entityBase.Name = entity.Name;
             entityBase.UrlMovie = entity.UrlMovie;
             entityBase.Details = entity.Details;
-            entityBase.Value = entity.Value;
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
             entityBase.UpdateDate = DateTime.Now;
             _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();

@@ -129,12 +129,11 @@ namespace surfaliancaAPI.Controllers
                                 }
                 
                             };
-
+                            
                             product.ApplicationUserId = id;
                             product.CreateDate = DateTime.Now;
                             product.Active = true;
                             productRepository.Insert(product);
-                            return new OkResult();
                         }
                     }
                     else
@@ -166,26 +165,22 @@ namespace surfaliancaAPI.Controllers
                                 }
 
                             };
+                            fileDelete = string.Concat(fileDelete, productBase.ImageName);
                         }
-                        productBase.Description = product.Description;
-                        productBase.Name = product.Name;
-                        productBase.Value = product.Value;
-                        productBase.ProductStatusId = product.ProductStatusId;
-                        productBase.ProductTypeId = product.ProductTypeId;
-                        productBase.IsPromotion = product.IsPromotion;
-                        productBase.IsSpotlight = product.IsSpotlight;
-                        if ((product.IsPromotion) && (product.ValuePromotion.HasValue))
+                        else
                         {
-                            productBase.ValuePromotion = product.ValuePromotion.Value;
+                            product.ImageName = productBase.ImageName;
+                            product.ImageName1 = productBase.ImageName1;
+                            product.ImageName2 = productBase.ImageName2;
                         }
-                        productBase.UpdateApplicationUserId = id;
-                        productBase.UpdateDate = DateTime.Now;
-                        productRepository.Update(productBase);
+                        product.UpdateApplicationUserId = id;
+                        product.UpdateDate = DateTime.Now;
+                        productRepository.Update(product);
                         if (System.IO.File.Exists(fileDelete))
                         {
                             System.IO.File.Delete(fileDelete);
                         }
-                        return new OkResult();
+                        
                     }
 
                 }
@@ -195,7 +190,7 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex}");
+                return BadRequest(string.Concat("Falha na tentativa: ", ex.Message));
             }
 
         }

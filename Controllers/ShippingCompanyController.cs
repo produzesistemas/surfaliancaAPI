@@ -109,16 +109,16 @@ namespace petixcoAPI.Controllers
                         switch (counter)
                         {
                             case 0:
-                                shippingCompanyBase.ImageName = fileName;
+                                shippingCompany.ImageName = fileName;
                                 break;
                         }
 
                     };
 
-                    shippingCompanyBase.Name = shippingCompany.Name;
-                    shippingCompanyBase.UpdateApplicationUserId = id;
-                    shippingCompanyBase.UpdateDate = DateTime.Now;
-                    shippingCompanyRepository.Update(shippingCompanyBase);
+                    shippingCompany.Name = shippingCompany.Name;
+                    shippingCompany.UpdateApplicationUserId = id;
+                    shippingCompany.UpdateDate = DateTime.Now;
+                    shippingCompanyRepository.Update(shippingCompany);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);

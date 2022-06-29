@@ -58,7 +58,7 @@ namespace Repositorys
         {
             if (_context.OrderProductOrdered.Any(c => c.LaminationId == id))
             {
-                throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
+                throw new Exception("A laminação não pode ser excluída.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
             };
 
             var entity = _context.Lamination.Single(x => x.Id == id);
@@ -74,8 +74,10 @@ namespace Repositorys
 
         public void Update(Lamination entity)
         {
-            entity.Name = entity.Name;
-            _context.Entry(entity).State = EntityState.Modified;
+            var entityBase = _context.Lamination.Single(x => x.Id == entity.Id);
+            entityBase.Name = entity.Name;
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

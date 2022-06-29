@@ -81,7 +81,6 @@ namespace Repositorys
         public void Update(Coupon entity)
         {
             var entityBase = _context.Coupon.Single(x => x.Id == entity.Id);
-
             entityBase.Description = entity.Description;
             entityBase.ClientId = entity.ClientId;
             entityBase.Code = entity.Code;
@@ -91,9 +90,11 @@ namespace Repositorys
             entityBase.General = entity.General;
             entityBase.Quantity = entity.Quantity;
             entityBase.Type =  entity.Type;
+            entityBase.Value = entity.Value;
+            entityBase.ValueMinimum = entity.ValueMinimum;
             entityBase.UpdateDate = DateTime.Now;
-
-            _context.Entry(entity).State = EntityState.Modified;
+            entityBase.UpdateApplicationUserId = entity.UpdateApplicationUserId;
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

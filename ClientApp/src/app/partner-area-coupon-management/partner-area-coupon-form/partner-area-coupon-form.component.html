@@ -9,23 +9,23 @@
             <form [formGroup]='form'>
                 <div class="form-group">
                     <label>Código:</label>
-                    <input type="text" maxlength="256" formControlName="codigo" placeholder="Informe o código..." class="form-control">
+                    <input type="text" maxlength="256" formControlName="code" placeholder="Informe o código..." class="form-control">
                   </div>
-                  <div *ngIf="submitted && f.codigo.errors">
-                    <p *ngIf="f.codigo.errors.required" class="text-danger small">* Informe o código</p>
+                  <div *ngIf="submitted && f.code.errors">
+                    <p *ngIf="f.code.errors.required" class="text-danger small">* Informe o código</p>
                   </div>
               <div class="form-group">
                 <label>Descrição:</label>
-                <input type="text" maxlength="256" formControlName="descricao" placeholder="Informe a descrição..." class="form-control">
+                <input type="text" maxlength="256" formControlName="description" placeholder="Informe a descrição..." class="form-control">
               </div>
-              <div *ngIf="submitted && f.descricao.errors">
-                <p *ngIf="f.descricao.errors.required" class="text-danger small">* Informe a descrição</p>
+              <div *ngIf="submitted && f.description.errors">
+                <p *ngIf="f.description.errors.required" class="text-danger small">* Informe a descrição</p>
               </div>
 
               <div class="form-group">
                 <label>Data inicial:</label>
                 <div class="input-group">
-                  <input class="form-control" placeholder="dd/mm/yyyy" name="dataInicial" formControlName="dataInicial"
+                  <input class="form-control" placeholder="dd/mm/yyyy" name="initialDate" formControlName="initialDate"
                     ngbDatepicker #d="ngbDatepicker">
                   <div class="input-group-append">
                     <button class="btn btn-primary" (click)="d.toggle()" type="button">
@@ -34,15 +34,15 @@
                   </div>
                 </div>
               </div>
-                <div *ngIf="submitted && f.dataInicial.errors">
-                  <p *ngIf="f.dataInicial.errors.required" class="text-danger small">* Selecione a data inicial do cupom
+                <div *ngIf="submitted && f.initialDate.errors">
+                  <p *ngIf="f.initialDate.errors.required" class="text-danger small">* Selecione a data inicial do cupom
                   </p>
                 </div>
 
                 <div class="form-group">
                   <label>Data final:</label>
                   <div class="input-group">
-                    <input class="form-control" placeholder="dd/mm/yyyy" name="dataFinal" formControlName="dataFinal"
+                    <input class="form-control" placeholder="dd/mm/yyyy" name="finalDate" formControlName="finalDate"
                       ngbDatepicker #dp="ngbDatepicker">
                     <div class="input-group-append">
                       <button class="btn btn-primary" (click)="dp.toggle()" type="button">
@@ -51,8 +51,8 @@
                     </div>
                   </div>
                 </div>
-                  <div *ngIf="submitted && f.dataFinal.errors">
-                    <p *ngIf="f.dataFinal.errors.required" class="text-danger small">* Selecione a data final do cupom
+                  <div *ngIf="submitted && f.finalDate.errors">
+                    <p *ngIf="f.finalDate.errors.required" class="text-danger small">* Selecione a data final do cupom
                     </p>
                   </div>
 
@@ -60,21 +60,21 @@
                 <label>Quantidade de vezes que o cliente poderá usar o cupom:</label>
                 <input currencyMask max="99999999"
                 [options]="{ prefix: '', thousands: '', decimal: '', precision: 0, allowNegative: false }"
-                maxlength="8" type="text" formControlName="quantidade"
+                maxlength="8" type="text" formControlName="quantity"
                 placeholder="Informe a quantidade..." class="form-control">
               </div>
-              <div *ngIf="submitted && f.quantidade.errors">
-                <p *ngIf="f.quantidade.errors.required" class="text-danger small">* Informe a quantidade</p>
+              <div *ngIf="submitted && f.quantity.errors">
+                <p *ngIf="f.quantity.errors.required" class="text-danger small">* Informe a quantidade</p>
               </div>
 
               <div class="form-group">
                 <label>Tipo de desconto:</label>
-                <select class="form-control" formControlName="tipo">
+                <select class="form-control" formControlName="type">
                   <option [ngValue]="tipo.value" *ngFor="let tipo of lstTipos">
                     {{tipo.label}}</option>
                 </select>
-                <div *ngIf="submitted && f.tipo.errors">
-                  <p *ngIf="f.tipo.errors.required" class="text-danger small">* Seleção de Tipo é
+                <div *ngIf="submitted && f.type.errors">
+                  <p *ngIf="f.type.errors.required" class="text-danger small">* Seleção de Tipo é
                     obrigatória</p>
                 </div>
               </div>
@@ -83,49 +83,49 @@
                   <label>Valor:</label>
                   <input currencyMask max="99999999"
                     [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
-                    maxlength="18" type="text" formControlName="valor" placeholder="Informe o valor..."
+                    maxlength="18" type="text" formControlName="value" placeholder="Informe o valor..."
                     class="form-control">
                 </div>
-                <div *ngIf="submitted && f.valor.errors">
-                  <p *ngIf="f.valor.errors.required" class="text-danger small">* Informe um valor</p>
+                <div *ngIf="submitted && f.value.errors">
+                  <p *ngIf="f.value.errors.required" class="text-danger small">* Informe um valor</p>
                 </div>
                 <div class="form-group">
                   <label>Valor mínimo para aplicar o cupom:</label>
                   <input currencyMask max="99999999"
                     [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
-                    maxlength="18" type="text" formControlName="valorMinimo"
+                    maxlength="18" type="text" formControlName="valueMinimum"
                     placeholder="Informe o valor minimo..." class="form-control">
                 </div>
-                <div *ngIf="submitted && f.valorMinimo.errors">
-                  <p *ngIf="f.valorMinimo.errors.required" class="text-danger small">* Informe um valor</p>
+                <div *ngIf="submitted && f.valueMinimum.errors">
+                  <p *ngIf="f.valueMinimum.errors.required" class="text-danger small">* Informe um valor</p>
                 </div>
 
                 <div class="form-group">
                     <label>Para todos os clientes: </label>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" (change)="handleChange($event)" name="geral"
-                        id="geralYes" value="true" formControlName="geral">
+                      <input class="form-check-input" type="radio" (change)="handleChange($event)" name="general"
+                        id="geralYes" value="true" formControlName="general">
                       <label class="form-check-label" for="geralYes">Sim</label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" (change)="handleChange($event)" name="geral"
-                        id="geralNo" value="false" formControlName="geral">
+                      <input class="form-check-input" type="radio" (change)="handleChange($event)" name="general"
+                        id="geralNo" value="false" formControlName="general">
                       <label class="form-check-label" for="geralNo">Não</label>
                     </div>
                   </div>
-                  <div *ngIf="submitted && f.geral.errors">
-                    <p *ngIf="f.geral.errors.required" class="text-danger small">* Informe se o cupom estará disponível para todos os clientes.
+                  <div *ngIf="submitted && f.general.errors">
+                    <p *ngIf="f.general.errors.required" class="text-danger small">* Informe se o cupom estará disponível para todos os clientes.
                     </p>
                   </div>
 
                   <div class="form-group" *ngIf="isGeral">
                     <label>Cliente:</label>
-                    <select class="form-control" formControlName="cliente">
+                    <select class="form-control" formControlName="client">
                       <option [value]="cliente.id" *ngFor="let cliente of lstClientes">{{cliente.name}}</option>
                     </select>
                   </div>
-                  <div *ngIf="submitted && f.cliente.errors">
-                    <p *ngIf="f.cliente.errors.required" class="text-danger small">* Informe o cliente</p>
+                  <div *ngIf="submitted && f.client.errors">
+                    <p *ngIf="f.client.errors.required" class="text-danger small">* Informe o cliente</p>
                   </div>
 
             </form>

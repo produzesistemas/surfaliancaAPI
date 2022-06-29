@@ -131,17 +131,22 @@ namespace surfaliancaAPI.Controllers
 
                 if (cupom.Id > decimal.Zero)
                 {
+                    cupom.UpdateApplicationUserId = id;
+                    cupom.UpdateDate = DateTime.Now;
                     cupomRepository.Update(cupom);
                 }
                 else
                 {
+                    cupom.Active = true;
+                    cupom.CreateDate = DateTime.Now;
+                    cupom.ApplicationUserId = id;
                     cupomRepository.Insert(cupom);
                 }
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha no registro do cupom: ", ex.Message));
             }
         }
 
@@ -154,7 +159,7 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Produto não encontrado!");
+                return BadRequest(string.Concat("Falha no carregamento do cupom: ", ex.Message));
             }
         }
 
@@ -185,7 +190,7 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha na ativação do cupom: ", ex.Message));
             }
         }
 

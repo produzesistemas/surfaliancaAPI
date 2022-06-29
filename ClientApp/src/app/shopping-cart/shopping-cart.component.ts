@@ -401,8 +401,8 @@ export class ShoppingCartComponent implements OnInit {
           this.toastr.error('Cupom não encontrado!')
         } else {
 
-          if (this.getTotalItems() < coupon.valorMinimo) {
-            return this.toastr.error('O valor mínimo do pedido para uso deste cupom é de: ' + this.currencyPipe.transform(coupon.valorMinimo, 'R$'));
+          if (this.getTotalItems() < coupon.valueMinimum) {
+            return this.toastr.error('O valor mínimo do pedido para uso deste cupom é de: ' + this.currencyPipe.transform(coupon.valueMinimum, 'R$'));
           }
           this.coupon = coupon;
           console.log(this.coupon);

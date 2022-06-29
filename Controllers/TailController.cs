@@ -74,7 +74,7 @@ namespace surfaliancaAPI.Controllers
                 if (tail.Id > decimal.Zero)
                 {
                     var tailBase = tailRepository.Get(tail.Id);
-                    tailBase.Name = tail.Name;
+                    //tailBase.Name = tail.Name;
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);
@@ -85,11 +85,11 @@ namespace surfaliancaAPI.Controllers
                             files[0].CopyTo(stream);
                         }
                         fileDelete = string.Concat(fileDelete, tailBase.ImageName);
-                        tailBase.ImageName = fileName;
+                        tail.ImageName = fileName;
                     }
-                    tailBase.UpdateApplicationUserId = id;
-                    tailBase.UpdateDate = DateTime.Now;
-                    tailRepository.Update(tailBase);
+                    tail.UpdateApplicationUserId = id;
+                    tail.UpdateDate = DateTime.Now;
+                    tailRepository.Update(tail);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);

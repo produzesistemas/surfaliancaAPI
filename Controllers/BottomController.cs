@@ -114,6 +114,7 @@ namespace surfaliancaAPI.Controllers
                         bottom.ImageName = fileName;
                         bottom.ApplicationUserId = id;
                         bottom.CreateDate = DateTime.Now;
+                        bottom.Active = true;
                         bottomRepository.Insert(bottom);
                     }
                 }

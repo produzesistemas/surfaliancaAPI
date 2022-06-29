@@ -58,10 +58,15 @@ namespace surfaliancaAPI.Controllers
                 }
                 if (entity.Id > decimal.Zero)
                 {
+                    entity.UpdateApplicationUserId = id;
+                    entity.UpdateDate = DateTime.Now;
                     laminationRepository.Update(entity);
                 }
                 else
                 {
+                    entity.Active = true;
+                    entity.CreateDate = DateTime.Now;
+                    entity.ApplicationUserId = id;
                     laminationRepository.Insert(entity);
                 }
                 return new OkResult();

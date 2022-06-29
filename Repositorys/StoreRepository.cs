@@ -48,7 +48,7 @@ namespace Repositorys
             entityBase.Name = entity.Name;
             entityBase.UpdateDate = DateTime.Now;
 
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
     }

@@ -42,6 +42,8 @@ namespace Repositorys
 
         public void Delete(int id)
         {
+            var images = _context.TeamImage.Where(c => c.TeamId == id);
+            _context.RemoveRange(images);
             var entity = _context.Team.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();

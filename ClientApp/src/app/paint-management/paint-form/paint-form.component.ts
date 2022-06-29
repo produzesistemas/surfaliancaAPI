@@ -44,14 +44,6 @@ export class PaintFormComponent implements OnInit {
       id: [0],
       name: ['', [Validators.required, Validators.maxLength(255)]],
       value: [''],
-      boardModel: ['', Validators.required],
-
-    });
-
-    this.boardModelService.getAll().subscribe(result => {
-      this.boardModels = result;
-      console.log(this.boardModels)
-
     });
 
     this.load();
@@ -65,7 +57,6 @@ export class PaintFormComponent implements OnInit {
         this.formAdd.controls.id.setValue(this.paint.id);
         this.formAdd.controls.name.setValue(this.paint.name);
         this.formAdd.controls.value.setValue(this.paint.value);
-        this.formAdd.controls.boardModel.setValue(this.boardModels.find(x => x.id === this.paint.boardModelId));
         this.logo = environment.urlImagesLojas + this.paint.imageName;
       });
     }
@@ -79,7 +70,6 @@ export class PaintFormComponent implements OnInit {
     }
     const formData = new FormData();
     this.paint = new Paint(this.formAdd.value);
-    this.paint.boardModelId = this.formAdd.controls.boardModel.value.id;
     if ((this.file === undefined) && (this.logo === undefined)){
       this.toastr.error('Selecione uma Foto!');
       return;

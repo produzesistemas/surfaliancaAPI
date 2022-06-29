@@ -69,6 +69,8 @@ namespace surfaliancaAPI.Controllers
 
                 if (stringer.Id > decimal.Zero)
                 {
+                    stringer.UpdateApplicationUserId = id;
+                    stringer.UpdateDate = DateTime.Now;
                     stringerRepository.Update(stringer);
                 }
                 else

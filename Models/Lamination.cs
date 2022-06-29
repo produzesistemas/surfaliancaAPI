@@ -8,6 +8,7 @@ namespace Models
     {
         public string Name { get; set; }
         public string Details { get; set; }
+        public decimal? Value { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }

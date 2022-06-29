@@ -38,37 +38,62 @@ namespace Repositorys
 
         public IQueryable<Bottom> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Bottom.AsQueryable();
         }
 
         public Bottom Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.Bottom.Single(x => x.Id == id);
         }
 
         public IQueryable<Bottom> Where(Expression<Func<Bottom, bool>> expression)
         {
-            throw new NotImplementedException();
+            return _context.Bottom.Where(expression).AsQueryable();
         }
 
         public void Active(int id)
         {
-            throw new NotImplementedException();
+            var entity = _context.Bottom.Single(x => x.Id == id);
+            if (entity.Active)
+            {
+                entity.Active = false;
+            }
+            else
+            {
+                entity.Active = true;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            if (_context.OrderProductOrdered.Any(c => c.BottomId == id))
+            {
+                throw new Exception("O fundo não pode ser excluído.Está relacionado com um pedido.Considere desativar!");
+            };
+
+            var entity = _context.Bottom.Single(x => x.Id == id);
+            _context.Remove(entity);
+            _context.SaveChanges();
+            _context.Dispose();
         }
 
         public void Update(Bottom entity)
         {
-            throw new NotImplementedException();
+            var entityBase = _context.Bottom.Single(x => x.Id == entity.Id);
+            entityBase.Name = entity.Name;
+            entityBase.ImageName = entity.ImageName;
+            entityBase.UpdateDate = DateTime.Now;
+            entityBase.UpdateApplicationUserId = entity.UpdateApplicationUserId;
+            _context.Entry(entityBase).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public void Insert(Bottom entity)
         {
-            throw new NotImplementedException();
+            _context.Bottom.Add(entity);
+            _context.SaveChanges();
         }
     }
 }

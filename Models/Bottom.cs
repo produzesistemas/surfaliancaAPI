@@ -9,7 +9,7 @@ namespace Models
     {
         public string Name { get; set; }
         public string ImageName { get; set; }
-
+        public bool Active { get; set; }
         public string UpdateApplicationUserId { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }

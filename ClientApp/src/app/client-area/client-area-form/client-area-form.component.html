@@ -121,7 +121,7 @@
   </div>
 
   <h6 *ngIf="order.coupon">
-    Cupom aplicado: {{ order.coupon.codigo }} - {{ order.coupon.descricao }}
+    Cupom aplicado: {{ order.coupon.code }} - {{ order.coupon.description }}
   </h6>
   <h6>Valor total dos produtos: {{ getTotalProducts() | currency: "R$" }}</h6>
   <h6>Valor total da encomenda: {{getTotalOrdered() | currency:'R$'}} </h6>

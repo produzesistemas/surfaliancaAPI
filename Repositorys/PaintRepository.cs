@@ -80,10 +80,11 @@ namespace Repositorys
         {
             var entityBase = _context.Paint.Single(x => x.Id == entity.Id);
             entityBase.Name = entity.Name;
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
             entityBase.ImageName = entity.ImageName;
             entityBase.UpdateDate = DateTime.Now;
 
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

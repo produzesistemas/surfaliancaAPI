@@ -59,35 +59,21 @@ namespace surfaliancaAPI.Controllers
                                     {
                                         file.CopyTo(stream);
                                     }
-                                    fileDelete = string.Concat(fileDelete, lojaBase.ImageName);
                                     store.ImageName = fileNameLogo;
                                 }
 
                             }
+                            fileDelete = string.Concat(fileDelete, lojaBase.ImageName);
 
                         }
-                        lojaBase.Description = store.Description;
-                        lojaBase.Name = store.Name;
-                        lojaBase.District = store.District;
-                        lojaBase.City = store.City;
-                        lojaBase.CNPJ = store.CNPJ;
-                        lojaBase.Contact = store.Contact;
-                        lojaBase.Number = store.Number;
-                        lojaBase.ValueMinimum = store.ValueMinimum;
-                        if (store.NumberInstallmentsCard.HasValue)
-                        {
-                            lojaBase.NumberInstallmentsCard = store.NumberInstallmentsCard.Value;
-                        }
-                        lojaBase.ExchangePolicy = store.ExchangePolicy;
-                        lojaBase.DeliveryPolicy = store.DeliveryPolicy;
-                        lojaBase.UpdateApplicationUserId = id;
-                        lojaBase.UpdateDate = DateTime.Now;
-                    storeRepository.Update(lojaBase);
+                        store.UpdateApplicationUserId = id;
+                        store.UpdateDate = DateTime.Now;
+                        storeRepository.Update(store);
                         if (System.IO.File.Exists(fileDelete))
                         {
                             System.IO.File.Delete(fileDelete);
                         }
-                    }
+                }
 
                 return new OkResult();
 

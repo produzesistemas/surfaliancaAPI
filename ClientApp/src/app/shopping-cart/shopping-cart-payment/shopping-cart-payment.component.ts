@@ -232,7 +232,7 @@ getImage(nomeImage) {
   getTotalSale() {
     let totalValue = this.getTotalProducts() + this.getTotalOrdered();
    if (this.order.coupon) {
-       if (this.order.coupon.tipo) {
+       if (this.order.coupon.type) {
            totalValue -= this.order.coupon.value;
        } else {
            totalValue -= (totalValue * this.order.coupon.value) /100;

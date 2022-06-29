@@ -55,6 +55,7 @@ export class LaminationFormComponent implements OnInit {
       id: [0],
       name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       details: [''],
+      value: ['']
     });
 
     this.load();
@@ -68,6 +69,7 @@ export class LaminationFormComponent implements OnInit {
         this.formAdd.controls.id.setValue(this.lamination.id);
         this.formAdd.controls.name.setValue(this.lamination.name);
         this.formAdd.controls.details.setValue(this.lamination.details);
+        this.formAdd.controls.value.setValue(this.lamination.value);
       });
     }
 

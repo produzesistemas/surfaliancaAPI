@@ -141,7 +141,7 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha na ativação da construção: ", ex.Message));
             }
         }
 

@@ -1,14 +1,14 @@
 export class Coupon {
     id: number;
-    descricao: string;
-    codigo: string;
-    quantidade: number;
-    clienteId?: number;
-    tipo: boolean;
-    geral: boolean;
-    ativo: boolean;
+    description: string;
+    code: string;
+    quantity: number;
+    clientId?: number;
+    type: boolean;
+    general: boolean;
+    active: boolean;
     value: number;
-    valorMinimo: number;
+    valueMinimum: number;
     initialDate: Date;
     finalDate: Date;
 

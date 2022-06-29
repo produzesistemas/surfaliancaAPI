@@ -78,6 +78,7 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 if (paint.Id > decimal.Zero)
                 {
+                    var paintBase = paintRepository.Get(paint.Id);
                     if (Request.Form.Files.Count() > decimal.Zero)
                     {
                         var extension = Path.GetExtension(files[0].FileName);
@@ -87,12 +88,14 @@ namespace surfaliancaAPI.Controllers
                         {
                             files[0].CopyTo(stream);
                         }
-                        fileDelete = string.Concat(fileDelete, paint.ImageName);
+                        fileDelete = string.Concat(fileDelete, paintBase.ImageName);
                         paint.ImageName = fileName;
+                    } else
+                    {
+                        paint.ImageName = paintBase.ImageName;
                     }
                     paint.UpdateApplicationUserId = id;
                     paint.UpdateDate = DateTime.Now;
-
                     paintRepository.Update(paint);
                     if (System.IO.File.Exists(fileDelete))
                     {

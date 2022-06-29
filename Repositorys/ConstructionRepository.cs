@@ -95,7 +95,7 @@ namespace Repositorys
             entityBase.Details = entity.Details;
             entityBase.Value = entity.Value;
             entityBase.UpdateDate = DateTime.Now;
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }
 

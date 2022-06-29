@@ -56,12 +56,10 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save()
+        public IActionResult Save(Construction construction)
         {
             try
             {
-                var construction = JsonConvert.DeserializeObject<Construction>(Convert.ToString(Request.Form["construction"]));
-
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
                 if (id == null)
@@ -71,18 +69,7 @@ namespace surfaliancaAPI.Controllers
 
                 if (construction.Id > decimal.Zero)
                 {
-                    var entityBase = constructionRepository.Get(construction.Id);
-                    entityBase.Name = construction.Name;
-                    if (construction.Value.HasValue)
-                    {
-                        entityBase.Value = construction.Value;
-                    }
-                    entityBase.Details = construction.Details;
-                    entityBase.UpdateApplicationUserId = id;
-                    entityBase.UpdateDate = DateTime.Now;
-                    entityBase.UrlMovie = construction.UrlMovie;
-                    constructionRepository.Update(entityBase);
-
+                    constructionRepository.Update(construction);
                 }
                 else
                 {
@@ -95,7 +82,7 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha no cadastro da construção: ", ex.Message));
             }
         }
 

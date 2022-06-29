@@ -85,22 +85,13 @@ export class ConstructionFormComponent implements OnInit {
     if (this.formAdd.invalid) {
       return;
     }
-    const formData = new FormData();
     const item = new Construction();
     item.id = this.construction.id;
     item.value = this.formAdd.controls.value.value;
     item.details = this.formAdd.controls.details.value;
     item.name = this.formAdd.controls.name.value;
     item.urlMovie = this.formAdd.controls.urlMovie.value;
-
-    formData.append('construction', JSON.stringify(item));
-    if(this.files.length > 0) {
-      this.files.forEach(f => {
-        formData.append('file', f.file, f.file.name);
-    });
-    }
-
-    this.constructionService.save(formData).subscribe(result => {
+    this.constructionService.save(item).subscribe(result => {
       this.toastr.success('Registro efetuado com sucesso!');
       this.router.navigate(['partner-area/construction']);
     });

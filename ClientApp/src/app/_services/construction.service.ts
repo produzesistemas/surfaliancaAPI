@@ -18,7 +18,7 @@ export class ConstructionService extends GenericHttpService<Construction> {
     }
 
 
-    save(entity:FormData) {
+    save(entity) {
       return this.post('Construction/save', entity);
    }
 

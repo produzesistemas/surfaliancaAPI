@@ -110,6 +110,7 @@ namespace Models
         public DbSet<ShippingCompanyState> ShippingCompanyState { get; set; }
         public DbSet<Lamination> Lamination { get; set; }
         public DbSet<Tail> Tail { get; set; }
+        public DbSet<TailReinforcement> TailReinforcement { get; set; }
         public DbSet<Paint> Paint { get; set; }
         public DbSet<Stringer> Stringer { get; set; }
         public DbSet<BoardModel> BoardModel { get; set; }

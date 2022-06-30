@@ -13,7 +13,6 @@ import { ColorService } from 'src/app/_services/color.service';
 import { BorderColorService } from 'src/app/_services/border-color.service';
 import { OrderService } from 'src/app/_services/order.service';
 import { FilterDefaultModel } from 'src/app/_models/filter-default-model';
-import { LogoService } from 'src/app/_services/logo.service';
 import { ConstructionService } from 'src/app/_services/construction.service';
 
 @Component({
@@ -65,7 +64,6 @@ export class OrderFormComponent implements OnInit {
     private paintService: PaintService,
     private colorService: ColorService,
     private borderColorService: BorderColorService,
-    private logoService: LogoService,
     private constructionService: ConstructionService
 
 
@@ -121,9 +119,7 @@ export class OrderFormComponent implements OnInit {
       this.orderService.getAllFinishing().subscribe(finishings => {
         this.lstFinishing = finishings;
       })
-      this.logoService.getAll().subscribe(logos => {
-        this.lstLogo = logos;
-      });
+
       this.constructionService.getAllConstruction().subscribe(construction => {
         this.lstConstruction = construction;
       });
@@ -154,7 +150,6 @@ onConfirm() {
       this.itemCart.value = this.finalValue;
       this.itemCart.productTypeId = 1;
       this.itemCart.productStatusId = 1;
-      this.itemCart.typeSaleId = 1;
       this.itemCart.boardModelId = this.boardModel.id;
       this.itemCart.constructionId = this.form.controls.construction.value.constructionId;
       this.itemCart.name = this.boardModel.name;

@@ -58,14 +58,9 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            if (_context.OrderProduct.Any(c => c.ProductId == id))
-            {
-                throw new Exception("O modelo não pode ser excluído.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
-            };
             var entity = _context.Product.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
-            _context.Dispose();
         }
 
         public Product Get(int id)
@@ -88,7 +83,6 @@ namespace Repositorys
             entityBase.ProductTypeId = entity.ProductTypeId;
             entityBase.Value = entity.Value;
             if (entity.ValuePromotion.HasValue) { entityBase.ValuePromotion = entity.ValuePromotion.Value; }
-            entityBase.TypeSaleId = entity.TypeSaleId;
             entityBase.ImageName = entity.ImageName;
             entityBase.UpdateDate = DateTime.Now;
 

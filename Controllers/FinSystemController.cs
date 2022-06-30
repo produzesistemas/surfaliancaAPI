@@ -57,79 +57,33 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save()
+        public IActionResult Save(FinSystem finSystem)
         {
             try
             {
-                var finSystem = JsonConvert.DeserializeObject<FinSystem>(Convert.ToString(Request.Form["finSystem"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileProduct"]);
-                var fileDelete = pathToSave;
-                var files = Request.Form.Files;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                if ((id != null) || (finSystem != null))
+                if (id == null)
                 {
-                    if (finSystem.Id == decimal.Zero)
-                    {
-                        if (Request.Form.Files.Count() > decimal.Zero)
-                        {
-                            for (var counter = 0; counter < files.Count; counter++)
-                            {
-                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                                var fullPath = Path.Combine(pathToSave, fileName);
-                                using (var stream = new FileStream(fullPath, FileMode.Create))
-                                {
-                                    files[counter].CopyTo(stream);
-                                }
-
-                                finSystem.ImageName = fileName;
-
-                            };
-
-                            finSystem.ApplicationUserId = id;
-                            finSystem.CreateDate = DateTime.Now;
-                            finSystem.Active = true;
-                            finSystemRepository.Insert(finSystem);
-                            return new OkResult();
-                        }
-                    }
-                    else
-                    {
-                        var finSystemBase = finSystemRepository.Get(finSystem.Id);
-                        if (Request.Form.Files.Count() > decimal.Zero)
-                        {
-                            for (var counter = 0; counter < files.Count; counter++)
-                            {
-                                var extension = Path.GetExtension(Request.Form.Files[0].FileName);
-                                var fileName = string.Concat(Guid.NewGuid().ToString(), extension);
-                                var fullPath = Path.Combine(pathToSave, fileName);
-                                using (var stream = new FileStream(fullPath, FileMode.Create))
-                                {
-                                    files[counter].CopyTo(stream);
-                                }
-                                finSystemBase.ImageName = fileName;
-                            };
-                        }
-                        finSystemBase.Details = finSystem.Details;
-                        finSystemBase.Name = finSystem.Name;
-                        finSystemBase.UpdateApplicationUserId = id;
-                        finSystemBase.UpdateDate = DateTime.Now;
-                        finSystemRepository.Update(finSystemBase);
-                        if (System.IO.File.Exists(fileDelete))
-                        {
-                            System.IO.File.Delete(fileDelete);
-                        }
-                        return new OkResult();
-                    }
-
+                    return BadRequest("Identificação do usuário não encontrada.");
                 }
 
+                if (finSystem.Id > decimal.Zero)
+                {
+                    finSystemRepository.Update(finSystem);
+                }
+                else
+                {
+                    finSystem.Active = true;
+                    finSystem.ApplicationUserId = id;
+                    finSystem.CreateDate = DateTime.Now;
+                    finSystemRepository.Insert(finSystem);
+                }
                 return new OkResult();
             }
             catch (Exception ex)
             {
-                return new JsonResult(ex);
+                return BadRequest(string.Concat("Falha no cadastro da construção: ", ex.Message));
             }
         }
 

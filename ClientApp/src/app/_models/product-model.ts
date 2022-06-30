@@ -15,8 +15,6 @@ export class Product {
     createDate: Date;
     updateDate: Date;
 
-
-    typeSaleId: number;
     productTypeId: number;
     productStatusId: number;
 

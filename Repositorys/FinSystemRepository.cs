@@ -67,11 +67,6 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            if (_context.OrderProductOrdered.Any(c => c.FinSystemId == id))
-            {
-                throw new Exception("A FinSystem não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
-            };
-
             var entity = _context.FinSystem.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
@@ -81,10 +76,8 @@ namespace Repositorys
         public void Update(FinSystem entity)
         {
             var entityBase = _context.FinSystem.Single(x => x.Id == entity.Id);
-
             entityBase.Name = entity.Name;
-            entityBase.Details = entity.Details;
-            entityBase.ImageName = entity.ImageName;
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
             entityBase.UpdateDate = DateTime.Now;
 
             _context.Entry(entityBase).State = EntityState.Modified;

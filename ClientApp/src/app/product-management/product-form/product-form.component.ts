@@ -125,7 +125,6 @@ export class ProductFormComponent implements OnInit {
     this.product.isPromotion = this.formAdd.controls.isPromotion.value === 'false' ? false : true;
     this.product.productStatusId = Number(this.formAdd.controls.productStatus.value);
     this.product.productTypeId = Number(this.formAdd.controls.productType.value);
-    this.product.typeSaleId = 2;
     if (this.product.isPromotion) {
       this.product.valuePromotion = this.formAdd.controls.valuePromotion.value;
     }

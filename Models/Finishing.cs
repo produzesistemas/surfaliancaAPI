@@ -6,6 +6,7 @@ namespace Models
     public class Finishing : BaseEntity
     {
         public string Name { get; set; }
+        public decimal? Value { get; set; }
         [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }
     }

@@ -23,10 +23,6 @@ namespace surfaliancaAPI.Controllers
         private IProductRepository productRepository;
         private IProductTypeRepository productTypeRepository;
         private IProductStatusRepository productStatusRepository;
-        //private IRepository<TypeSale> typeSaleRepository;
-        //private IRepository<ProductStatus> productStatusRepository;
-        //private IRepository<ProductType> productTypeRepository;
-        //private IProductRepository<Product> productRepository;
 
         public ProductController(
            IWebHostEnvironment environment,
@@ -34,10 +30,6 @@ namespace surfaliancaAPI.Controllers
            IProductRepository productRepository,
            IProductTypeRepository productTypeRepository,
            IProductStatusRepository productStatusRepository
-        //   IProductRepository<Product> productRepository,
-        //   IRepository<TypeSale> typeSaleRepository,
-        //IRepository<ProductStatus> productStatusRepository,
-        //IRepository<ProductType> productTypeRepository
            )
         {
             _hostEnvironment = environment;
@@ -52,22 +44,24 @@ namespace surfaliancaAPI.Controllers
         [Authorize()]
         public IActionResult GetByFilter(FilterDefault filter)
         {
-            ClaimsPrincipal currentUser = this.User;
-            var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-            if (id == null)
-            {
-                return BadRequest("Identificação do usuário não encontrada.");
-            }
+            //ClaimsPrincipal currentUser = this.User;
+            //var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
+            //if (id == null)
+            //{
+            //    return BadRequest("Identificação do usuário não encontrada.");
+            //}
             Expression<Func<Product, bool>> p2, p1;
             var predicate = PredicateBuilder.New<Product>();
-            p1 = p => p.Active.Equals(true);
-            predicate = predicate.And(p1);
+            //p1 = p => p.Active.Equals(true);
+            //predicate = predicate.And(p1);
             if (filter.Name != null)
             {
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
+                return new JsonResult(productRepository.Where(predicate).ToList());
             }
-            return new JsonResult(productRepository.Where(predicate).ToList());
+            
+            return new JsonResult(productRepository.GetAll().OrderBy(x => x.Name).ToList());
         }
 
         [HttpPost()]
@@ -273,6 +267,43 @@ namespace surfaliancaAPI.Controllers
         public IActionResult GetDetails(FilterDefault filter)
         {
             return new JsonResult(productRepository.Get(filter.Id));
+        }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(Product product)
+        {
+            try
+            {
+                productRepository.Active(product.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize()]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                productRepository.Delete(id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("O produto não pode ser excluído. Relacionado com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão do produto: ", ex.Message));
+            }
+
+
         }
     }
 }

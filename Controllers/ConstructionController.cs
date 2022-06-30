@@ -49,8 +49,9 @@ namespace surfaliancaAPI.Controllers
             {
                 p2 = p => p.Name.Contains(filter.Name);
                 predicate = predicate.And(p2);
+                return new JsonResult(constructionRepository.Where(predicate));
             }
-            return new JsonResult(constructionRepository.Where(predicate).ToList());
+            return new JsonResult(constructionRepository.GetAll().OrderBy(x => x.Name));
         }
 
         [HttpPost()]

@@ -1,7 +1,7 @@
 <div class="container">
     <div class="py-5">
       <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
-        <div class="card text-white bg-dark">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title text-center">Cadastro de Produto</h5>
             <div class="form-group col-md-12">
@@ -22,8 +22,7 @@
                   <tbody>
                       <tr *ngFor='let picture of files'>
                           <td>
-                              
-                            <span class="text-white">
+                            <span>
                               {{ picture.file.name }}
                             </span>
                           </td>
@@ -31,18 +30,18 @@
                   </tbody>
               </table>
 
-              <div class="card-group py-3" *ngIf="product">
-                  <div class="card bg-dark ml-2 mb-2 text-center" role="button">
+              <div class="card-group py-3" *ngIf="product.imageName">
+                  <div class="card ml-2 mb-2 text-center" role="button">
                     <div class="card-body text-center">
                       <img class="img-fluid" src={{getImage(product.imageName)}} alt="Image" width="200px">
                     </div>
                   </div>
-                  <div class="card bg-dark ml-2 mb-2 text-center" role="button">
+                  <div class="card ml-2 mb-2 text-center" role="button">
                     <div class="card-body text-center">
                       <img class="img-fluid" src={{getImage(product.imageName1)}} alt="Image" width="200px">
                     </div>
                   </div>
-                  <div class="card bg-dark ml-2 mb-2 text-center" role="button">
+                  <div class="card ml-2 mb-2 text-center" role="button">
                     <div class="card-body text-center">
                       <img class="img-fluid" src={{getImage(product.imageName2)}} alt="Image" width="200px">
                     </div>
@@ -65,7 +64,7 @@
               </div>
 
               <div class="form-group col-md-12">
-                <label class="text-white">Detalhes:</label>
+                <label>Detalhes:</label>
                 <angular-editor [config]="configEditor" formControlName="description"></angular-editor>
             </div>
 

@@ -6,7 +6,6 @@ import { BoardModelService } from 'src/app/_services/board-model.service';
 import { ToastrService } from 'ngx-toastr';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FilterDefaultModel } from 'src/app/_models/filter-default-model';
-import { LogoService } from '../../_services/logo.service';
 import { environment } from 'src/environments/environment';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { BoardModelDimensions } from 'src/app/_models/board-model-dimensions-model';
@@ -58,7 +57,6 @@ export class BoardModelFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private toastr: ToastrService,
-    private logoService: LogoService,
     private route: ActivatedRoute,
     private boardModelService: BoardModelService
   ) { }
@@ -117,13 +115,10 @@ export class BoardModelFormComponent implements OnInit {
       allowSearchFilter: true
     };
 
-      this.logoService.getAll().subscribe(result => {
-        this.logos = result;
 
         if (this.boardModel.id > 0) {
           this.load();
         }
-      });
   }
 
   load() {

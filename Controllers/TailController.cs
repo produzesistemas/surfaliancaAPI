@@ -108,6 +108,7 @@ namespace surfaliancaAPI.Controllers
                         }
                         tail.ImageName = fileName;
                         tail.ApplicationUserId = id;
+                        tail.Active = true;
                         tail.CreateDate = DateTime.Now;
                         tailRepository.Insert(tail);
                     }

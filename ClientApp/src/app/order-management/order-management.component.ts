@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BoardModelService} from '../_services/board-model.service';
 import { environment } from 'src/environments/environment';
 import { ShoppingCartService } from '../_services/shopping-cart.service';
-import { LogoService } from '../_services/logo.service';
 import { FilterDefaultModel } from '../_models/filter-default-model';
 import { BoardModel } from '../_models/board-model-model';
 import { LevelService } from '../_services/level.service';
@@ -78,7 +77,6 @@ export class OrderManagementComponent implements OnInit {
     private stringerService: StringerService,
     private tailService: TailService,
     private levelService: LevelService,
-    private logoService: LogoService,
     private shoppingCartService: ShoppingCartService,
     private paintService: PaintService,
 
@@ -105,19 +103,17 @@ export class OrderManagementComponent implements OnInit {
     });
 
     forkJoin(
-      this.logoService.getAll(),
       this.constructionService.getAllConstruction(),
       this.tailService.getAll(),
       this.laminationService.getAll(),
       this.finSystemService.getAll(),
       this.stringerService.getAll()
     )    .subscribe(result => {
-      this.logos = result[0];
-      this.constructions = result[1];
-      this.tails = result[2];
-      this.laminations = result[3];
-      this.finSystems = result[4];
-      this.stringers = result[5];
+      this.constructions = result[0];
+      this.tails = result[1];
+      this.laminations = result[2];
+      this.finSystems = result[3];
+      this.stringers = result[4];
     });
 
 

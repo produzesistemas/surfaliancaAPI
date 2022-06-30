@@ -50,6 +50,7 @@ export class ProductManagementComponent implements OnInit {
 
   onSubmit() {
     const filter: FilterDefaultModel = new FilterDefaultModel();
+    if (this.form.controls.name) { filter.name = this.form.controls.name.value;}
     this.productService.getByFilter(filter).subscribe(result => {
     this.lst = result;
   });

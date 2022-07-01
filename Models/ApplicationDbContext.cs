@@ -39,9 +39,7 @@ namespace Models
 
 
 
-            //modelBuilder.Entity<Construction>().HasMany(c => c.BoardModelConstructions)
-            //    .WithOne(b => b.Construction)
-            //    .HasForeignKey(c => c.ConstructionId);
+
 
             modelBuilder.Entity<Lamination>().HasKey(c => c.Id);
             modelBuilder.Entity<State>().HasKey(c => c.Id);
@@ -91,6 +89,13 @@ namespace Models
             .HasForeignKey(c => c.ShippingCompanyId);
             modelBuilder.Entity<ShippingCompanyState>().HasOne(c => c.ShippingCompany);
 
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelBottoms).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelConstructions).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelFinSystems).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelLaminations).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelStringers).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTailReinforcements).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
+            modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTails).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -129,6 +134,15 @@ namespace Models
         public DbSet<Blog> Blog { get; set; }
         public DbSet<TypeBlog> TypeBlog { get; set; }
         public DbSet<Bottom> Bottom { get; set; }
+
+        public DbSet<BoardModelBottom> BoardModelBottom { get; set; }
+        public DbSet<BoardModelConstruction> BoardModelConstruction { get; set; }
+        public DbSet<BoardModelFinSystem> BoardModelFinSystem { get; set; }
+        public DbSet<BoardModelLamination> BoardModelLamination { get; set; }
+        public DbSet<BoardModelStringer> BoardModelStringer { get; set; }
+        public DbSet<BoardModelTail> BoardModelTail { get; set; }
+        public DbSet<BoardModelTailReinforcement> BoardModelTailReinforcement { get; set; }
+
 
     }
 }

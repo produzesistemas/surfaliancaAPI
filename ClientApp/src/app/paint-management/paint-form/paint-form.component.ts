@@ -57,7 +57,7 @@ export class PaintFormComponent implements OnInit {
         this.formAdd.controls.id.setValue(this.paint.id);
         this.formAdd.controls.name.setValue(this.paint.name);
         this.formAdd.controls.value.setValue(this.paint.value);
-        this.logo = environment.urlImagesLojas + this.paint.imageName;
+        this.logo = environment.urlImagesPaint + this.paint.imageName;
       });
     }
 

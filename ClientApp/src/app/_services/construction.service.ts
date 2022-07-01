@@ -13,9 +13,9 @@ export class ConstructionService extends GenericHttpService<Construction> {
       return this.postAll('Construction/filter', filter);
     }
 
-    getAllConstruction() {
+    getAll() {
       return this.http.get<Construction[]>(`${this.getUrlApi()}Construction/getAll`);
-    }
+  }
 
 
     save(entity) {

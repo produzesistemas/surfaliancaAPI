@@ -79,7 +79,7 @@ namespace Repositorys
 
             entityBase.Name = entity.Name;
             entityBase.Details = entity.Details;
-            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; } else { entityBase.Value = null; }
             entityBase.UpdateDate = DateTime.Now;
 
             _context.Entry(entityBase).State = EntityState.Modified;

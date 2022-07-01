@@ -82,7 +82,7 @@ namespace Repositorys
             entityBase.ProductStatusId = entity.ProductStatusId;
             entityBase.ProductTypeId = entity.ProductTypeId;
             entityBase.Value = entity.Value;
-            if (entity.ValuePromotion.HasValue) { entityBase.ValuePromotion = entity.ValuePromotion.Value; }
+            if (entity.ValuePromotion.HasValue) { entityBase.ValuePromotion = entity.ValuePromotion.Value; } else { entityBase.ValuePromotion = null; }
             entityBase.ImageName = entity.ImageName;
             entityBase.UpdateDate = DateTime.Now;
 

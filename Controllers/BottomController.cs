@@ -137,7 +137,11 @@ namespace surfaliancaAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("O reforço da rabeta não pode ser excluído. Está relacionado com um pedido. Considere desativar!");
+                }
+                return BadRequest(string.Concat("Falha na exclusão do reforço: ", ex.Message));
             }
 
 
@@ -154,6 +158,30 @@ namespace surfaliancaAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Arquivo não encontrado!" + ex.Message);
+            }
+        }
+
+        [HttpGet()]
+        [Route("getAll")]
+        [AllowAnonymous]
+        public IActionResult GetAll()
+        {
+            return new JsonResult(bottomRepository.GetAll().ToList());
+        }
+
+        [HttpPost()]
+        [Route("active")]
+        [Authorize()]
+        public IActionResult Active(TailReinforcement tailReinforcement)
+        {
+            try
+            {
+                bottomRepository.Active(tailReinforcement.Id);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(string.Concat("Falha na ativação do fundo: ", ex.Message));
             }
         }
     }

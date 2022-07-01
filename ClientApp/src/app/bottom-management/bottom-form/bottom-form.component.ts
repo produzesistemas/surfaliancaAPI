@@ -75,7 +75,7 @@ export class BottomFormComponent implements OnInit {
     formData.append('file', this.file);
     this.bottomService.save(formData).subscribe(result => {
       this.toastr.success('Registro efetuado com sucesso!');
-      this.router.navigate(['bottom']);
+      this.router.navigate(['partner-area/bottom']);
   });
   }
 

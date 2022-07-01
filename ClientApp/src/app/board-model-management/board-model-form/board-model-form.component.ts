@@ -9,6 +9,14 @@ import { FilterDefaultModel } from 'src/app/_models/filter-default-model';
 import { environment } from 'src/environments/environment';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { BoardModelDimensions } from 'src/app/_models/board-model-dimensions-model';
+import { forkJoin } from 'rxjs';
+import { BottomService } from 'src/app/_services/bottom.service';
+import { ConstructionService } from 'src/app/_services/construction.service';
+import { FinSystemService } from 'src/app/_services/fin-system.service';
+import { LaminationService } from 'src/app/_services/lamination.service';
+import { StringerService } from 'src/app/_services/stringer.service';
+import { TailService } from 'src/app/_services/tail.service';
+import { TailReinforcementService } from 'src/app/_services/tail-reinforcement.service';
 
 @Component({
   selector: 'app-board-model-form',
@@ -24,6 +32,13 @@ export class BoardModelFormComponent implements OnInit {
   selectedItems = [];
   logos = [];
   lstdimensions = [];
+  tails = [];
+  constructions = [];
+  finSystens = [];
+  bottons = [];
+  tailReforcements = [];
+  stringers = [];
+  laminations = [];
 
   dropdownSettings: IDropdownSettings = {};
   multiSettings: IDropdownSettings = {};
@@ -58,7 +73,14 @@ export class BoardModelFormComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private route: ActivatedRoute,
-    private boardModelService: BoardModelService
+    private boardModelService: BoardModelService,
+    private bottomService: BottomService,
+    private constructionService: ConstructionService,
+    private finSystemService: FinSystemService,
+    private laminationService: LaminationService,
+    private stringerService: StringerService,
+    private tailService: TailService,
+    private tailReinforcementService: TailReinforcementService
   ) { }
 
   get q() { return this.formAdd.controls; }
@@ -86,7 +108,13 @@ export class BoardModelFormComponent implements OnInit {
       urlMovie: [''],
       value: ['', [Validators.required]],
       daysProduction: ['', [Validators.required]],
-      logo: ['', [Validators.required]],
+      tails: [''],
+      laminations: [''],
+      constructions: [''],
+      finSystens: [''],
+      stringers: [''],
+      bottons: [''],
+      tailReforcements: [''],
 
     });
 
@@ -115,7 +143,23 @@ export class BoardModelFormComponent implements OnInit {
       allowSearchFilter: true
     };
 
-
+    forkJoin(
+      this.constructionService.getAll(),
+      this.tailService.getAll(),
+      this.laminationService.getAll(),
+      this.finSystemService.getAll(),
+      this.stringerService.getAll(),
+      this.bottomService.getAll(),
+      this.tailReinforcementService.getAll()
+    )    .subscribe(result => {
+      this.constructions = result[0];
+      this.tails = result[1];
+      this.laminations = result[2];
+      this.finSystens = result[3];
+      this.stringers = result[4];
+      this.bottons = result[5];
+      this.tailReforcements = result[6];
+    });
         if (this.boardModel.id > 0) {
           this.load();
         }
@@ -138,9 +182,6 @@ export class BoardModelFormComponent implements OnInit {
     this.formAdd.controls.name.setValue(item.name);
     this.formAdd.controls.urlMovie.setValue(item.urlMovie);
     this.formAdd.controls.value.setValue(item.value);
-    this.formAdd.controls.logo.setValue(this.logos.find(x => x.id === item.logoId));
-    // this.logos = [...this.logos];
-    // this.formAdd.controls.logo.setValue(item.logo);
 
 
     if (this.isView) {
@@ -149,8 +190,6 @@ export class BoardModelFormComponent implements OnInit {
       this.formAdd.controls.name.disable();
       this.formAdd.controls.urlMovie.disable();
       this.formAdd.controls.value.disable();
-      this.formAdd.controls.logo.disable();
-
     }
   }
 
@@ -171,8 +210,6 @@ export class BoardModelFormComponent implements OnInit {
     item.name = this.formAdd.controls.name.value;
     item.daysProduction = this.formAdd.controls.daysProduction.value;
     item.urlMovie = this.formAdd.controls.urlMovie.value;
-    item.logoId = this.formAdd.controls.logo.value.id;
-    item.logo = this.formAdd.controls.logo.value;
 
 
 this.lstdimensions.forEach(dimension => {

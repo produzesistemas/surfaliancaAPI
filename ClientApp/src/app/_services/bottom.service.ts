@@ -12,6 +12,10 @@ export class BottomService extends GenericHttpService<Bottom>{
         super(http);
     }
 
+    getAll() {
+      return this.http.get<Bottom[]>(`${this.getUrlApi()}Bottom/getAll`);
+  }
+
     getByFilter(filter: any) {
         return this.postAll('Bottom/filter', filter);
       }
@@ -26,6 +30,10 @@ export class BottomService extends GenericHttpService<Bottom>{
   
       getById(id: any) {
         return this.http.get<Bottom>(`${this.getUrlApi()}Bottom/${id}`);
+    }
+
+    active(entity) {
+      return this.post('Bottom/active', entity);
     }
 
 }

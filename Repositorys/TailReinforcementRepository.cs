@@ -9,11 +9,11 @@ using UnitOfWork;
 
 namespace Repositorys
 {
-    public class ConstructionRepository : IConstructionRepository, IDisposable
+    public class TailReinforcementRepository : ITailReinforcementRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
         private bool disposed = false;
-        public ConstructionRepository(ApplicationDbContext context)
+        public TailReinforcementRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -36,32 +36,32 @@ namespace Repositorys
             GC.SuppressFinalize(this);
         }
 
-        public IQueryable<Construction> GetAll()
+        public IQueryable<TailReinforcement> GetAll()
         {
-            var lst = new List<Construction>();
+            var lst = new List<TailReinforcement>();
 
             using (var db = _context)
             {
-                lst = db.Construction.ToList();
+                lst = db.TailReinforcement.ToList();
             }
 
             return lst.AsQueryable();
         }
 
-        public Construction Get(int id)
+        public TailReinforcement Get(int id)
         {
-            return _context.Construction
+            return _context.TailReinforcement
     .Single(x => x.Id == id);
         }
 
-        public IQueryable<Construction> Where(Expression<Func<Construction, bool>> expression)
+        public IQueryable<TailReinforcement> Where(Expression<Func<TailReinforcement, bool>> expression)
         {
-            return _context.Construction.Where(expression).AsQueryable();
+            return _context.TailReinforcement.Where(expression).AsQueryable();
         }
 
         public void Active(int id)
         {
-            var entity = _context.Construction.Single(x => x.Id == id);
+            var entity = _context.TailReinforcement.Single(x => x.Id == id);
             if (entity.Active)
             {
                 entity.Active = false;
@@ -76,22 +76,21 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            if (_context.OrderProductOrdered.Any(c => c.ConstructionId == id))
-            {
-                throw new Exception("A tecnologia / construção não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
-            };
+            //if (_context.OrderProductOrdered.Any(c => c.ConstructionId == id))
+            //{
+            //    throw new Exception("A tecnologia / construção não pode ser excluída.Está relacionado com um pedido.Considere desativar!");
+            //};
 
-            var entity = _context.Construction.Single(x => x.Id == id);
+            var entity = _context.TailReinforcement.Single(x => x.Id == id);
             _context.Remove(entity);
             _context.SaveChanges();
             _context.Dispose();
         }
 
-        public void Update(Construction entity)
+        public void Update(TailReinforcement entity)
         {
-            var entityBase = _context.Construction.Single(x => x.Id == entity.Id);
+            var entityBase = _context.TailReinforcement.Single(x => x.Id == entity.Id);
             entityBase.Name = entity.Name;
-            entityBase.UrlMovie = entity.UrlMovie;
             entityBase.Details = entity.Details;
             if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; } else { entityBase.Value = null; }
             entityBase.UpdateDate = DateTime.Now;
@@ -99,9 +98,9 @@ namespace Repositorys
             _context.SaveChanges();
         }
 
-        public void Insert(Construction entity)
+        public void Insert(TailReinforcement entity)
         {
-            _context.Construction.Add(entity);
+            _context.TailReinforcement.Add(entity);
             _context.SaveChanges();
         }
     }

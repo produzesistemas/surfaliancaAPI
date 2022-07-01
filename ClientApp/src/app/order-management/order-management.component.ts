@@ -103,7 +103,7 @@ export class OrderManagementComponent implements OnInit {
     });
 
     forkJoin(
-      this.constructionService.getAllConstruction(),
+      this.constructionService.getAll(),
       this.tailService.getAll(),
       this.laminationService.getAll(),
       this.finSystemService.getAll(),

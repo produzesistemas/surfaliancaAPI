@@ -39,6 +39,7 @@ export class BottomManagementComponent implements OnInit {
         this.form = this.formBuilder.group({
             name: ['']
           });
+          this.onSubmit();
       };
 
       get f() { return this.form.controls; }
@@ -83,6 +84,12 @@ export class BottomManagementComponent implements OnInit {
 
       getImage(nomeImage) {
         return environment.urlImagesLojas + nomeImage;
+    }
+
+    onActive(item) {
+      this.bottomService.active(item).subscribe(result => {
+        this.onSubmit();
+      });
     }
     
 }

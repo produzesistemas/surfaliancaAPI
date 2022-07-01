@@ -76,7 +76,7 @@ namespace Repositorys
         {
             var entityBase = _context.Lamination.Single(x => x.Id == entity.Id);
             entityBase.Name = entity.Name;
-            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; } else { entityBase.Value = null; }
             _context.Entry(entityBase).State = EntityState.Modified;
             _context.SaveChanges();
         }

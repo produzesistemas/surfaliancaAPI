@@ -2,24 +2,26 @@ import { Component, OnInit, TemplateRef, Output, EventEmitter } from '@angular/c
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
+import { FinSystem } from '../_models/fin-system-model';
 import { FilterDefaultModel } from '../_models/filter-default-model';
-import { PaintService } from 'src/app/_services/paint.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Paint } from '../_models/paint-model';
-import { environment } from 'src/environments/environment';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { TailReinforcement } from '../_models/tail-reinforcement-model';
+import { TailReinforcementService } from '../_services/tail-reinforcement.service';
 
 @Component({
-  selector: 'app-paint-management',
-  templateUrl: './paint-management.component.html'
+  selector: 'app-tail-reinforcement-management',
+  templateUrl: './tail-reinforcement.component.html'
 })
 
-export class PaintManagementComponent implements OnInit {
+export class TailReinforcementComponent implements OnInit {
   modalRef: BsModalRef;
   modalDelete: BsModalRef;
   form: FormGroup;
+  loading = false;
   submitted = false;
   lst = [];
-  paint: any;
+  tail: any;
+  @Output() action = new EventEmitter();
   page = 1;
   pageSize = 5;
 
@@ -27,7 +29,7 @@ export class PaintManagementComponent implements OnInit {
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private paintService: PaintService,
+    private tailReinforcementService: TailReinforcementService,
     private router: Router,
   ) {
   }
@@ -44,7 +46,7 @@ export class PaintManagementComponent implements OnInit {
   onSubmit() {
     const filter: FilterDefaultModel = new FilterDefaultModel();
     filter.name = this.form.controls.name.value;
-    this.paintService.getByFilter(filter).subscribe(
+    this.tailReinforcementService.getByFilter(filter).subscribe(
       data => {
         this.lst = data;
       }
@@ -52,21 +54,21 @@ export class PaintManagementComponent implements OnInit {
   }
 
   onNew() {
-    this.router.navigate([`partner-area/paint/0/0`]);
+    this.router.navigate([`partner-area/tail-reinforcement/0/0`]);
   }
 
-  edit(obj: Paint) {
-    this.router.navigate([`partner-area/paint/${obj.id}/1`]);
+  edit(obj: FinSystem) {
+    this.router.navigate([`partner-area/tail-reinforcement/${obj.id}/1`]);
   }
 
-  deleteById(template: TemplateRef<any>, paint: Paint) {
-    this.paint = paint;
+  deleteById(template: TemplateRef<any>, tail: TailReinforcement) {
+    this.tail = tail;
     this.modalDelete = this.modalService.show(template, { class: 'modal-md' });
   }
 
   confirmDelete() {
-    this.paintService.deleteById(this.paint.id).subscribe(() => {
-      const index: number = this.lst.indexOf(this.paint);
+    this.tailReinforcementService.deleteById(this.tail.id).subscribe(() => {
+      const index: number = this.lst.indexOf(this.tail);
       if (index !== -1) {
         this.lst.splice(index, 1);
       }
@@ -79,15 +81,13 @@ export class PaintManagementComponent implements OnInit {
   this.modalDelete.hide();
   }
 
-  getImage(nomeImage) {
-    return environment.urlImagesPaint + nomeImage;
-}
+  onActive(item) {
+    this.tailReinforcementService.active(item).subscribe(result => {
+      this.onSubmit();
+    });
+  }
 
 
-onActive(item) {
-  this.paintService.active(item).subscribe(result => {
-    this.onSubmit();
-  });
-}
+
 
 }

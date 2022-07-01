@@ -120,7 +120,7 @@ export class OrderFormComponent implements OnInit {
         this.lstFinishing = finishings;
       })
 
-      this.constructionService.getAllConstruction().subscribe(construction => {
+      this.constructionService.getAll().subscribe(construction => {
         this.lstConstruction = construction;
       });
 

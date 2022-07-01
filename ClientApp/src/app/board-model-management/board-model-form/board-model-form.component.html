@@ -1,13 +1,13 @@
 <div class="container">
     <div class="py-5">
         <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
-            <div class="card text-white bg-dark">
+            <div class="card">
                 <div class="card-body">
                     <form [formGroup]="formAdd">
                         <h5 class="card-title text-center">Cadastro de Modelo de Prancha</h5>
 
                         <div class="form-group col-md-12">
-                            <label>Fotos:</label>
+                            <label>Foto:</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend" *ngIf="!canView()">
                                     <span class="input-group-text" id="inputGroupFileAddon01"><i
@@ -21,65 +21,12 @@
                                     <label class="custom-file-label" for="inputGroupFile01">Clique para
                                         Selecionar</label>
                                 </div>
-                                <table class="table" *ngIf="!canView()">
-                                    <thead>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor='let picture of files'>
-                                            <td>
-
-                                                <span class="text-white">
-                                                    {{ picture.file.name }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div class="card-group py-3">
-                                    <div class="card bg-dark ml-2 mb-2 text-center" role="button" *ngIf="boardModel.imageName">
-                                        <div class="card-body text-center">
-                                            <img class="img-fluid" src={{getImage(boardModel.imageName)}} alt="Image"
-                                                width="200px">
-                                        </div>
-                                    </div>
-                                    <div class="card bg-dark ml-2 mb-2 text-center" role="button" *ngIf="boardModel.imageName1">
-                                        <div class="card-body text-center">
-                                            <img class="img-fluid" src={{getImage(boardModel.imageName1)}} alt="Image"
-                                                width="200px">
-                                        </div>
-                                    </div>
-                                    <div class="card bg-dark ml-2 mb-2 text-center" role="button" *ngIf="boardModel.imageName2">
-                                        <div class="card-body text-center">
-                                            <img class="img-fluid" src={{getImage(boardModel.imageName2)}} alt="Image"
-                                                width="200px">
-                                        </div>
-                                    </div>
-                                    <div class="card bg-dark ml-2 mb-2 text-center" role="button" *ngIf="boardModel.imageName3">
-                                        <div class="card-body text-center">
-                                            <img class="img-fluid" src={{getImage(boardModel.imageName3)}} alt="Image"
-                                                width="200px">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
 
                         <div class="form-group col-md-12">
-                            <label>Marca:</label>
-                            <select class="form-control" formControlName="logo">
-                                <option [ngValue]="logo" *ngFor="let logo of logos">
-                                    {{logo.name}}</option>
-                            </select>
-                            <div *ngIf="submitted && q.logo.errors">
-                                <p *ngIf="q.logo.errors.required" class="text-danger small">* Seleção de
-                                    Marca é obrigatória</p>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-12">
-                            <label class="text-white">Descrição:</label>
+                            <label>Descrição:</label>
                             <input type="text" class="form-control" id="name" formControlName="name"
                                 placeholder="Informe a descrição" maxlength="255" />
                             <div *ngIf="submitted && q.name.errors">
@@ -89,13 +36,13 @@
                         </div>
 
                         <div class="form-group col-md-12">
-                            <label class="text-white">Url Video:</label>
+                            <label>Url Video:</label>
                             <input type="text" class="form-control" id="name" formControlName="urlMovie"
                                 placeholder="Informe a url do video do modelo" />
                         </div>
 
                         <div class="form-group col-md-12">
-                            <label class="text-white">Dias para produção:</label>
+                            <label>Dias para produção:</label>
                             <input currencyMask max="99999999"
                                 [options]="{ prefix: '', thousands: '', decimal: '', precision: 0, allowNegative: false }"
                                 maxlength="18" type="text" class="form-control" id="daysProduction"
@@ -109,7 +56,7 @@
                         </div>
 
                         <div class="form-group col-md-12">
-                            <label class="text-white">Detalhes:</label>
+                            <label>Detalhes:</label>
                             <angular-editor [config]="configEditor" formControlName="description" editable="false">
                             </angular-editor>
                         </div>
@@ -170,6 +117,56 @@
 
                         </div>
                     </form>
+
+
+                    <div class="form-group col-md-12">
+                        <label>Rabetas disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="tails" formControlName="tails">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Reforços para Rabeta disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="tailReforcements" formControlName="tailReforcements">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Construção / Tecnologia disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="constructions" formControlName="constructions">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Laminações disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="laminations" formControlName="laminations">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Sistema de quilhas disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="finSystens" formControlName="finSystens">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Fundos disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="bottons" formControlName="bottons">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Longarinas disponíveis para o modelo:</label>
+                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
+                            [settings]="dropdownSettings" [data]="stringers" formControlName="stringers">
+                        </ng-multiselect-dropdown>
+                    </div>
 
 
                     <div class="form-group col-md-6">

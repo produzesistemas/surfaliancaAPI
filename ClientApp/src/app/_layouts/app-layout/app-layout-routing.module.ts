@@ -46,6 +46,12 @@ const routes: Routes = [
 				data: { expectedRole: ['Master'], breadcrumb: 'Rabetas' }
 			},
 			{
+				path: 'tail-reinforcement',
+				loadChildren: () => import('../../tail-reinforcement-management/tail-reinforcement.module').then(m => m.TailReinforcementModule),
+                canActivate: [AuthGuardMaster],
+				data: { expectedRole: ['Master'], breadcrumb: 'Reforço de Rabeta' }
+			},
+			{
 				path: 'bottom',
 				loadChildren: () => import('../../bottom-management/bottom-management.module').then(m => m.BottomManagementModule),
                 canActivate: [AuthGuardMaster],

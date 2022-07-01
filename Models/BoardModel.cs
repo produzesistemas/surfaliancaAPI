@@ -25,10 +25,21 @@ namespace Models
 
         [NotMapped]
         public List<BoardModelDimensions> BoardModelDimensions { get; set; }
-
-
         [NotMapped]
-        public List<Product> Products { get; set; }
+         public List<BoardModelBottom> BoardModelBottoms { get; set; }
+        [NotMapped]
+        public List<BoardModelConstruction> BoardModelConstructions { get; set; }
+        [NotMapped]
+        public List<BoardModelFinSystem> BoardModelFinSystems { get; set; }
+        [NotMapped]
+        public List<BoardModelLamination> BoardModelLaminations { get; set; }
+        [NotMapped]
+        public List<BoardModelStringer> BoardModelStringers { get; set; }
+        [NotMapped]
+        public List<BoardModelTail> BoardModelTails { get; set; }
+        [NotMapped]
+        public List<BoardModelTailReinforcement> BoardModelTailReinforcements { get; set; }
+
 
         [NotMapped]
         public List<OrderProductOrdered> OrderProductOrdereds { get; set; }

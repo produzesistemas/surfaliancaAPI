@@ -65,7 +65,7 @@ namespace surfaliancaAPI.Controllers
             try
             {
                 var paint = JsonConvert.DeserializeObject<Paint>(Convert.ToString(Request.Form["paint"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
+                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFilePaint"]);
                 var fileDelete = pathToSave;
 
                 ClaimsPrincipal currentUser = this.User;

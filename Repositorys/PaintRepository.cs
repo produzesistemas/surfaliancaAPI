@@ -80,7 +80,7 @@ namespace Repositorys
         {
             var entityBase = _context.Paint.Single(x => x.Id == entity.Id);
             entityBase.Name = entity.Name;
-            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; }
+            if (entity.Value.HasValue) { entityBase.Value = entity.Value.Value; } else { entityBase.Value = null; }
             entityBase.ImageName = entity.ImageName;
             entityBase.UpdateDate = DateTime.Now;
 

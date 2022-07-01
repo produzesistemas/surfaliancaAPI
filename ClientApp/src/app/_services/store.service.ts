@@ -22,7 +22,7 @@ export class StoreService extends GenericHttpService<any>{
         return this.http.get<Store>(`${this.getUrlApi()}store/getToIndex`);
     }
 
-    save(store: FormData) {
+    save(store) {
         return this.post('store/save', store);
     }
 

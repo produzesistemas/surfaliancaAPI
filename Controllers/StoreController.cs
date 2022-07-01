@@ -17,16 +17,10 @@ namespace surfaliancaAPI.Controllers
     [ApiController]
     public class StoreController : ControllerBase
     {
-        private IWebHostEnvironment _hostEnvironment;
-        private IConfiguration _configuration;
         private IStoreRepository storeRepository;
         public StoreController(
-            IWebHostEnvironment environment,
-            IConfiguration Configuration,
             IStoreRepository storeRepository)
         {
-            _hostEnvironment = environment;
-            _configuration = Configuration;
             this.storeRepository = storeRepository;
 
         }
@@ -34,47 +28,28 @@ namespace surfaliancaAPI.Controllers
         [HttpPost()]
         [Route("save")]
         [Authorize()]
-        public IActionResult Save()
+        public IActionResult Save(Store store)
         {
             try
             {
-                var store = JsonConvert.DeserializeObject<Store>(Convert.ToString(Request.Form["store"]));
-                var pathToSave = string.Concat(_hostEnvironment.ContentRootPath, _configuration["pathFileStore"]);
-                var fileDelete = pathToSave;
                 ClaimsPrincipal currentUser = this.User;
                 var id = currentUser.Claims.FirstOrDefault(z => z.Type.Contains("primarysid")).Value;
-                if ((id != null) || (store != null))
+                if (id == null)
                 {
-                        var lojaBase = storeRepository.Get();
-                        if (Request.Form.Files.Count() > decimal.Zero)
-                        {
-                            foreach (var file in Request.Form.Files)
-                            {
-                                if (file.Name == "fileLogo")
-                                {
-                                    var ext = Path.GetExtension(file.FileName);
-                                    var fileNameLogo = string.Concat(Guid.NewGuid().ToString(), ext);
-                                    var fullPath = Path.Combine(pathToSave, fileNameLogo);
-                                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                                    {
-                                        file.CopyTo(stream);
-                                    }
-                                    store.ImageName = fileNameLogo;
-                                }
-
-                            }
-                            fileDelete = string.Concat(fileDelete, lojaBase.ImageName);
-
-                        }
-                        store.UpdateApplicationUserId = id;
-                        store.UpdateDate = DateTime.Now;
-                        storeRepository.Update(store);
-                        if (System.IO.File.Exists(fileDelete))
-                        {
-                            System.IO.File.Delete(fileDelete);
-                        }
+                    return BadRequest("Identificação do usuário não encontrada.");
                 }
 
+                if (store.Id > decimal.Zero)
+                {
+                    store.UpdateApplicationUserId = id;
+                    store.UpdateDate = DateTime.Now;
+                    storeRepository.Update(store);
+                }
+                else
+                {
+                    store.CreateDate = DateTime.Now;
+                    storeRepository.Insert(store);
+                }
                 return new OkResult();
 
             }

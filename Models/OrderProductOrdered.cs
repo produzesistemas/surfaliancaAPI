@@ -22,7 +22,7 @@ namespace Models
         public int? BottomId { get; set; }
         public int? FinishingId { get; set; }
         public int? FinSystemId { get; set; }
-        public int? StingerId { get; set; }
+        public int? StringerId { get; set; }
 
         //[NotMapped]
         //public Finishing Finishing { get; set; }

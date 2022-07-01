@@ -57,7 +57,7 @@ namespace Repositorys
 
         public void Delete(int id)
         {
-            if (_context.OrderProductOrdered.Any(c => c.StingerId == id))
+            if (_context.OrderProductOrdered.Any(c => c.StringerId == id))
             {
                 throw new Exception("A longarina não pode ser excluída.Está relacionado com um pedido ou com uma pintura.Considere desativar!");
             };

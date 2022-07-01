@@ -117,23 +117,6 @@ export class ConstructionFormComponent implements OnInit {
     return this.isNew;
   }
   
-  onFileChange(event) {
-    if (event.target.files.length > 4) {
-    return this.toastr.error('Só é permitido anexar quatro arquivos ou menos!');
-    }
-    
-    if (event.target.files.length > 0) {
-      this.onResetFileChange();
-      this.files = [];
-      for (const file of event.target.files) {
-        this.files.push({ file });
-      }
-    }
-  }
-
-  onResetFileChange() {
-    this.files = [];
-}
 
 }
 

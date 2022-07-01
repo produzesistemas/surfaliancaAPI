@@ -5,6 +5,7 @@ import { StoreManagementRoutingModule} from './store-management-routing.module';
 import { CommonModule } from '@angular/common';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { NgxViacepModule } from '@brunoc/ngx-viacep';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -13,6 +14,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         SharedModule,
         CommonModule,
         StoreManagementRoutingModule,
+        AngularEditorModule,
         NgxMaskModule.forRoot(options),
         NgxViacepModule
       ],

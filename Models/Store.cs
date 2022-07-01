@@ -8,8 +8,6 @@ namespace Models
     public class Store : BaseEntity
     {
         public string Name { get; set; }
-        public string ImageName { get; set; }
-        public string Description { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string Number { get; set; }
@@ -18,9 +16,17 @@ namespace Models
         public string CNPJ { get; set; }
         public string Contact { get; set; }
         public string Phone { get; set; }
+
+        public string Description { get; set; }
         public string ExchangePolicy { get; set; }
         public string DeliveryPolicy { get; set; }
+        public string Warranty { get; set; }
+
+        public string KeyPix { get; set; }
+        public decimal? OffPix { get; set; }
+
         public decimal? ValueMinimum { get; set; }
+        public decimal? FreeShipping { get; set; }
         public int? NumberInstallmentsCard { get; set; }
 
         public string UpdateApplicationUserId { get; set; }

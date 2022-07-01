@@ -91,7 +91,7 @@
   </div>
 </div>
 
-<div *ngIf="lstAcessorios.length > 0">
+<div *ngIf="lstAcessorios.length > 0 && store">
   <div class="container-fluid" *ngIf="!isFilter">
     <div class="text-center text-white py-3">
       <h5>Acessórios</h5>
@@ -125,7 +125,7 @@
   </div>
 </div>
 
-<div *ngIf="lstBoards.length > 0">
+<div *ngIf="lstBoards.length > 0  && store">
   <div class="container-fluid bg-secondary" *ngIf="!isFilter">
     <div class="text-center text-white py-3">
       <h5>Pranchas de surf</h5>
@@ -161,7 +161,7 @@
   </div>
 </div>
 
-<div *ngIf="lstBoardModels.length > 0">
+<div *ngIf="lstBoardModels.length > 0  && store">
   <div class="container-fluid" *ngIf="!isFilter">
     <div class="text-center text-white py-3">
       <h5>Modelos</h5>
@@ -189,7 +189,7 @@
   </div>
 </div>
 
-<div *ngIf="lstBlogs.length > 0">
+<div *ngIf="lstBlogs.length > 0 ">
   <div class="container-fluid bg-secondary" *ngIf="!isFilter">
     <div class="text-center text-white py-3">
       <h5>Blogs</h5>

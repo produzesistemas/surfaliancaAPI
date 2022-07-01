@@ -6,6 +6,7 @@ import { Store } from '../_models/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StoreService } from '../_services/store.service';
 import { AuthenticationService } from '../_services/authentication.service';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
     selector: 'app-store-management',
@@ -16,22 +17,23 @@ export class StoreManagementComponent implements OnInit {
     public currentUser;
     form: FormGroup;
     formAddress: FormGroup;
-    // formFileUpload: FormGroup;
-    fileToUploadLogo: File = null;
-    fileToUploadStore: File = null;
-
-    @ViewChild('fileLogo') uploadedFileLogo: HTMLInputElement;
-    @ViewChild('fileStore') uploadedFileStore: HTMLInputElement;
-
-    uploaded = false;
-
-    imageLogo: any;
-    imageStore: any;
     public submitted = false;
     public submittedCep = false;
     public store: any;
-    public fileLogo: any;
-    public fileStore: any;
+    configEditor: AngularEditorConfig = {
+      editable: true,
+      spellcheck: true,
+      height: '15rem',
+      minHeight: '5rem',
+      placeholder: '',
+      translate: 'no',
+      defaultParagraphSeparator: '',
+      defaultFontName: 'Arial',
+      toolbarHiddenButtons: [
+        [],
+        ['toggleEditorMode', 'removeFormat']
+      ]
+    };
 
     constructor( private toastr: ToastrService,
                  private router: Router,
@@ -50,13 +52,17 @@ export class StoreManagementComponent implements OnInit {
         phone: ['', Validators.required],
         exchangePolicy: [''],
         deliveryPolicy: [''],
+        freeShipping: [''],
+        offPix: [''],
+        keyPix: [''],
+        warranty: [''],
         valueMinimum: ['', Validators.required],
         numberInstallmentsCard: ['', Validators.required],
         street: ['', Validators.required],
         district: ['', Validators.required],
         city: ['', Validators.required],
         number: ['', Validators.required],
-        cep: ['', Validators.required],
+        postalCode: ['', Validators.required],
         id: [0]
       });
 
@@ -64,8 +70,6 @@ export class StoreManagementComponent implements OnInit {
       this.storeService.get().subscribe((result) => {
           this.store = result;
           if (this.store) {
-            this.imageLogo = environment.urlImagesLojas + this.store.imageName;
-            this.imageStore = environment.urlImagesLojas + this.store.imageStore;
             this.load(result);
           }
 });
@@ -80,29 +84,23 @@ load(store: any) {
   this.form.controls.phone.setValue(store.phone);
   this.form.controls.exchangePolicy.setValue(store.exchangePolicy);
   this.form.controls.deliveryPolicy.setValue(store.deliveryPolicy);
+  this.form.controls.warranty.setValue(store.warranty);
+
+  this.form.controls.offPix.setValue(store.offPix);
+  this.form.controls.keyPix.setValue(store.keyPix);
+
   this.form.controls.valueMinimum.setValue(store.valueMinimum);
+  this.form.controls.freeShipping.setValue(store.freeShipping);
   this.form.controls.numberInstallmentsCard.setValue(store.numberInstallmentsCard);
   this.form.controls.street.setValue(store.street);
   this.form.controls.city.setValue(store.city);
   this.form.controls.district.setValue(store.district);
-  this.form.controls.cep.setValue(store.cep);
+  this.form.controls.postalCode.setValue(store.postalCode);
   this.form.controls.number.setValue(store.number);
   this.form.controls.id.setValue(store.id);
 }
 
 get f() { return this.form.controls; }
-
-onFileLogoChange(event) {
-    if (event.target.files.length > 0) {
-      this.fileLogo = event.target.files[0];
-    }
-  }
-
-  onFileStoreChange(event) {
-    if (event.target.files.length > 0) {
-      this.fileStore = event.target.files[0];
-    }
-  }
 
   onSubmit() {
     this.submitted = true;
@@ -110,17 +108,10 @@ onFileLogoChange(event) {
         return;
     }
 
-    const formData = new FormData();
     this.store = new Store(this.form.value);
-    if ((this.fileLogo === undefined) && (this.imageLogo === undefined)){
-      this.toastr.error('Selecione uma logomarca!');
-      return;
-    }
-    formData.append('store', JSON.stringify(this.store));
-    formData.append('fileLogo', this.fileLogo);
-    formData.append('fileStore', this.fileStore);
+    
 
-    this.storeService.save(formData).subscribe(result => {
+    this.storeService.save(this.store).subscribe(result => {
       this.toastr.success('Registro efetuado com sucesso!');
   });
 }

@@ -1,52 +1,15 @@
 <div class="container">
   <div class="py-5">
     <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
-      <div class="card text-white bg-dark">
+      <div class="card">
         <div class="card-body">
           <h5 class="card-title text-center">Configurações gerais</h5>
-          <div class="form-group col-md-12">
-            <label>Logomarca:</label>
-            <div class="row">
-              <div class="col-md-12">
-                <img *ngIf="imageLogo" class="img-thumbnail" src={{imageLogo}}>
-              </div>
-            </div>
-            <div class="py-3">
-              <input type="file" name="fileToUploadLogo" id="fileLogo" #file
-                (change)="onFileLogoChange($event)" accept=".jpg, .png, .gif, .tiff" required />
-            </div>
-          </div>
-
-
-          <div class="form-group col-md-12">
-            <label>Foto da fachada:</label>
-            <div class="row">
-              <div class="col-md-12">
-                <img *ngIf="imageStore" class="img-thumbnail" src={{imageStore}}>
-              </div>
-            </div>
-            <div class="py-3">
-              <input type="file" name="fileToUploadStore" id="fileStore" #file
-                (change)="onFileStoreChange($event)" accept=".jpg, .png, .gif, .tiff" required />
-            </div>
-          </div>
-
-
           <form [formGroup]='form'>
             <div class="form-group col-md-12">
               <label>Nome:</label>
               <input type="text" formControlName="name" placeholder="Informe o nome..." class="form-control">
               <div *ngIf="submitted && f.name.errors">
                 <p *ngIf="f.name.errors.required" class="text-danger small">* Informe o nome</p>
-              </div>
-            </div>
-
-            <div class="form-group col-md-12">
-              <label>Descrição:</label>
-              <textarea formControlName="description" placeholder="Informe a descrição..."
-              class="form-control" rows="3" maxlength="1000"></textarea>
-              <div *ngIf="submitted && f.description.errors">
-                <p *ngIf="f.description.errors.required" class="text-danger small">* Informe a descrição</p>
               </div>
             </div>
 
@@ -78,18 +41,6 @@
             </div>
 
             <div class="form-group col-md-12">
-              <label>Política de troca:</label>
-              <textarea formControlName="exchangePolicy" placeholder="Informe a política de troca..."
-                class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="form-group col-md-12">
-              <label>Política de entrega:</label>
-              <textarea formControlName="deliveryPolicy" placeholder="Informe a política de entrega..."
-                class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="form-group col-md-12">
               <label>Valor mínimo para compra:</label>
               <input currencyMask max="99999999"
                 [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
@@ -99,6 +50,14 @@
                 <p *ngIf="f.valueMinimum.errors.required" class="text-danger small">* Informe o valor mínimo de compra
                 </p>
               </div>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label>Valor mínimo para frete grátis:</label>
+              <input currencyMask max="99999999"
+                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                maxlength="18" type="text" formControlName="freeShipping"
+                placeholder="Informe o valor para frete grátis..." class="form-control">
             </div>
 
             <div class="form-group col-md-12">
@@ -113,14 +72,52 @@
               </div>
             </div>
 
-            <h5>Endereço de cobrança</h5>
+            <div class="form-group md-12">
+              <label>Chave Pix:</label>
+              <input type="text" maxlength="256" formControlName="keyPix" placeholder="Informe a chave Pix..."
+                class="form-control">
+            </div>
+            <div class="form-group md-12">
+              <label>% Desconto Pix:</label>
+              <input currencyMask max="99999999"
+                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                maxlength="18" type="text" formControlName="offPix"
+                placeholder="Informe o percentual do desconto PIX" class="form-control">
+            </div>
+
+            <div class="form-group col-md-12">
+              <label>Quem somos:</label>
+              <angular-editor [config]="configEditor" formControlName="description"></angular-editor>
+              <div *ngIf="submitted && f.description.errors">
+                <p *ngIf="f.description.errors.required" class="text-danger small">* Informe a descrição</p>
+              </div>
+            </div>
+
+
+            <div class="form-group col-md-12">
+              <label>Política de troca:</label>
+              <angular-editor [config]="configEditor" formControlName="exchangePolicy"></angular-editor>
+            </div>
+
+            <div class="form-group col-md-12">
+              <label>Política de entrega:</label>
+                <angular-editor [config]="configEditor" formControlName="deliveryPolicy"></angular-editor>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label>Termos de garantia:</label>
+              <angular-editor [config]="configEditor" formControlName="warranty"></angular-editor>
+            </div>
+
             <hr>
+            <h5>Endereço do Centro de distribuição</h5>
+
             <div class="form-group col-md-12">
               <label>Cep:</label>
-                <input type="text" mask="00000-000" maxlength="9" formControlName="cep" placeholder="Informe o CEP..."
+                <input type="text" mask="00000-000" maxlength="9" formControlName="postalCode" placeholder="Informe o CEP..."
                   class="form-control">
-              <div *ngIf="submitted && f.cep.errors">
-                <p *ngIf="f.cep.errors.required" class="text-danger small">* Informe o CEP</p>
+              <div *ngIf="submitted && f.postalCode.errors">
+                <p *ngIf="f.postalCode.errors.required" class="text-danger small">* Informe o CEP</p>
               </div>
             </div>
             <div class="form-group col-md-12">

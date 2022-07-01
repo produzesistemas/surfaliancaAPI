@@ -2,24 +2,26 @@ import { Product } from './product-model';
 export class Store {
     id: number;
     name: string;
-    imageName: string;
     description: string;
     cnpj: string;
     contact: string;
     phone: string;
     exchangePolicy: string;
     deliveryPolicy: string;
-    aspNetUsersId: string;
+    warranty: string;
     valueMinimum: number;
+    freeShipping: number;
     numberInstallmentsCard: number;
 
     street: string;
     district: string;
     number: string;
-    cep: string;
-    nameCity: string;
+    postalCode: string;
+    city: string;
 
-    aspNetUsers: any;
+    offPix: string;
+    keyPix: string;
+
     criadoPor: string;
     alteradoPor: string;
     createDate: Date;

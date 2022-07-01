@@ -14,7 +14,7 @@ private obj: FinSystem = new FinSystem();
       return this.postAll('finSystem/filter', filter);
     }
 
-    save(entity:FormData) {
+    save(entity) {
       return this.post('finSystem/save', entity);
    }
 

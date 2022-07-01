@@ -7,5 +7,6 @@ namespace UnitOfWork
     {
         Store Get();
         void Update(Store entity);
+        void Insert(Store entity);
     }
 }

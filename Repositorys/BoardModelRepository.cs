@@ -53,7 +53,16 @@ namespace Repositorys
 
         public BoardModel Get(int id)
         {
-               return _context.BoardModel.Include(c => c.BoardModelDimensions).Single(b => b.Id == id);
+               return _context.BoardModel
+                .Include(c => c.BoardModelDimensions)
+                .Include(c => c.BoardModelBottoms)
+                .Include(c => c.BoardModelConstructions)
+                .Include(c => c.BoardModelFinSystems)
+                .Include(c => c.BoardModelLaminations)
+                .Include(c => c.BoardModelStringers)
+                .Include(c => c.BoardModelTailReinforcements)
+                .Include(c => c.BoardModelTails)
+                .Single(b => b.Id == id);
         }
 
         public void Update(BoardModel entity)

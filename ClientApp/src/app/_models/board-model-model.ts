@@ -3,7 +3,9 @@ import { BoardModelConstruction } from "./board-model-construction-model";
 import { BoardModelDimensions } from "./board-model-dimensions-model";
 import { BoardModelFinSystem } from "./board-model-fin-system-model";
 import { BoardModelLamination } from "./board-model-lamination-model";
+import { BoardModelStringer } from "./board-model-stringer-model";
 import { BoardModelTail } from "./board-model-tail-model";
+import { BoardModelTailReinforcement } from './board-model-tail-reinforcement-model';
 
 export class BoardModel {
     description: string;
@@ -22,6 +24,8 @@ export class BoardModel {
     boardModelConstructions: BoardModelConstruction[] = [];
     boardModelLaminations: BoardModelLamination[] = [];
     boardModelTails: BoardModelTail[] = [];
+    boardModelTailReinforcements: BoardModelTailReinforcement[] = [];
+    boardModelStringers: BoardModelStringer[] = [];
     boardModelFinSystems: BoardModelFinSystem[] = [];
 
     public constructor(init?: Partial<BoardModel>) {

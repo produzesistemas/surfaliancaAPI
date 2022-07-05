@@ -17,6 +17,7 @@ import { LaminationService } from 'src/app/_services/lamination.service';
 import { StringerService } from 'src/app/_services/stringer.service';
 import { TailService } from 'src/app/_services/tail.service';
 import { TailReinforcementService } from 'src/app/_services/tail-reinforcement.service';
+import { BoardModelBottom } from '../../_models/board-model-bottom-model';
 
 @Component({
   selector: 'app-board-model-form',
@@ -24,13 +25,9 @@ import { TailReinforcementService } from 'src/app/_services/tail-reinforcement.s
 })
 export class BoardModelFormComponent implements OnInit {
   formAdd: FormGroup;
-  formDimension: FormGroup;
-  formLstDimension: FormGroup;
   submitted = false;
-  submittedDimension = false;
   public boardModel: BoardModel = new BoardModel();
   selectedItems = [];
-  logos = [];
   lstdimensions = [];
   tails = [];
   constructions = [];
@@ -84,7 +81,6 @@ export class BoardModelFormComponent implements OnInit {
   ) { }
 
   get q() { return this.formAdd.controls; }
-  get d() { return this.formDimension.controls; }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -115,13 +111,9 @@ export class BoardModelFormComponent implements OnInit {
       stringers: [''],
       bottons: [''],
       tailReforcements: [''],
-
+      dimension: [''],
     });
 
-    this.formDimension = this.formBuilder.group({
-      dimension: ['', [Validators.required]],
-
-    });
 
 
     this.dropdownSettings = {
@@ -168,6 +160,7 @@ export class BoardModelFormComponent implements OnInit {
   load() {
     this.boardModelService.getById(this.boardModel.id).subscribe(boardmodel => {
       this.boardModel = boardmodel;
+      this.logo = environment.urlImagesLojas + this.boardModel.imageName;
       this.setControls(this.boardModel);
       this.boardModel.boardModelDimensions.forEach(bmd => {
         this.lstdimensions.push(bmd.description);
@@ -217,6 +210,13 @@ this.lstdimensions.forEach(dimension => {
   boardmodeldimension.description = dimension;
 item.boardModelDimensions.push(boardmodeldimension);
 })
+
+item.boardModelBottoms = this.formAdd.controls.bottons.value.map(function (i) {
+  let item = new BoardModelBottom();
+  item.bottomId = i.id;
+  return item;
+});
+
 
     formData.append('boardModel', JSON.stringify(item));
     if(this.files.length > 0) {
@@ -271,13 +271,11 @@ canSave() {
 }
 
 onAddDimension() {
-  this.submittedDimension = true;
-  if (this.formDimension.invalid) {
-    return;
+  if (this.formAdd.controls.dimension.value === undefined) {
+    return this.toastr.error("Informe as dimensões disponíveis para esse modelo e clique em adicionar")
   }
-  this.lstdimensions.push(this.formDimension.controls.dimension.value);
-  this.formDimension.controls.dimension.reset();
-  this.submittedDimension = false;
+  this.lstdimensions.push(this.formAdd.controls.dimension.value);
+  this.formAdd.controls.dimension.reset();
 }
 
 deleteById(dimension: any) {
@@ -286,8 +284,6 @@ deleteById(dimension: any) {
     this.lstdimensions.splice(index, 1);
   }
 }
-
-
 
 }
 

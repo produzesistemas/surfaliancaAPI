@@ -1,12 +1,11 @@
 <div class="container">
     <div class="py-5">
-        <div class="col-sm-9 col-md-7 col-lg-7 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <form [formGroup]="formAdd">
-                        <h5 class="card-title text-center">Cadastro de Modelo de Prancha</h5>
-
-                        <div class="form-group col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="formAdd">
+                    <h5 class="card-title text-center">Cadastro de Modelo de Prancha</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
                             <label>Foto:</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend" *ngIf="!canView()">
@@ -15,17 +14,19 @@
                                 </div>
                                 <div class="custom-file" *ngIf="!canView()">
                                     <input type="file" #file name="fileToUpload" (change)="onFileChange($event)"
-                                        accept=".jpg, .png, .gif, .tiff, .jfif" required
-                                        class="custom-file-input" id="inputGroupFile01"
-                                        aria-describedby="inputGroupFileAddon01">
+                                        accept=".jpg, .png, .gif, .tiff, .jfif" required class="custom-file-input"
+                                        id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                                     <label class="custom-file-label" for="inputGroupFile01">Clique para
                                         Selecionar</label>
                                 </div>
                             </div>
-
                         </div>
-
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
+                            <img *ngIf="logo" class="img-thumbnail" src={{logo}}>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
                             <label>Descrição:</label>
                             <input type="text" class="form-control" id="name" formControlName="name"
                                 placeholder="Informe a descrição" maxlength="255" />
@@ -34,14 +35,16 @@
                                 </p>
                             </div>
                         </div>
-
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label>Url Video:</label>
                             <input type="text" class="form-control" id="name" formControlName="urlMovie"
                                 placeholder="Informe a url do video do modelo" />
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-12">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
                             <label>Dias para produção:</label>
                             <input currencyMask max="99999999"
                                 [options]="{ prefix: '', thousands: '', decimal: '', precision: 0, allowNegative: false }"
@@ -49,18 +52,13 @@
                                 formControlName="daysProduction"
                                 placeholder="Informe os dias necessários para produção do modelo." maxlength="255" />
                             <div *ngIf="submitted && q.daysProduction.errors">
-                                <p *ngIf="q.daysProduction.errors.required" class="text-danger small">Informe os dias
+                                <p *ngIf="q.daysProduction.errors.required" class="text-danger small">Informe os
+                                    dias
                                     necessários para produção do modelo
                                 </p>
                             </div>
                         </div>
-
-                        <div class="form-group col-md-12">
-                            <label>Detalhes:</label>
-                            <angular-editor [config]="configEditor" formControlName="description" editable="false">
-                            </angular-editor>
-                        </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label>Valor:</label>
                             <input currencyMask max="99999999"
                                 [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
@@ -70,113 +68,126 @@
                                 <p *ngIf="q.value.errors.required" class="text-danger small">Informe um valor</p>
                             </div>
                         </div>
-                    </form>
-                    <form [formGroup]="formDimension">
-                        <div class="form-group col-md-12">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Detalhes:</label>
+                            <angular-editor [config]="configEditor" formControlName="description" editable="false">
+                            </angular-editor>
+                        </div>
+                        <div class="form-group col-md-6">
                             <label>Dimensão:</label>
                             <div class="input-group">
-                                <input class="form-control py-2" type="search" id="example-search-input" formControlName="dimension" placeholder="Informe a dimensão e clique no botão para adiciona-lo a lista">
+                                <input class="form-control py-2" type="search" id="example-search-input"
+                                    formControlName="dimension"
+                                    placeholder="Informe a dimensão e clique no botão para adiciona-lo a lista">
                                 <span class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" (click)="onAddDimension()">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </span>
                             </div>
-                            <div *ngIf="submittedDimension && d.dimension.errors">
-                                <p *ngIf="d.dimension.errors.required" class="text-danger small">Informe a Dimensão</p>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="text-center">
+                                                Dimensões cadastradas
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor='let dimension of lstdimensions'>
+                                            <td>
+                                                {{dimension}}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex actions">
+                                                    <a class="ml-2" tabindex="-1" role="button" aria-disabled="true"
+                                                        title="Excluir" (click)="deleteById(dimension)">
+                                                        <i class="fa fa-trash text-primary"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                         </div>
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-striped table-sm text-white">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" class="text-center">
-                                          Dimensões cadastradas
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor='let dimension of lstdimensions'>
-                                        <td>
-                                            {{dimension}}
-                                        </td>
-                                        <td>
-                                            <div class="d-flex actions">
-                                              <a class="ml-2" tabindex="-1" role="button" aria-disabled="true" title="Excluir"
-                                                (click)="deleteById(dimension)">
-                                                <i class="fa fa-trash text-primary"></i>
-                                              </a>
-                                            </div>
-                                          </td>
+                    </div>
 
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="form-row">
 
-
+                        <div class="form-group col-md-6">
+                            <label>Rabetas disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="tails" formControlName="tails">
+                            </ng-multiselect-dropdown>
                         </div>
-                    </form>
-
-
-                    <div class="form-group col-md-12">
-                        <label>Rabetas disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="tails" formControlName="tails">
-                        </ng-multiselect-dropdown>
+                        <div class="form-group col-md-6">
+                            <label>Reforços para Rabeta disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="tailReforcements" formControlName="tailReforcements">
+                            </ng-multiselect-dropdown>
+                        </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label>Reforços para Rabeta disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="tailReforcements" formControlName="tailReforcements">
-                        </ng-multiselect-dropdown>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Construção / Tecnologia disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="constructions" formControlName="constructions">
+                            </ng-multiselect-dropdown>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Laminações disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="laminations" formControlName="laminations">
+                            </ng-multiselect-dropdown>
+                        </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label>Construção / Tecnologia disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="constructions" formControlName="constructions">
-                        </ng-multiselect-dropdown>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Sistema de quilhas disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="finSystens" formControlName="finSystens">
+                            </ng-multiselect-dropdown>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Fundos disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="bottons" formControlName="bottons">
+                            </ng-multiselect-dropdown>
+                        </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label>Laminações disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="laminations" formControlName="laminations">
-                        </ng-multiselect-dropdown>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Longarinas disponíveis para o modelo:</label>
+                            <ng-multiselect-dropdown [placeholder]="'Selecione'" [settings]="dropdownSettings"
+                                [data]="stringers" formControlName="stringers">
+                            </ng-multiselect-dropdown>
+                        </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label>Sistema de quilhas disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="finSystens" formControlName="finSystens">
-                        </ng-multiselect-dropdown>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label>Fundos disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="bottons" formControlName="bottons">
-                        </ng-multiselect-dropdown>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label>Longarinas disponíveis para o modelo:</label>
-                        <ng-multiselect-dropdown [placeholder]="'Selecione'"
-                            [settings]="dropdownSettings" [data]="stringers" formControlName="stringers">
-                        </ng-multiselect-dropdown>
-                    </div>
+                </form>
 
 
-                    <div class="form-group col-md-6">
-                        <button type="button" class="btn btn-rounded btn-primary" (click)="onSave()" *ngIf="!canView()">
-                            <i class="fa fa-save"></i>
-                        </button>
-                        <button type="button" class="btn btn-rounded btn-danger ml-2" (click)="onCancel()">
-                            <i class="fas fa-arrow-circle-left"></i>
-                        </button>
-                    </div>
+
+
+                <div class="form-group col-md-6">
+                    <button type="button" class="btn btn-rounded btn-primary" (click)="onSave()" *ngIf="!canView()">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <button type="button" class="btn btn-rounded btn-danger ml-2" (click)="onCancel()">
+                        <i class="fas fa-arrow-circle-left"></i>
+                    </button>
                 </div>
             </div>
         </div>

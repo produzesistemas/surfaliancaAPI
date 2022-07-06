@@ -205,17 +205,21 @@ export class BoardModelFormComponent implements OnInit {
     if (this.formAdd.invalid) {
       return;
     }
-    if (this.lstdimensions.length === 0) {
-      return this.toastr.error('Coloque pelo menos uma dimensão');
-    }
 
     const formData = new FormData();
-    // const item = new BoardModel();
     this.boardModel.value = this.formAdd.controls.value.value;
     this.boardModel.description = this.formAdd.controls.description.value;
     this.boardModel.name = this.formAdd.controls.name.value;
     this.boardModel.daysProduction = this.formAdd.controls.daysProduction.value;
     this.boardModel.urlMovie = this.formAdd.controls.urlMovie.value;
+    this.boardModel.boardModelBottoms = [];
+    this.boardModel.boardModelConstructions = [];
+    this.boardModel.boardModelDimensions = [];
+    this.boardModel.boardModelFinSystems = [];
+    this.boardModel.boardModelLaminations = [];
+    this.boardModel.boardModelStringers = [];
+    this.boardModel.boardModelTailReinforcements = [];
+    this.boardModel.boardModelTails = [];
 
 
 this.lstdimensions.forEach(dimension => {
@@ -227,88 +231,73 @@ this.lstdimensions.forEach(dimension => {
 
 if (this.formAdd.controls.laminations.value.length > 0) {
   this.formAdd.controls.laminations.value.forEach(lamination => {
-    if(!this.boardModel.boardModelLaminations.find(x => x.laminationId === lamination.id)) {
       const newModel = new BoardModelLamination();
       newModel.id = 0;
       newModel.laminationId = lamination.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelLaminations.push(newModel);
-    };
   });
 }
 
 if (this.formAdd.controls.finSystens.value.length > 0) {
   this.formAdd.controls.finSystens.value.forEach(fin => {
-    if(!this.boardModel.boardModelFinSystems.find(x => x.finSystemId === fin.id)) {
       const newModel = new BoardModelFinSystem();
       newModel.id = 0;
       newModel.finSystemId = fin.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelFinSystems.push(newModel);
-    };
   });
 }
 
 if (this.formAdd.controls.constructions.value.length > 0) {
   this.formAdd.controls.constructions.value.forEach(construction => {
-    if(!this.boardModel.boardModelConstructions.find(x => x.constructionId === construction.id)) {
       const newModel = new BoardModelConstruction();
       newModel.id = 0;
       newModel.constructionId = construction.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelConstructions.push(newModel);
-    };
   });
 }
 
 if (this.formAdd.controls.bottons.value.length > 0) {
   this.formAdd.controls.bottons.value.forEach(bottom => {
-    if(!this.boardModel.boardModelBottoms.find(x => x.bottomId === bottom.id)) {
       const newModel = new BoardModelBottom();
-      newModel.id = 0;
       newModel.bottomId = bottom.id;
       newModel.boardModelId = this.boardModel.id;
+      newModel.bottom = null;
       this.boardModel.boardModelBottoms.push(newModel);
-    };
   });
-}
+} 
 
 if (this.formAdd.controls.stringers.value.length > 0) {
   this.formAdd.controls.stringers.value.forEach(stringer => {
-    if(!this.boardModel.boardModelStringers.find(x => x.stringerId === stringer.id)) {
       const newModel = new BoardModelStringer();
       newModel.id = 0;
       newModel.stringerId = stringer.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelStringers.push(newModel);
-    };
   });
 }
 
 if (this.formAdd.controls.tails.value.length > 0) {
   this.formAdd.controls.tails.value.forEach(tail => {
-    if(!this.boardModel.boardModelTails.find(x => x.tailId === tail.id)) {
       const newModel = new BoardModelTail();
       newModel.id = 0;
       newModel.tailId = tail.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelTails.push(newModel);
-    };
   });
 }
 
 if (this.formAdd.controls.tailReforcements.value.length > 0) {
   this.formAdd.controls.tailReforcements.value.forEach(tailR => {
-    if(!this.boardModel.boardModelTailReinforcements.find(x => x.tailReinforcementId === tailR.id)) {
       const newModel = new BoardModelTailReinforcement();
       newModel.id = 0;
       newModel.tailReinforcementId = tailR.id;
       newModel.boardModelId = this.boardModel.id;
       this.boardModel.boardModelTailReinforcements.push(newModel);
-    };
   });
 }
-
 
     formData.append('boardModel', JSON.stringify(this.boardModel));
     if(this.files.length > 0) {
@@ -363,7 +352,8 @@ canSave() {
 }
 
 onAddDimension() {
-  if (this.formAdd.controls.dimension.value === undefined) {
+  if ((this.formAdd.controls.dimension.value === null) || (this.formAdd.controls.dimension.value === "") || 
+  (this.formAdd.controls.dimension.value === undefined)){
     return this.toastr.error("Informe as dimensões disponíveis para esse modelo e clique em adicionar")
   }
   this.lstdimensions.push(this.formAdd.controls.dimension.value);

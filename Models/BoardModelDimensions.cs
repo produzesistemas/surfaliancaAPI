@@ -7,5 +7,7 @@ namespace Models
     {
         public int BoardModelId { get; set; }
         public string Description { get; set; }
+        [NotMapped]
+        public BoardModel BoardModel { get; set; }
     }
 }

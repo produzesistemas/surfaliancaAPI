@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -57,7 +58,7 @@ namespace surfaliancaAPI.Controllers
                 var files = Request.Form.Files;
                 if (boardModel.Id > decimal.Zero)
                 {
-                    var boardModelBase = boardModelRepository.Get(boardModel.Id);
+                    //var boardModelBase = boardModelRepository.Get(boardModel.Id);
                     for (var counter = 0; counter < files.Count; counter++)
                     {
                         var extension = Path.GetExtension(Request.Form.Files[0].FileName);
@@ -71,33 +72,30 @@ namespace surfaliancaAPI.Controllers
                         switch (counter)
                         {
                             case 0:
-                                boardModelBase.ImageName = fileName;
+                                boardModel.ImageName = fileName;
                                 break;
                         }
 
                     };
 
-                    boardModelBase.Description = boardModel.Description;
-                    boardModelBase.Name = boardModel.Name;
-                    boardModelBase.Value = boardModel.Value;
-                    boardModelBase.DaysProduction = boardModel.DaysProduction;
-                    boardModelBase.UrlMovie = boardModel.UrlMovie;
-                    boardModelBase.UpdateApplicationUserId = id;
-                    boardModelBase.UpdateDate = DateTime.Now;
-                    boardModelRepository.Update(boardModelBase);
+                    boardModel.UpdateApplicationUserId = id;
+                    boardModelRepository.Update(boardModel);
                     if (System.IO.File.Exists(fileDelete))
                     {
                         System.IO.File.Delete(fileDelete);
                     }
-                    boardModelBase.BoardModelDimensions.ForEach(x =>
-                    {
-                        boardModelDimensionsRepository.Delete(x.Id);
-                    });
-                    boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
-                    {
-                        boardModelDimensions.BoardModelId = boardModel.Id;
-                        boardModelDimensionsRepository.Insert(boardModelDimensions);
-                    });
+
+
+
+                    //boardModelBase.BoardModelDimensions.ForEach(x =>
+                    //{
+                    //    boardModelDimensionsRepository.Delete(x.Id);
+                    //});
+                    //boardModel.BoardModelDimensions.ForEach(boardModelDimensions =>
+                    //{
+                    //    boardModelDimensions.BoardModelId = boardModel.Id;
+                    //    boardModelDimensionsRepository.Insert(boardModelDimensions);
+                    //});
 
                 }
                 else
@@ -217,12 +215,15 @@ namespace surfaliancaAPI.Controllers
         {
             try
             {
-                //var entityBase = genericRepository.Get(id);
                 boardModelRepository.Delete(id);
                 return new OkResult();
             }
             catch (Exception ex)
             {
+                if (ex.InnerException.Message.Contains("The DELETE statement conflicted with the REFERENCE constraint"))
+                {
+                    return BadRequest("O modelo não pode ser excluído. Está relacionado com um pedido. Considere desativar!");
+                }
                 return BadRequest(string.Concat("Falha na exclusão do modelo: ", ex.Message));
 
             }
@@ -243,6 +244,9 @@ namespace surfaliancaAPI.Controllers
                 return new JsonResult(ex);
             }
         }
+
+
+
     }
 }
 

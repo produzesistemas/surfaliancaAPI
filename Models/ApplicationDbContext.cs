@@ -61,6 +61,14 @@ namespace Models
             //modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Finishing);
             modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Paint);
 
+            modelBuilder.Entity<BoardModelBottom>().HasOne(c => c.Bottom);
+            modelBuilder.Entity<BoardModelConstruction>().HasOne(c => c.Construction);
+            modelBuilder.Entity<BoardModelFinSystem>().HasOne(c => c.FinSystem);
+            modelBuilder.Entity<BoardModelLamination>().HasOne(c => c.Lamination);
+            modelBuilder.Entity<BoardModelStringer>().HasOne(c => c.Stringer);
+            modelBuilder.Entity<BoardModelTailReinforcement>().HasOne(c => c.TailReinforcement);
+            modelBuilder.Entity<BoardModelTail>().HasOne(c => c.Tail);
+
             modelBuilder.Entity<Product>().HasMany(c => c.OrderProducts)
                 .WithOne(b => b.Product)
                 .HasForeignKey(c => c.ProductId);

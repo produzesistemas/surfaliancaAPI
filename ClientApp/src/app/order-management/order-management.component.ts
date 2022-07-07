@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BoardModelService} from '../_services/board-model.service';
 import { environment } from 'src/environments/environment';
@@ -20,6 +20,8 @@ import { FinSystemService } from '../_services/fin-system.service';
 import { FinSystem } from '../_models/fin-system-model';
 import { Stringer } from '../_models/stringer-model';
 import { StringerService } from '../_services/stringer.service';
+import { BoardModelConstruction } from '../_models/board-model-construction-model';
+import { Bottom } from '../_models/bottom-model';
 
 @Component({
   selector: 'app-order-management',
@@ -39,7 +41,6 @@ export class OrderManagementComponent implements OnInit {
   imgStringer: any;
   modalPaint: BsModalRef;
   levels = [];
-  logos = [];
   paint: any;
   public lstBoardModels = [];
   public finalValue: number;
@@ -47,6 +48,7 @@ export class OrderManagementComponent implements OnInit {
   laminations: Lamination[] = [];
   stringers: Stringer[] = [];
   finSystems: FinSystem[] = [];
+  bottons: Bottom[] = [];
   tails = [];
   boardModelDimensions = [];
   boardModels: BoardModel[] = [];
@@ -77,6 +79,7 @@ export class OrderManagementComponent implements OnInit {
     private stringerService: StringerService,
     private tailService: TailService,
     private levelService: LevelService,
+    private route: ActivatedRoute,
     private shoppingCartService: ShoppingCartService,
     private paintService: PaintService,
 
@@ -84,6 +87,13 @@ export class OrderManagementComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.route.params.subscribe(params => {
+      if (params.id > 0) {
+        this.boardModel.id = Number(params.id);
+      }
+    });
+
     this.shoppingCart = this.shoppingCartService.loadCart();
     this.form = this.formBuilder.group({
       logo: ['', Validators.required],
@@ -102,22 +112,71 @@ export class OrderManagementComponent implements OnInit {
 
     });
 
-    forkJoin(
-      this.constructionService.getAll(),
-      this.tailService.getAll(),
-      this.laminationService.getAll(),
-      this.finSystemService.getAll(),
-      this.stringerService.getAll()
-    )    .subscribe(result => {
-      this.constructions = result[0];
-      this.tails = result[1];
-      this.laminations = result[2];
-      this.finSystems = result[3];
-      this.stringers = result[4];
+    this.levels = this.levelService.get();
+    this.boardModelService.getToOrder(this.boardModel)
+      .subscribe(result => {
+      this.boardModel = result;
+        this.setControls(this.boardModel);
     });
 
 
-    this.levels = this.levelService.get();
+    
+  }
+
+  setControls(boardModel) {
+    this.bottons = [];
+    this.constructions = [];
+    this.laminations = [];
+    this.tails = [];
+    this.stringers = [];
+    this.finSystems = [];
+
+    if (boardModel.boardModelBottoms.length > 0) {
+      boardModel.boardModelBottoms.forEach(element => {
+        this.bottons.push(element.bottom);
+      });
+      this.bottons = [...this.bottons];
+    }
+
+    if (boardModel.boardModelConstructions.length > 0) {
+      boardModel.boardModelConstructions.forEach(element => {
+        this.constructions.push(element.construction);
+      });
+      this.constructions = [...this.constructions];
+    }
+
+    if (boardModel.boardModelLaminations.length > 0) {
+      boardModel.boardModelLaminations.forEach(element => {
+        this.laminations.push(element.lamination);
+      });
+      this.laminations = [...this.laminations];
+    }
+
+    if (boardModel.boardModelTails.length > 0) {
+      boardModel.boardModelTails.forEach(element => {
+        this.tails.push(element.tail);
+      });
+      this.tails = [...this.tails];
+    }
+
+    if (boardModel.boardModelStringers.length > 0) {
+      boardModel.boardModelStringers.forEach(element => {
+        this.stringers.push(element.stringer);
+      });
+      this.stringers = [...this.stringers];
+    }
+
+    if (boardModel.boardModelFinSystems.length > 0) {
+      boardModel.boardModelFinSystems.forEach(element => {
+        this.finSystems.push(element.finSystem);
+      });
+      this.finSystems = [...this.finSystems];
+    }
+
+    this.imgModel = boardModel.imageName;
+    this.onCalculate();
+
+
   }
 
   get f() { return this.form.controls; }
@@ -126,9 +185,9 @@ export class OrderManagementComponent implements OnInit {
     return environment.urlImagesLojas + this.imgModel;
 }
 
-  onSelectedModel(boardModel) {
-    this.router.navigate([`/order/${boardModel.id}`]);
-  }
+  // onSelectedModel(boardModel) {
+  //   this.router.navigate([`/order/${boardModel.id}`]);
+  // }
 
   getQuantityItems() {
     if (this.shoppingCart !== null) {
@@ -147,20 +206,6 @@ openShoppingCart() {
       // return this.toastr.error('O Carrinho está vazio. Adicione produtos');
   }
   this.router.navigate(['/shoppingcart']);
-}
-
-onChangeMarca(){
-  this.imgModel = "custom.png";
-  const filter: FilterDefaultModel = new FilterDefaultModel();
-  filter.id = Number(this.form.controls.logo.value);
-  this.boardModelService.getBoardModelByLogo(filter).subscribe(
-    data => {
-      this.boardModels = data;
-      this.boardModelDimensions = []
-    }
-  );
-
-
 }
 
 onChangeModel(){

@@ -14,7 +14,7 @@ import { ContatoManagementModule } from './contato-management/contato-management
 const routes: Routes = [
     { path: '', redirectTo: 'index', pathMatch: 'full'},
     { path: 'index', loadChildren: () => IndexManagementModule},
-    { path: 'order', loadChildren: () => OrderManagementModule },
+    { path: 'order/:id', loadChildren: () => OrderManagementModule },
     { path: 'shoppingcart', loadChildren: () => ShoppingCartModule },
     { path: 'team-list', loadChildren: () => TeamListManagementModule },
     { path: 'politica-privacidade', loadChildren: () => PoliticaPrivacidadeModule },

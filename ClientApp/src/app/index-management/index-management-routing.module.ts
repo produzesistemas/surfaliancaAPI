@@ -16,6 +16,13 @@ const routes: Routes = [
             { path: '', loadChildren: () => IndexDetailProductModule },
           ]
       },
+    //   {
+    //     path: 'boardModel',
+    //     component: BoardModelDetailComponent,
+    //     children: [
+    //         { path: '', loadChildren: () => BoardModelDetailModule },
+    //       ]
+    //   },
 ];
 
 @NgModule({

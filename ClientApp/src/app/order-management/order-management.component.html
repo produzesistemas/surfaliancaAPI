@@ -75,84 +75,43 @@
 
 <form [formGroup]="form">
   <div class="container-sm py-3">
-    <div class="card text-white bg-dark">
+    <div class="card">
       <div class="card-body">
         <h5 class="card-title text-center py-3">Encomenda on-line</h5>
 
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-lg-5">
             <div class="text-center">
               <img src="{{ getImage() }}" alt="Board model" width="300px" />
             </div>
+          </div>
 
-            <div class="row py-4" *ngIf="boardModel.id > 0">
+          <div class="col-lg-7">
+            <div class="row py-4" *ngIf="boardModel">
               <div class="form-group col-sm text-center">
                 <h5>Valor inicial do modelo:</h5>
-                <h6 class="ml-2">{{ boardModel.value | currency: "R$" }}</h6>
+                <h6>{{ boardModel.value | currency: "R$" }}</h6>
               </div>
             </div>
 
-            <div class="row" *ngIf="boardModel.id > 0">
+            <div class="row" *ngIf="boardModel">
               <div class="form-group col-sm text-center">
                 <h5>Valor final da encomenda:</h5>
-                <h6 class="ml-2">
+                <h6>
                   {{ getValueFinal() | currency: "R$" }}
-                  <a class="text-white col-sm" (click)="openModal()">
+                  <!-- <a class="text-white col-sm" (click)="openModal()">
                     <i class="far fa-question-circle"></i
-                  ></a>
+                  ></a> -->
                 </h6>
               </div>
             </div>
 
-            <div class="row" *ngIf="boardModel.id > 0">
+            <div class="row" *ngIf="boardModel">
               <div class="form-group col-sm text-center">
                 <h5>Dias para produção:</h5>
-                <h6 class="ml-2">{{ boardModel.daysProduction }}</h6>
+                <h6>{{ boardModel.daysProduction }}</h6>
               </div>
             </div>
-          </div>
-
-          <div class="col-lg-4">
-            <label>Marca:</label>
-            <select
-              class="form-control"
-              formControlName="logo"
-              (change)="onChangeMarca()"
-            >
-              <option [value]="logo.id" *ngFor="let logo of logos">
-                {{ logo.name }}
-              </option>
-            </select>
-            <div *ngIf="submitted && f.logo.errors">
-              <p *ngIf="f.logo.errors.required" class="text-danger small">
-                * Seleção de Marca é obrigatória
-              </p>
-            </div>
-
-            <div class="py-2" *ngIf="boardModels.length > 0">
-              <label>Modelo:</label>
-              <select
-                class="form-control"
-                formControlName="boardModel"
-                (change)="onChangeModel()"
-              >
-                <option
-                  [ngValue]="boardModel"
-                  *ngFor="let boardModel of boardModels"
-                >
-                  {{ boardModel.name }}
-                </option>
-              </select>
-              <div *ngIf="submitted && f.boardModel.errors">
-                <p
-                  *ngIf="f.boardModel.errors.required"
-                  class="text-danger small"
-                >
-                  * Seleção de Modelo é obrigatória
-                </p>
-              </div>
-            </div>
-
             <div class="py-2" *ngIf="boardModelDimensions.length > 0">
               <label>Dimensões:</label>
               <select
@@ -181,7 +140,7 @@
 
             </div>
 
-            <div class="py-2" *ngIf="boardModel.id > 0">
+            <div class="py-2" *ngIf="boardModel">
               <label>Selecione o seu nível:</label>
               <select class="form-control" formControlName="level">
                 <option [ngValue]="level" *ngFor="let level of levels">
@@ -190,7 +149,7 @@
               </select>
             </div>
 
-            <div class="py-2" *ngIf="boardModel.id > 0 && constructions.length > 0">
+            <div class="py-2" *ngIf="boardModel.boardModelConstructions.length > 0">
               <label> Tecnologia/Construção:</label>
               <select
                 class="form-control"
@@ -206,7 +165,7 @@
               </select>
             </div>
 
-            <div class="py-2" *ngIf="boardModel.id > 0 && laminations.length > 0">
+            <div class="py-2" *ngIf="boardModel.boardModelLaminations.length > 0">
               <label> Laminação:</label>
               <select class="form-control" formControlName="lamination" (change)="onChangeLamination()"
               >
@@ -220,17 +179,8 @@
             </div>
 
 
-            <div class="py-2" *ngIf="boardModel.id > 0 && tails.length > 0">
-              <label> Reforço da rabeta:</label>
-              <!-- <select
-                class="form-control"
-                formControlName="tail"
-                (change)="onChangeTail()"
-              >
-                <option [ngValue]="tail" *ngFor="let tail of tails">
-                  {{ tail.name }}
-                </option>
-              </select> -->
+            <div class="py-2" *ngIf="boardModel.boardModelTails.length > 0">
+              <label> Rabeta:</label>
               <select
                 class="form-control"
                 formControlName="tail"
@@ -239,14 +189,9 @@
                   {{ tail.name }}
                 </option>
               </select>
-
             </div>
-            <!-- <div class="text-center py-2" *ngIf="imgTail">
-              <img src="{{ getImageTail() }}" alt="Tail" width="100px" />
-            </div> -->
 
-
-            <div class="py-2" *ngIf="boardModel.id > 0 && finSystems.length > 0">
+            <div class="py-2" *ngIf="boardModel.boardModelFinSystems.length > 0">
               <label> Sistema de quilhas:</label>
               <select class="form-control" formControlName="finSystem" (change)="onChangeFinSystem()"
               >
@@ -259,11 +204,7 @@
               </select>
             </div>
 
-            <div class="text-center py-2" *ngIf="imgFinSystem">
-              <img src="{{ getImageFinSystem() }}" alt="FinSystem" width="100px" />
-            </div>
-
-            <div class="py-2" *ngIf="boardModel.id > 0 && stringers.length > 0">
+            <div class="py-2" *ngIf="boardModel.boardModelStringers.length > 0">
               <label> Longarina:</label>
               <select class="form-control" formControlName="stringer" (change)="onChangeStringer()"
               >
@@ -276,12 +217,21 @@
               </select>
             </div>
 
-            <div class="text-center py-2" *ngIf="imgStringer">
-              <img src="{{ getImageStringer() }}" alt="Stringer" width="100px" />
+            <div class="py-2" *ngIf="boardModel.boardModelBottoms.length > 0">
+              <label> Fundos:</label>
+              <select class="form-control" formControlName="bottom" (change)="onChangeStringer()"
+              >
+                <option
+                  [ngValue]="bottom"
+                  *ngFor="let bottom of bottons"
+                >
+                  {{ bottom.name }}
+                </option>
+              </select>
             </div>
 
 
-            <div class="py-2" *ngIf="boardModel.id > 0">
+            <div class="py-2" *ngIf="boardModel">
               <label class="mr-2"> Pinturas:</label>
 
               <button
@@ -294,12 +244,16 @@
             </div>
           </div>
         </div>
-        <hr class="btn-light" />
-        <h5 class="col" *ngIf="boardModel.id > 0">Detalhes do modelo</h5>
-
-        <section class="container" *ngIf="boardModel.urlMovie">
+        
+        <hr class="btn-dark" />
+        
+        <div class="col-lg-12 p-l-0 p-r-0 py-3 text-break" *ngIf="boardModel">
+          <h5>Detalhes do modelo</h5>
+          <p [innerHTML]="boardModel.description"></p>
+      </div>
+        <section class="container" *ngIf="boardModel">
           <div class="py-2">
-            <iframe
+            <iframe *ngIf="boardModel.urlMovie"
               class="embed-responsive-item"
               [src]="boardModel.urlMovie | safe"
               frameborder="0"
@@ -309,12 +263,8 @@
           </div>
         </section>
 
-        <div class="col-sm-12">
-          <div
-            class="p-l-0 p-r-0 text-white py-2"
-            [innerHTML]="boardModel.description"
-          ></div>
-        </div>
+       
+        <!-- </div> -->
         <div *ngIf="construction.id > 0">
           <hr class="btn-light" />
           <h5 class="col">Detalhes da Tecnologia / Construção</h5>
@@ -355,7 +305,7 @@
           </div>
         </div>
 
-        <div class="row py-3 d-flex justify-content-center" *ngIf="boardModel.id > 0">
+        <div class="row py-3 d-flex justify-content-center" *ngIf="boardModel">
           <button type="button" class="btn btn-rounded btn-outline-primary text-uppercase"
               (click)="onConfirm()">
               <i class="fa fa-check"></i> Confirmar

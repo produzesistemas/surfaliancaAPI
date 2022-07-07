@@ -134,10 +134,7 @@ export class IndexManagementComponent implements OnInit {
     }
 
     openModalBoardModel(boardModel) {
-        this.boardModelService.getToOrder(boardModel).subscribe(result => {
-            this.boardModel = result;
-            this.modalRef = this.modalService.show(this.templateref, { class: 'modal-xl' });
-          });
+        this.router.navigate([`order/${boardModel.id}`]);
     }
 
     openModal(blog) {

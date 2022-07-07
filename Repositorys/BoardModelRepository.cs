@@ -65,13 +65,13 @@ namespace Repositorys
         {
                return _context.BoardModel
                 .Include(c => c.BoardModelDimensions)
-                .Include(c => c.BoardModelBottoms)
-                .Include(c => c.BoardModelConstructions)
-                .Include(c => c.BoardModelFinSystems)
-                .Include(c => c.BoardModelLaminations)
-                .Include(c => c.BoardModelStringers)
-                .Include(c => c.BoardModelTailReinforcements)
-                .Include(c => c.BoardModelTails)
+                .Include(c => c.BoardModelBottoms).ThenInclude(x => x.Bottom)
+                .Include(c => c.BoardModelConstructions).ThenInclude(x => x.Construction)
+                .Include(c => c.BoardModelFinSystems).ThenInclude(x => x.FinSystem)
+                .Include(c => c.BoardModelLaminations).ThenInclude(x => x.Lamination)
+                .Include(c => c.BoardModelStringers).ThenInclude(x => x.Stringer)
+                .Include(c => c.BoardModelTailReinforcements).ThenInclude(x => x.TailReinforcement)
+                .Include(c => c.BoardModelTails).ThenInclude(x => x.Tail)
                 .Single(b => b.Id == id);
         }
 

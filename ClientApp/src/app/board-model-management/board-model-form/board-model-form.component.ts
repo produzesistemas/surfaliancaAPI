@@ -187,6 +187,13 @@ export class BoardModelFormComponent implements OnInit {
       this.formAdd.controls.urlMovie.disable();
       this.formAdd.controls.value.disable();
       this.formAdd.controls.stringers.disable();
+      this.formAdd.controls.bottons.disable();
+      this.formAdd.controls.constructions.disable();
+      this.formAdd.controls.finSystens.disable();
+      this.formAdd.controls.tails.disable();
+      this.formAdd.controls.tailReforcements.disable();
+      this.formAdd.controls.dimension.disable();
+
     }
   }
 

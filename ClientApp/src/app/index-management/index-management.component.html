@@ -171,7 +171,8 @@
         <div class="col text-center" role="button" (click)="openModalBoardModel(model)">
           <img class="img-responsive img-board-card" src="{{ getImageBoardModel(model.imageName) }}"
             alt="Board model" />
-          <div class="text-white">{{ model.name }}</div>
+          <div>{{ model.name }}</div>
+          <span class="badge bg-primary text-white"> Encomenda </span>
           <div class="py-2">
             <span class="text-muted">A partir de: </span>
             <span class="text-muted font-weight-bold">{{
@@ -183,6 +184,7 @@
               <small>Produção em {{ model.daysProduction }} dias</small>
             </p>
           </div>
+          
         </div>
       </div>
     </div>

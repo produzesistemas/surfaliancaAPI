@@ -43,8 +43,16 @@ export class BoardModelFormComponent implements OnInit {
   stringers = [];
   laminations = [];
 
-  dropdownSettings: IDropdownSettings = {};
-  multiSettings: IDropdownSettings = {};
+  dropdownSettings: IDropdownSettings = {
+    singleSelection: false,
+    idField: 'id',
+    textField: 'name',
+    selectAllText: 'Marque todos',
+    unSelectAllText: 'Desmarque todos',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+  // multiSettings: IDropdownSettings = {};
 
   configEditor: AngularEditorConfig = {
     editable: true,
@@ -70,6 +78,8 @@ export class BoardModelFormComponent implements OnInit {
   public isNew = false;
 
   @ViewChild('fileUpload') fileUpload: ElementRef;
+
+  
 
   constructor(
     private formBuilder: FormBuilder,
@@ -119,27 +129,6 @@ export class BoardModelFormComponent implements OnInit {
       tailReforcements: [''],
       dimension: [''],
     });
-
-
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'name',
-      selectAllText: 'Marque todos',
-      unSelectAllText: 'Desmarque todos',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
-    this.multiSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'description',
-      selectAllText: 'Marque todos',
-      unSelectAllText: 'Desmarque todos',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
 
     forkJoin(
       this.constructionService.getAll(),
@@ -197,6 +186,7 @@ export class BoardModelFormComponent implements OnInit {
       this.formAdd.controls.name.disable();
       this.formAdd.controls.urlMovie.disable();
       this.formAdd.controls.value.disable();
+      this.formAdd.controls.stringers.disable();
     }
   }
 

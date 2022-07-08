@@ -96,20 +96,17 @@ export class OrderManagementComponent implements OnInit {
 
     this.shoppingCart = this.shoppingCartService.loadCart();
     this.form = this.formBuilder.group({
-      logo: ['', Validators.required],
       boardModel: ['', Validators.required],
       boardModelDimension: [''],
       level: [''],
       construction: [''],
       lamination: [''],
+      bottom: [''],
       finSystem:[''],
       stringer:[''],
       tail: [''],
       otherDimensions: [''],
       paint: [''],
-
-
-
     });
 
     this.levels = this.levelService.get();
@@ -174,6 +171,7 @@ export class OrderManagementComponent implements OnInit {
     }
 
     this.imgModel = boardModel.imageName;
+    this.form.controls.boardModel.setValue(boardModel);
     this.onCalculate();
 
 
@@ -208,19 +206,6 @@ openShoppingCart() {
   this.router.navigate(['/shoppingcart']);
 }
 
-onChangeModel(){
-  if (this.form.controls.boardModel.value === undefined) {
-    this.imgModel = "custom.png";
-  } else {
-    this.imgModel = this.form.controls.boardModel.value.imageName;
-    this.boardModelDimensions = this.form.controls.boardModel.value.boardModelDimensions
-    this.boardModel = this.form.controls.boardModel.value;
-    this.isSelectedDimensions = true;
-    this.finalValue = this.boardModel.value;
-  }
-
-}
-
 onChangeTail(){
   if (this.form.controls.tail.value === undefined) {
     this.imgTail = "";
@@ -228,8 +213,6 @@ onChangeTail(){
     this.imgTail = this.form.controls.tail.value.imageName;
   }
 }
-
-
 
 onChangeDimension(){
   if (this.form.controls.boardModelDimension.value === undefined || this.form.controls.boardModelDimension.value === "") {
@@ -244,30 +227,30 @@ onCheckDimension(){
     return this.isSelectedDimensions;
       }
 
-
       openModalPaint() {
-        if (this.form.controls.boardModel.value !== undefined) {
-
-          const filter: FilterDefaultModel = new FilterDefaultModel();
-          filter.id = this.form.controls.boardModel.value.id;
-          this.paintService.getByModel(filter).subscribe(
+          this.paintService.getAll().subscribe(
             data => {
               this.paints = data;
               this.modalPaint = this.modalService.show(this.templaterefPaint, { class: 'modal-xl' });
 
             }
           );
-
-        }
-
     }
 
     closeModalPaint() {
       this.modalPaint.hide();
   }
 
-  getImagePaint(nomeImage) {
-    return environment.urlImagesLojas + nomeImage;
+  getImagePaint(paint) {
+    if (paint.imageName) {
+      return environment.urlImagesPaint + paint.imageName;
+    }
+}
+
+getImagePaintSelected() {
+  if (this.paint !== null) {
+    return environment.urlImagesPaint + this.paint.imageName;
+  }
 }
 
 getImageTail() {
@@ -286,8 +269,9 @@ getImageStringer() {
 
 onSelect(paint){
   this.closeModalPaint();
-  this.imgModel = paint.imageName;
+  // this.imgModel = paint.imageName;
   this.form.controls.paint.setValue(paint);
+  this.paint = paint;
   this.onCalculate();
 }
 
@@ -303,6 +287,16 @@ onCalculate() {
   if (this.form.controls.paint.value) {
     this.finalValue = this.finalValue + this.form.controls.paint.value.value;
   }
+  if (this.form.controls.lamination.value) {
+    this.finalValue = this.finalValue + this.form.controls.lamination.value.value;
+  }
+  if (this.form.controls.finSystem.value) {
+    this.finalValue = this.finalValue + this.form.controls.finSystem.value.value;
+  }
+  if (this.form.controls.stringer.value) {
+    this.finalValue = this.finalValue + this.form.controls.stringer.value.value;
+  }
+
 }
 
 openModal() {
@@ -328,6 +322,7 @@ onChangeFinSystem(){
   } else {
     this.imgFinSystem = this.form.controls.finSystem.value.imageName;
   }
+  this.onCalculate();
 }
 onChangeStringer(){
   if (this.form.controls.stringer.value === undefined) {
@@ -335,6 +330,7 @@ onChangeStringer(){
   } else {
     this.imgStringer = this.form.controls.stringer.value.imageName;
   }
+  this.onCalculate();
 }
 
 
@@ -344,17 +340,15 @@ onConfirm() {
       if (this.form.invalid) {
         return;
       }
-      if (this.form.controls.boardModelDimension.value === "" && this.form.controls.otherDimensions.value === ""){
-        return this.toastr.error("Obrigatório selecionar uma dimensão ou digite sua dimensão");
-      }
+
       this.shoppingCart = this.shoppingCartService.loadCart();
       if (this.shoppingCart === null) {
         this.shoppingCart = [];
       }
       this.itemCart = {};
+      this.itemCart.typeSaleId = 1;
       this.itemCart.quantity = 1;
       this.itemCart.value = this.finalValue;
-      this.itemCart.typeSaleId = 1;
       this.itemCart.boardModelId = this.boardModel.id;
       this.itemCart.construction = this.form.controls.construction ? this.form.controls.construction.value : null;
       this.itemCart.constructionId = this.form.controls.construction ? this.form.controls.construction.value.id : null;
@@ -375,6 +369,8 @@ onConfirm() {
       this.itemCart.finSystem = this.form.controls.finSystem ? this.form.controls.finSystem.value : null;
       this.itemCart.stringerId = this.form.controls.stringer ? this.form.controls.stringer.value.id : null;
       this.itemCart.stringer = this.form.controls.stringer ? this.form.controls.stringer.value : null;
+      this.itemCart.bottomId = this.form.controls.bottom ? this.form.controls.bottom.value.id : null;
+      this.itemCart.bottom = this.form.controls.bottom ? this.form.controls.bottom.value : null;
       this.shoppingCart.push(this.itemCart);
       this.shoppingCartService.updateCart(this.shoppingCart);
       this.modalRef = this.modalService.show(this.templateref, { class: 'modal-md' });

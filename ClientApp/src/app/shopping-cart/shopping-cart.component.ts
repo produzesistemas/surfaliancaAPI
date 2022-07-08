@@ -133,6 +133,9 @@ export class ShoppingCartComponent implements OnInit {
   getImage(item) {
     if (item) {
       if (item.typeSaleId === 1) {
+        if (item.paint) {
+          return environment.urlImagesPaint + item.paint.imageName;
+        }
         return environment.urlImagesLojas + item.imageName;
       }
 

@@ -163,19 +163,12 @@ namespace surfaliancaAPI.Controllers
             }
         }
 
-        [HttpPost()]
+        [HttpGet()]
         [Route("getAll")]
         [AllowAnonymous]
-        public IActionResult GetAll(FilterDefault filter)
+        public IActionResult GetAll()
         {
-            Expression<Func<Paint, bool>> p2;
-            var predicate = PredicateBuilder.New<Paint>();
-            if (filter.Name != null)
-            {
-                p2 = p => p.Name.Contains(filter.Name);
-                predicate = predicate.And(p2);
-            }
-            return new JsonResult(paintRepository.Where(predicate).ToList());
+            return new JsonResult(paintRepository.GetAll());
         }
 
         [HttpPost()]

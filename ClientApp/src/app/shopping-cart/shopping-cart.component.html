@@ -51,9 +51,9 @@
 </nav>
 
 <div class="container-xl py-5">
-  <h2 class="text-center text-white">Meu carrinho</h2>
+  <h2 class="text-center">Meu carrinho</h2>
   <div class="row d-flex justify-content-center">
-    <div class="col-lg-8">
+    <div class="col-lg-9">
       <table class="table table-hover">
         <tr *ngFor="let item of shoppingCart">
           <div class="card">
@@ -68,8 +68,8 @@
                   />
                 </div>
                 <div class="col">
-                  <div>{{ item.name }}</div>
-                  <div>
+                  <div> Modelo : {{ item.name }}</div>
+                  <div *ngIf="item.boardModelDimension">
                     Dimensões : {{ item.boardModelDimension.description }}
                   </div>
                   <div *ngIf="item.contruction">
@@ -86,6 +86,8 @@
                     Longarina : {{ item.stringer.name }}
                   </div>
                   <div *ngIf="item.tail">Rabeta : {{ item.tail.name }}</div>
+                  <div *ngIf="item.tailReinforcement">Reforço da rabeta : {{ item.tailReinforcement.name }}</div>
+                  <div *ngIf="item.bottom">Fundo : {{ item.bottom.name }}</div>
                   <div>Valor : {{ item.value | currency: "R$" }}</div>
                   <div>Quantidade: {{ item.quantity }}</div>
                   <div>Subtotal: {{ getSubtotal(item) | currency: "R$" }}</div>

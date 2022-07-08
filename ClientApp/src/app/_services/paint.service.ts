@@ -13,9 +13,9 @@ export class PaintService extends GenericHttpService<Paint> {
       return this.postAll('Paint/filter', filter);
     }
 
-    getAll(filter: any) {
-      return this.postAll('Paint/getAll', filter);
-    }
+    getAll() {
+      return this.http.get<Paint[]>(`${this.getUrlApi()}Paint/getAll`);
+  }
 
     save(entity) {
       return this.post('Paint/save', entity);

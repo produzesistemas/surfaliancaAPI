@@ -32,6 +32,8 @@ namespace Models
             modelBuilder.Entity<Stringer>().HasKey(c => c.Id);
             modelBuilder.Entity<BoardModel>().HasKey(c => c.Id);
             modelBuilder.Entity<Product>().HasKey(c => c.Id);
+            modelBuilder.Entity<ProductStatus>().HasKey(c => c.Id);
+            modelBuilder.Entity<ProductType>().HasKey(c => c.Id);
             modelBuilder.Entity<Order>().HasKey(c => c.Id);
             modelBuilder.Entity<ShippingCompany>().HasKey(c => c.Id);
             modelBuilder.Entity<ShippingCompanyState>().HasKey(c => c.Id);
@@ -72,6 +74,8 @@ namespace Models
             modelBuilder.Entity<Product>().HasMany(c => c.OrderProducts)
                 .WithOne(b => b.Product)
                 .HasForeignKey(c => c.ProductId);
+            modelBuilder.Entity<Product>().HasOne(x => x.ProductStatus).WithMany(x => x.Products);
+            modelBuilder.Entity<Product>().HasOne(x => x.ProductType).WithMany(x => x.Products);
 
             modelBuilder.Entity<StatusOrder>().HasMany(c => c.OrderTrackings)
                 .WithOne(b => b.StatusOrder)

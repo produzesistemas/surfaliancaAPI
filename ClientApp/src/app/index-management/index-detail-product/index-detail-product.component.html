@@ -65,7 +65,7 @@
       </ng-template>
     </ngb-carousel>
     <div class="col-10 py-3">
-      <div class="card text-white bg-dark ml-3 mb-3 text-center mx-auto">
+      <div class="card ml-3 mb-3 text-center mx-auto">
         <h2 class="card-header">{{ product.name }}</h2>
         <div class="card-body">
           <div *ngIf="!product.isPromotion" class="py-2">
@@ -92,7 +92,7 @@
 
   </div>
   <div class="row">
-    <div class="col p-l-0 p-r-0 text-white py-3 text-break">
+    <div class="col p-l-0 p-r-0 py-3 text-break">
       <p [innerHTML]="product.description" ></p>
     </div>
   </div>
@@ -100,9 +100,9 @@
 
 
 <ng-template #modal>
-  <div class="inmodal bg-dark" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
-      <h3 class="modal-title text-white">Produto adicionado ao carrinho</h3>
+      <h3 class="modal-title">Produto adicionado ao carrinho</h3>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -112,21 +112,21 @@
       </div>
       <div class="row py-2">
         <div class="col">
-          <h5 class="text-white">{{ product.name }}</h5>
+          <h5>{{ product.name }}</h5>
         </div>
       </div>
 
       <div *ngIf="!product.isPromotion" class="row py-2">
         <div class="col">
-          <h5 class="text-white font-weight-bold">{{ product.value | currency:'R$'}}</h5>
+          <h5 class="font-weight-bold">{{ product.value | currency:'R$'}}</h5>
         </div>
       </div>
       <div *ngIf="product.isPromotion" class="row py-2">
         <div class="col">
-          <h5 class="text-white font-weight-bold">
+          <h5 class="font-weight-bold">
             <p>De: <del>{{ product.value | currency:'R$'}}</del></p>
           </h5>
-          <h5 class="text-white font-weight-bold">Por:{{ product.valuePromotion | currency:'R$'}}</h5>
+          <h5 class="font-weight-bold">Por:{{ product.valuePromotion | currency:'R$'}}</h5>
         </div>
       </div>
     </div>

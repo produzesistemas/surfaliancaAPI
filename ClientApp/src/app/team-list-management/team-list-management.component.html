@@ -45,11 +45,11 @@
 
 <div class="container">
   <div class="py-5">
-    <h5 class="h5 text-white text-center">Família / Equipe</h5>
+    <h5 class="h5 text-center">Família / Equipe</h5>
     <div class="card-group py-3" *ngIf="lstModels.length > 0">
       <div *ngFor='let team of lstModels'>
         <div class="py-1">
-          <div class="card text-white bg-dark ml-2 mr-2" role="button" (click)="openModal(team)"> 
+          <div class="card ml-2 mr-2" role="button" (click)="openModal(team)"> 
             <div class="card-body">
               <label for="staticEmail" class="col-sm-12 col-form-label">{{ team.name }}</label>
             </div>
@@ -64,7 +64,7 @@
 </div>
 
 <ng-template #modal>
-  <div class="inmodal bg-dark text-white" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <h3 class="modal-title">Membro da Equipe</h3>
       <button type="button" class="close" (click)="closeModal()">
@@ -81,7 +81,7 @@
         </ng-template>
       </ngb-carousel>
       <div class="row">
-        <div class="col-sm-12 p-l-0 p-r-0 text-white py-3" [innerHTML]="team.description"></div>
+        <div class="col-sm-12 p-l-0 p-r-0 py-3" [innerHTML]="team.description"></div>
       </div>
     </div>
   </div>

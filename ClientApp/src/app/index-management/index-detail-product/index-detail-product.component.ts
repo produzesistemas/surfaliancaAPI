@@ -86,7 +86,7 @@ addShoppingCart(product) {
           this.itemCart.name = product.name;
           this.itemCart.productTypeId = product.productTypeId;
           this.itemCart.productStatusId = product.productStatusId;
-          this.itemCart.typeSaleId = product.typeSaleId;
+          this.itemCart.typeSaleId = 2;
           if (product.isPromotion) {
             this.itemCart.value = product.valuePromotion;
           } else {
@@ -106,7 +106,7 @@ addShoppingCart(product) {
       this.itemCart.name = product.name;
       this.itemCart.productTypeId = product.productTypeId;
       this.itemCart.productStatusId = product.productStatusId;
-      this.itemCart.typeSaleId = product.typeSaleId;
+      this.itemCart.typeSaleId = 2;
       if (product.isPromotion) {
         this.itemCart.value = product.valuePromotion;
       } else {

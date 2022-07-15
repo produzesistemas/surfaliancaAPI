@@ -65,7 +65,10 @@ namespace Repositorys
 
         public Product Get(int id)
         {
-            return _context.Product.Single(b => b.Id == id);
+            return _context.Product
+                .Include(c => c.ProductStatus)
+                .Include(c => c.ProductType)
+                .Single(b => b.Id == id);
         }
 
         public void Update(Product entity)

@@ -14,9 +14,9 @@
       <!-- <li class="nav-item">
         <a class="nav-link" role="button" href="blog-list">Blog</a>
       </li> -->
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" role="button" href="order">Encomendar</a>
-      </li>
+      </li> -->
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
@@ -365,9 +365,9 @@
       </div>
       <hr />
       <div class="row">
-        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
-          {{ store.description }}
-        </label>
+        <div class="col-sm-12">
+          <div class="p-l-0 p-r-0 text-white py-3 text-break" [innerHTML]="store.description"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -384,9 +384,9 @@
 
     <div class="modal-body">
       <div class="row">
-        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
-          {{ store.deliveryPolicy }}
-        </label>
+        <div class="col-sm-12">
+          <div class="p-l-0 p-r-0 text-white py-3 text-break" [innerHTML]="store.deliveryPolicy"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -403,9 +403,9 @@
 
     <div class="modal-body">
       <div class="row">
-        <label class="text-justify text-white col-sm-12 p-l-0 p-r-0 py-3">
-          {{ store.exchangePolicy }}
-        </label>
+        <div class="col-sm-12">
+          <div class="p-l-0 p-r-0 text-white py-3 text-break" [innerHTML]="store.exchangePolicy"></div>
+        </div>
       </div>
     </div>
   </div>

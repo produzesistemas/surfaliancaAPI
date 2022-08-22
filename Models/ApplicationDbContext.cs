@@ -37,12 +37,10 @@ namespace Models
             modelBuilder.Entity<Order>().HasKey(c => c.Id);
             modelBuilder.Entity<ShippingCompany>().HasKey(c => c.Id);
             modelBuilder.Entity<ShippingCompanyState>().HasKey(c => c.Id);
-
             modelBuilder.Entity<TeamImage>().HasOne(c => c.Team);
             modelBuilder.Entity<Blog>().HasOne(c => c.TypeBlog);
             modelBuilder.Entity<TypeBlog>().HasMany(c => c.Blogs).WithOne(b => b.TypeBlog).HasForeignKey(c => c.TypeBlogId);
             modelBuilder.Entity<Team>().HasMany(c => c.teamImages).WithOne(b => b.Team).HasForeignKey(c => c.TeamId);
-
             modelBuilder.Entity<BoardModel>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelDimensions).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelBottoms).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
@@ -52,17 +50,13 @@ namespace Models
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelStringers).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTailReinforcements).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
             modelBuilder.Entity<BoardModel>().HasMany(c => c.BoardModelTails).WithOne(b => b.BoardModel).HasForeignKey(c => c.BoardModelId);
-
             modelBuilder.Entity<OrderProduct>().HasKey(c => c.Id);
             modelBuilder.Entity<OrderProductOrdered>().HasKey(c => c.Id);
             modelBuilder.Entity<OrderTracking>().HasKey(c => c.Id);
-
             modelBuilder.Entity<Order>().HasMany(c => c.OrderProduct);
             modelBuilder.Entity<Order>().HasMany(c => c.OrderProductOrdered);
             modelBuilder.Entity<Order>().HasMany(c => c.OrderTracking);
-            //modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Finishing);
             modelBuilder.Entity<OrderProductOrdered>().HasOne(c => c.Paint);
-
             modelBuilder.Entity<BoardModelBottom>().HasOne(c => c.Bottom);
             modelBuilder.Entity<BoardModelConstruction>().HasOne(c => c.Construction);
             modelBuilder.Entity<BoardModelFinSystem>().HasOne(c => c.FinSystem);
@@ -70,32 +64,25 @@ namespace Models
             modelBuilder.Entity<BoardModelStringer>().HasOne(c => c.Stringer);
             modelBuilder.Entity<BoardModelTailReinforcement>().HasOne(c => c.TailReinforcement);
             modelBuilder.Entity<BoardModelTail>().HasOne(c => c.Tail);
-
             modelBuilder.Entity<Product>().HasMany(c => c.OrderProducts)
                 .WithOne(b => b.Product)
                 .HasForeignKey(c => c.ProductId);
             modelBuilder.Entity<Product>().HasOne(x => x.ProductStatus).WithMany(x => x.Products);
             modelBuilder.Entity<Product>().HasOne(x => x.ProductType).WithMany(x => x.Products);
-
             modelBuilder.Entity<StatusOrder>().HasMany(c => c.OrderTrackings)
                 .WithOne(b => b.StatusOrder)
                 .HasForeignKey(c => c.StatusOrderId);
-
             modelBuilder.Entity<StatusPaymentOrder>().HasMany(c => c.OrderTrackings)
                 .WithOne(b => b.StatusPaymentOrder)
                 .HasForeignKey(c => c.StatusPaymentOrderId);
-
-            
             modelBuilder.Entity<Tail>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Tail).HasForeignKey(c => c.TailId);
             modelBuilder.Entity<Lamination>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Lamination).HasForeignKey(c => c.LaminationId);
             modelBuilder.Entity<Construction>().HasMany(c => c.OrderProductOrdereds).WithOne(b => b.Construction).HasForeignKey(c => c.ConstructionId);
             modelBuilder.Entity<Coupon>().HasMany(c => c.Orders).WithOne(b => b.Coupon).HasForeignKey(c => c.CouponId);
-
             modelBuilder.Entity<ShippingCompany>().HasMany(c => c.ShippingCompanyStates)
             .WithOne(b => b.ShippingCompany)
             .HasForeignKey(c => c.ShippingCompanyId);
             modelBuilder.Entity<ShippingCompanyState>().HasOne(c => c.ShippingCompany);
-
            base.OnModelCreating(modelBuilder);
         }
 
